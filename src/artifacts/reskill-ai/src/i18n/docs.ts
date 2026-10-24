@@ -124,11 +124,11 @@ export const docsEn = {
   "docs.riasec.scoring": "All 30 unique answers are required by the API and both assessment screens. Each area uses the average of its five answers, rounded to two decimals. Ties follow R, I, A, S, E, C.",
   "docs.riasec.limits": "Skilytics adapted the activities and translations under the O*NET Tools Developer License. Independent psychometric validation remains outstanding. USDOL/ETA has not approved, endorsed or tested the modifications. Interests are never inferred from CV text.",
 
-  "docs.match.weights": "Within skill fit, tools/subject skills count twice as much as basic Human skills. Weights: skills 40, transferable 15, interest 20, preferences 10, feasibility 15. Additional skills may be suggested from reviewed education and experience using catalogue terms; these are inferred, not verified. RIASEC supplies interest fit, not skill evidence.",
+  "docs.match.weights": "Within skill fit, tools/subject skills count twice as much as basic Human skills. Weights: skills 40, transferable 15, interest 20, preferences 10, feasibility 15. Additional skills may be suggested from reviewed education and experience using catalogue terms; these are inferred, not verified. RIASEC supplies interest fit, not skill evidence. Optional growth ordering uses the reviewed US BLS 2025–2035 SOC snapshot, not Malaysian demand or a new personal-fit score. The team heatmap separates in-profile, inferred, completed-course, missing and not-required evidence; it does not assess proficiency.",
   "docs.match.demand": "Labour demand is not fabricated. Until a verified Malaysian demand source exists it is null and shown as not verified, not zero.",
   "docs.match.feasibility": "When no verified course exists, feasibility is unavailable and gets zero credit. It is not estimated from course durations.",
 
-  "docs.sdg.method": "Course subject themes take priority: climate 13, clean energy 7, health 3, manufacturing/research 9, productivity 8 and inclusion 10. Education 4.4 is a fallback. Roles use explicit title/sector rules: health 3, education 4, engineering/logistics/research 9, green roles 7/12/13, other work 8. These application associations are not UN occupational classifications or measured impact. The first goal has a bold outline; icons are deduplicated by goal.",
+  "docs.sdg.method": "Course subject themes take priority: climate 13, clean energy 7, health 3, manufacturing/research 9, productivity 8 and inclusion 10. Education 4.4 is a fallback. Roles use explicit title/sector rules: health 3, education 4, engineering/logistics/research 9, green roles 7/12/13, other work 8. These application associations are not UN occupational classifications or measured impact. The first goal has a bold outline; icons are deduplicated by goal. Role and vacancy filters let users choose work themes without changing personal fit scores. Learning summaries link accessible training to 4.3/4.4 and work preparation to 8.2/8.5; completion is not proof of measurable UN impact.",
   "docs.sdg.limits": "Not measured or certified impact, and not SDG statistics.",
 
   "docs.demo.org": "Enterprise and Educators demo accounts are tagged as dummy. Their organisations and members are not external facts.",
@@ -274,11 +274,11 @@ export const docsMs: Record<DocsKey, string> = {
   "docs.riasec.scoring": "Semua 30 jawapan unik diwajibkan oleh API dan kedua-dua skrin ujian. Setiap kategori menggunakan purata lima jawapan, dibundarkan kepada dua perpuluhan. Seri mengikut susunan R, I, A, S, E, C.",
   "docs.riasec.limits": "Skilytics mengadaptasi aktiviti dan terjemahan di bawah O*NET Tools Developer License. Pengesahan psikometrik bebas belum dijalankan. USDOL/ETA tidak meluluskan, menyokong atau menguji perubahan ini. Minat tidak disimpulkan daripada teks CV.",
 
-  "docs.match.weights": "Dalam padanan kemahiran, alat/kemahiran bidang diberi nilai dua kali kemahiran asas Human. Pemberat: kemahiran 40, boleh pindah 15, minat 20, keutamaan 10, kebolehlaksanaan 15. Kemahiran tambahan boleh dicadangkan daripada pendidikan dan pengalaman yang disemak menggunakan istilah katalog; ini anggaran, bukan pengesahan. RIASEC memberi padanan minat, bukan bukti kemahiran.",
+  "docs.match.weights": "Dalam padanan kemahiran, alat/kemahiran bidang diberi nilai dua kali kemahiran asas Human. Pemberat: kemahiran 40, boleh pindah 15, minat 20, keutamaan 10, kebolehlaksanaan 15. Kemahiran tambahan boleh dicadangkan daripada pendidikan dan pengalaman yang disemak menggunakan istilah katalog; ini anggaran, bukan pengesahan. RIASEC memberi padanan minat, bukan bukti kemahiran. Susunan pertumbuhan pilihan menggunakan snapshot SOC BLS AS 2025–2035, bukan permintaan Malaysia atau skor peribadi baharu. Heatmap membezakan bukti profil, anggaran, kursus selesai, belum dipelajari dan tidak diperlukan; bukan penilaian penguasaan.",
   "docs.match.demand": "Permintaan buruh tidak direka. Sehingga sumber permintaan Malaysia yang disahkan wujud, ia null dan ditunjukkan sebagai belum disahkan, bukan sifar.",
   "docs.match.feasibility": "Jika tiada kursus disahkan, kebolehlaksanaan tidak tersedia dan diberi kredit sifar. Ia tidak dianggarkan daripada tempoh kursus.",
 
-  "docs.sdg.method": "Tema kursus diutamakan: iklim 13, tenaga bersih 7, kesihatan 3, pembuatan/penyelidikan 9, produktiviti 8 dan keterangkuman 10. Pendidikan 4.4 menjadi sandaran. Peranan mengikut aturan tajuk/sektor jelas: kesihatan 3, pendidikan 4, kejuruteraan/logistik/penyelidikan 9, peranan hijau 7/12/13, kerja lain 8. Kaitan aplikasi ini bukan pengelasan pekerjaan PBB atau impak diukur. Matlamat pertama mempunyai bingkai tebal; ikon tidak diulang bagi matlamat sama.",
+  "docs.sdg.method": "Tema kursus diutamakan: iklim 13, tenaga bersih 7, kesihatan 3, pembuatan/penyelidikan 9, produktiviti 8 dan keterangkuman 10. Pendidikan 4.4 menjadi sandaran. Peranan mengikut aturan tajuk/sektor jelas: kesihatan 3, pendidikan 4, kejuruteraan/logistik/penyelidikan 9, peranan hijau 7/12/13, kerja lain 8. Kaitan aplikasi ini bukan pengelasan pekerjaan PBB atau impak diukur. Matlamat pertama mempunyai bingkai tebal; ikon tidak diulang bagi matlamat sama. Penapis peranan dan jawatan kosong membolehkan pilihan tema tanpa mengubah skor padanan peribadi. Ringkasan mengaitkan pembelajaran mudah diakses dengan 4.3/4.4 dan persediaan kerja dengan 8.2/8.5; penyempurnaan bukan bukti impak PBB yang diukur.",
   "docs.sdg.limits": "Bukan impak yang diukur atau diperakui, dan bukan statistik SDG.",
 
   "docs.demo.org": "Akaun demo Enterprise dan Pendidik ditandakan sebagai contoh. Organisasi, pekerja dan pelajar ialah data contoh.",
@@ -422,11 +422,11 @@ export const docsZh: Record<DocsKey, string> = {
   "docs.riasec.scoring": "API 及两个评估页面均要求回答全部 30 道不同题目。各领域取五题平均值，保留两位小数。平分时依次按 R、I、A、S、E、C 排序。",
   "docs.riasec.limits": "Skilytics 按 O*NET Tools Developer License 改编活动与译文，尚未完成独立心理测量验证。USDOL/ETA 未批准、认可或测试这些修改。兴趣绝不从简历文本推断。",
 
-  "docs.match.weights": "在技能匹配内，工具及专业技能的权重为基础 Human 技能的两倍。权重：技能 40、可迁移 15、兴趣 20、偏好 10、可行性 15。根据已核对的学历和经历，使用技能目录术语推测额外技能；这些推测尚未核实。RIASEC 用于兴趣匹配，不作为技能证据。",
+  "docs.match.weights": "在技能匹配内，工具及专业技能的权重为基础 Human 技能的两倍。权重：技能 40、可迁移 15、兴趣 20、偏好 10、可行性 15。根据已核对的学历和经历，使用技能目录术语推测额外技能；这些推测尚未核实。RIASEC 用于兴趣匹配，不作为技能证据。可选增长排序采用美国BLS 2025–2035 SOC快照，并非马来西亚需求或新的个人匹配分数。团队热图区分资料已有、推测、课程完成、待学与不需要，不评估熟练度。",
   "docs.match.demand": "劳动力需求不会被编造。在有经核实的马来西亚需求来源之前，该值为空，并显示为未核实，而非为零。",
   "docs.match.feasibility": "没有经核实的课程时，可行性不可用，得分为零。不会根据课程时长估算。",
 
-  "docs.sdg.method": "课程优先按主题关联：气候 13、清洁能源 7、健康 3、制造/科研 9、生产力 8、包容性 10。教育 4.4 仅作后备。职业采用明确的名称/行业规则：医疗 3、教育 4、工程/物流/科研 9、绿色职业 7/12/13、其他工作 8。这是应用关联，并非联合国职业分类或实测影响。首个目标采用粗边框，同一目标图标不重复。",
+  "docs.sdg.method": "课程优先按主题关联：气候 13、清洁能源 7、健康 3、制造/科研 9、生产力 8、包容性 10。教育 4.4 仅作后备。职业采用明确的名称/行业规则：医疗 3、教育 4、工程/物流/科研 9、绿色职业 7/12/13、其他工作 8。这是应用关联，并非联合国职业分类或实测影响。首个目标采用粗边框，同一目标图标不重复。职业与招聘筛选可选择工作主题，个人匹配分数不变。学习摘要将易获取的培训关联4.3/4.4，将工作准备关联8.2/8.5；完成课程不代表实测的联合国影响。",
   "docs.sdg.limits": "并非经测量或认证的影响，也不是 SDG 统计数据。",
 
   "docs.demo.org": "企业与教育工作者演示账户已标注为示例。其机构与成员并非外部事实。",

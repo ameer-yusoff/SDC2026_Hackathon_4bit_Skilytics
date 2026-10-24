@@ -1,3 +1,5 @@
+import { SdgChoice } from "@/components/sdg-choice";
+import { byGoal } from "@/lib/sdg-choice";
 import { useState } from "react";
 import { useParams, Link } from "wouter";
 import { useQuery } from "@tanstack/react-query";
@@ -11,6 +13,7 @@ import { roleGoals } from "@/components/matcher-skill-map";
 import { PageHeader, Rows, ErrorBox, Meter, SdgBadge } from "@/components/kit";
 type Vacancy = {
   source?: string;
+  posted?: string;
   sourceUrl?: string;
   id: number;
   title: string;
@@ -58,10 +61,26 @@ export default function Jobs() {
   const [limit, setLimit] = useState(10);
   const q = useQuery({
     queryKey: ["jobs", id],
-    queryFn: () => customFetch<{ jobs: Vacancy[] }>(`/api/profiles/${id}/jobs`),
+    queryFn: () =>
+      customFetch<{ jobs: Vacancy[]; checkedAt?: string }>(
+        `/api/profiles/${id}/jobs`,
+      ),
     retry: false,
   });
-  const jobs = q.data?.jobs ?? [];
+  const [goal, setGoal] = useState("all");
+  const allJobs = q.data?.jobs ?? [];
+  const goals = [
+    ...new Set(
+      allJobs.flatMap((j) =>
+        roleGoals(j.exposureRole ?? { title: j.title, sector: "" }),
+      ),
+    ),
+  ].sort((a, b) => Number(a) - Number(b));
+  const jobs = byGoal(
+    allJobs,
+    goal,
+    (j) => j.exposureRole ?? { title: j.title, sector: "" },
+  );
   const card = (j: Vacancy, rank: number, podium = false) => (
     <article
       key={j.id}
@@ -106,6 +125,14 @@ export default function Jobs() {
           />
         </div>
       </div>
+      <p className="text-xs text-muted-foreground">
+        {lang === "ms" ? "Diterbitkan" : lang === "zh" ? "发布日期" : "Posted"}:{" "}
+        {j.posted && Number.isFinite(Date.parse(j.posted))
+          ? new Intl.DateTimeFormat(
+              { en: "en-GB", ms: "ms-MY", zh: "zh-CN" }[lang],
+            ).format(new Date(j.posted))
+          : "—"}
+      </p>
       <div className="flex flex-wrap gap-2">
         {j.matched.slice(0, 4).map((s) => (
           <span key={s} className="rounded-lg bg-emerald-50 px-2 py-1 text-xs">
@@ -164,6 +191,32 @@ export default function Jobs() {
         ← {t("nav.workspace")}
       </Link>
       <PageHeader title={w.jobs} sub={w.jobNote} />
+      {q.data?.checkedAt && (
+        <p className="mb-3 text-xs text-muted-foreground">
+          {lang === "ms"
+            ? "Katalog disemak"
+            : lang === "zh"
+              ? "目录检查时间"
+              : "Catalogue checked"}
+          :{" "}
+          {new Intl.DateTimeFormat(
+            { en: "en-GB", ms: "ms-MY", zh: "zh-CN" }[lang],
+            { dateStyle: "medium", timeStyle: "short" },
+          ).format(new Date(q.data.checkedAt))}
+        </p>
+      )}
+      {!!allJobs.length && (
+        <div className="mb-5">
+          <SdgChoice
+            goals={goals}
+            value={goal}
+            onChange={(g) => {
+              setGoal(g);
+              setLimit(10);
+            }}
+          />
+        </div>
+      )}
       {q.isLoading ? (
         <Rows n={4} />
       ) : q.isError ? (

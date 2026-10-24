@@ -1,3 +1,4 @@
+import {SdgContribution} from "./sdg-choice";
 import {useState} from "react";
 import {jobWords} from "./market-skills";
 import type { Profile } from "@workspace/api-client-react";
@@ -74,6 +75,7 @@ export function LearningDashboard({ p, employer=false, portal="hr" }: { p: Profi
         </Button>
       </div>
       <p className="mt-3 text-xs text-muted-foreground">{w.calendarNote}</p>
+      <SdgContribution/>
       <div className="my-5">
         <p className="mb-2 flex justify-between text-sm font-semibold">
           <span>{w.progress}</span>
@@ -117,6 +119,7 @@ export function LearningDashboard({ p, employer=false, portal="hr" }: { p: Profi
                     )}
                     {i.title}
                   </h3>
+                  <p className="mt-2 text-xs text-muted-foreground">{i.provider} · {i.costMyr===0?(lang==="ms"?"Percuma":lang==="zh"?"免费":"Free"):`RM ${i.costMyr}`}</p>
                   <p className="mt-2 text-sm">
                     <span className="rounded bg-muted px-2 py-1">
                       {w.starts}: {i.startDate}

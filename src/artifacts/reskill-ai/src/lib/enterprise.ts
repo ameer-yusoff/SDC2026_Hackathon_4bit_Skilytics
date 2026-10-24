@@ -11,6 +11,10 @@ export type CompanyMember = {
   stage: string;
   skillCount: number;
   skillNames?: string[];
+  requiredSkills?:string[];
+  confirmedSkillNames?:string[];
+  inferredSkillNames?:string[];
+  completedSkillNames?:string[];
   gapCount: number;
   remainingGap: number;
   gaps: string[];

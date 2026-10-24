@@ -1,3 +1,4 @@
+import {SyntheticBadge} from "@/components/sdg-choice";
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { Link, Redirect, useLocation, useParams, useSearch } from "wouter";
 import { useQueryClient } from "@tanstack/react-query";
@@ -766,6 +767,7 @@ function CvStep({
             : lang === "zh" ? "直接填写示例资料，不调用 AI。上传自己的简历仍由 AI 读取。" : "Fill sample details instantly, without AI. Your own CV upload still uses AI."}
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+          <SyntheticBadge/>
           {demoItems.map((demo) => {
             const Icon = demo.icon;
             return (

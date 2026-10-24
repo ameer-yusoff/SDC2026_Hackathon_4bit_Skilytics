@@ -1,3 +1,5 @@
+import {SdgChoice} from "@/components/sdg-choice";
+import {byGoal} from "@/lib/sdg-choice";
 import { useMemo, useState } from "react";
 import { Link, useParams, useSearch } from "wouter";
 import { ArrowLeft, Award, ExternalLink } from "lucide-react";
@@ -59,7 +61,9 @@ export function Roles() {
     () => Array.from(new Set((q.data ?? []).map((r) => r.sector))).sort(),
     [q.data],
   );
-  const list = (q.data ?? []).filter(
+  const [goal,setGoal]=useState("all");
+  const goals=[...new Set((q.data??[]).flatMap(roleGoals))].sort((a,b)=>Number(a)-Number(b));
+  const list = byGoal(q.data??[],goal,r=>r).filter(
     (r) =>
       (sector === "all" || r.sector === sector) &&
       `${r.title} ${roleTitle(r, lang)} ${r.socCode} ${r.skills.map((s) => skillLabel(s.name, lang)).join(" ")}`
@@ -101,6 +105,7 @@ export function Roles() {
           </Select>
         }
       />
+      <div className="mb-4"><SdgChoice goals={goals} value={goal} onChange={setGoal}/></div>
       <p className="mb-4 text-xs text-muted-foreground">{guides[lang].scope}</p>
       <div className="mb-4 space-y-2">
         <Input
@@ -392,6 +397,8 @@ export function Courses({ hr, hideHeader=false }: { hr?: boolean;hideHeader?: bo
   const f = useFmt();
   const [provider, setProvider] = useState("all");
   const [hrdc, setHrdc] = useState(false);
+  const urlSearch=useSearch();
+  const [courseSearch,setCourseSearch]=useState(()=>new URLSearchParams(urlSearch).get("search")??"");
   const params = { ...(hr && hrdc ? { hrdcOnly: true } : {}) };
   const q = useListCourses(params, {
     query: {
@@ -401,7 +408,7 @@ export function Courses({ hr, hideHeader=false }: { hr?: boolean;hideHeader?: bo
   });
   const providers = [...new Set((q.data ?? []).map((c) => c.provider))].sort();
   const list = (q.data ?? [])
-    .filter((c) => provider === "all" || c.provider === provider)
+    .filter((c) => (provider === "all" || c.provider === provider) && `${c.title} ${c.provider} ${c.skills.map(s=>s.name+" "+skillLabel(s.name,lang)).join(" ")}`.toLowerCase().includes(courseSearch.toLowerCase()))
     .sort(
       (a, b) =>
         a.provider.localeCompare(b.provider) || a.title.localeCompare(b.title),
@@ -418,6 +425,7 @@ export function Courses({ hr, hideHeader=false }: { hr?: boolean;hideHeader?: bo
         title={hr ? t("courses.hrTitle") : t("courses.title")}
         sub={t("courses.sub")}
       />}
+      <Input className="mb-3 min-h-11" value={courseSearch} onChange={e=>setCourseSearch(e.target.value)} aria-label={lang==="ms"?"Cari kursus atau kemahiran":lang==="zh"?"搜索课程或技能":"Search courses or skills"} placeholder={lang==="ms"?"Cari kursus atau kemahiran":lang==="zh"?"搜索课程或技能":"Search courses or skills"}/>
       <div className="mb-4 flex flex-wrap items-center gap-3">
         <Select value={provider} onValueChange={setProvider}>
           <SelectTrigger

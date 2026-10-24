@@ -75,21 +75,9 @@ export const matcherWords = {
   },
 };
 
-/** Transparent application associations to UN goal themes, never official role ratings. */
-export function roleGoals(role: Pick<Role, "title" | "sector">) {
-  const title = role.title.toLowerCase();
-  if (/solar|renewable/.test(title)) return ["7", "13"];
-  if (/energy/.test(title)) return ["7", "12", "13"];
-  if (/environment|sustainab|esg/.test(title)) return ["12", "13"];
-  if (/safety/.test(title)) return ["8", "3"];
-  if (role.sector === "Healthcare") return ["3"];
-  if (role.sector === "Education & Training") return ["4"];
-  if (role.sector === "Engineering & Manufacturing") return ["9", "8"];
-  if (role.sector === "Logistics") return ["9", "8"];
-  if (role.sector === "Digital & ICT") return ["9", "8"];
-  if (/scientist|machine learning|research/.test(title)) return ["9", "8"];
-  return ["8"];
-}
+export {roleGoals} from "@/lib/sdg-choice";
+import {roleGoals} from "@/lib/sdg-choice";
+import {SdgReason} from "./sdg-choice";
 
 export function RoleGoals({ role }: { role: Role }) {
   return (
@@ -257,7 +245,7 @@ export function MatcherSkillMap({
           </div>
         </details>
       )}
-      <p className="mt-3 text-xs text-muted-foreground">{w.courseNote}</p>
+      <SdgReason role={match.role}/><p className="mt-3 text-xs text-muted-foreground">{w.courseNote}</p>
       {match.role.sourceUrl && (
         <a
           className="mt-4 inline-block text-xs underline"
@@ -265,7 +253,7 @@ export function MatcherSkillMap({
           target="_blank"
           rel="noopener noreferrer"
         >
-          {w.source}
+          {w.source} · {match.role.sourceVersion} · {match.role.sourceFetchedAt?.slice(0,10) ?? "—"}
         </a>
       )}
     </section>

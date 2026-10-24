@@ -1,3 +1,4 @@
+import {TeamHeatmap} from "./team-heatmap";
 import { AnalysisEvidence, ScenarioMath } from "./scenario-reason";
 import { MarketGuide, usePortalGuide } from "./portal-guides";
 import type { ReactNode } from "react";
@@ -46,6 +47,7 @@ function TeamGuide() {
  const {lang}=useT(),w=enterpriseWords[lang],guide=usePortalGuide();
  return <PageGuide title={w.guide} steps={[
   {title:w.dashboard,body:w.guideDashboard},
+  {title:lang==="ms"?"Peta kemahiran pasukan":lang==="zh"?"团队技能地图":"Team skill map",body:lang==="ms"?"Warna membezakan bukti profil, anggaran pengalaman, kursus selesai dan kemahiran untuk dipelajari. Scroll jadual ke sisi dan tekan tajuk kemahiran untuk cari kursus.":lang==="zh"?"颜色区分资料已有、经历推测、课程完成与待学技能。横向滚动表格，点击技能标题查找课程。":"Colours separate profile evidence, experience suggestions, course completions and skills to learn. Scroll the table sideways and tap a skill header to find courses."},
   {title:w.due,body:guide.progressBody},
   {title:w.employees,body:guide.intakeBody},
   {title:w.company,body:guide.companyBody}
@@ -83,6 +85,7 @@ export function EnterpriseDashboard() {
             />
             <Stat label={w.gap} value={c.avgGap.toFixed(1)} />
           </div>
+          <TeamHeatmap company={c}/>
           <div className="mt-4 grid gap-4 lg:grid-cols-2">
             <Panel title={w.due}>
               {c.members.filter((m) => m.nextDeadline).length ? (

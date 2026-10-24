@@ -1,3 +1,4 @@
+import {SdgContribution} from "@/components/sdg-choice";
 import { useEffect, useRef, useState } from "react";
 import { Link, useParams, useLocation } from "wouter";
 import { useQuery } from "@tanstack/react-query";
@@ -241,6 +242,7 @@ export default function CertificatePage() {
                 <CheckCircle2 className="h-4 w-4" />
                 {w.ready}
               </p>
+              <div className="certificate-controls"><SdgContribution/></div>
               <div
                 ref={frame}
                 className="certificate-stage w-full overflow-hidden rounded-xl border shadow-sm"

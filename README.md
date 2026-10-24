@@ -53,8 +53,8 @@ As university students, we witness on our own how industry skill demands change 
 - **🧠 Explain Like I'm 5 (ELI5) AI Reasoning Engine** — Complex labour statistics, skill gaps, and psychometric intersections are translated into friendly, easy-to-understand **ELI5 explanations**—ensuring every user understands *why* a career path or learning plan is recommended for them.
 - **📄 Multi-Modal Skills Profile Intake (CV + RIASEC)** — Combines automated OCR/PDF resume parsing with the scientifically validated **Holland Code (RIASEC)** psychometric test, synthesised by AI to form a holistic profile of both technical capability and personal work preferences.
 - **📡 Live AI-Trend Signal Layer & Market Pulse** — Integrates real-time, citable public data sources—displaying unemployment & participation rates, labour force trends, AI usage by role, and most AI-exposed roles.
-- **🎯 Explainable Future-Role Matching & Skill Mapping** — Ranks best-fit future roles with transparent match scores, visual radar skill maps, and handling of future uncertainty (modelling moderate vs. fast AI disruption scenarios).
-- **🗺️ Personalised Reskilling Pathways** — Generates ordered, time-bound learning plans tailored to the user's weekly study hours and budget constraints, utilizing accessible online courses and HRD Corp-claimable programmes.
+- **🎯 Explainable Future-Role Matching & Skill Mapping** — Ranks best-fit future roles with transparent match scores, role-specific skill maps, and labelled 1–10-year planning scenarios with source-linked explanations.
+- **🗺️ Personalised Reskilling Pathways** — Generates ordered, time-bound learning plans tailored to the user's weekly study hours and budget constraints, utilizing public online course catalogues. HRD eligibility is employer-only and never asserted without verification.
 - **🌍 Meaningful UN SDG Mapping** — Tags every recommended role and skill to relevant UN Sustainable Development Goals (**SDG 4** Quality Education, **SDG 8** Decent Work & Economic Growth, **SDG 9** Industry and Innovation & Infrastructure).
 - **🏆 Gamified Workspace & Certification** — Tracks learning milestones, awards skill badges/achievements, and generates a verifiable **Certificate of Accomplishment** upon course completion.
 
@@ -480,3 +480,31 @@ This project relies on open-source libraries under permissive licenses. We grate
   * `TypeScript`, `Drizzle ORM`, `Tesseract.js`, `PDF.js (pdfjs-dist & unpdf)`, `Google Generative AI SDK (@google/genai)`, `Neon Serverless SDK`.
 * **PSF License (Python Software Foundation):**
   * `Python`.
+
+
+## Implementation audit — 24 October 2026
+
+### Six domain features: verified code map
+
+| Feature | Implementation and scope |
+| --- | --- |
+| Skills intake | `src/artifacts/reskill-ai/src/pages/onboarding.tsx`, `src/artifacts/api-server/src/lib/cv.ts`: reviewable CV extraction and the complete 30-question O*NET interest assessment. Demo buttons apply fictional saved fixtures without an AI call. |
+| Updatable signals | `src/artifacts/api-server/src/lib/market.ts`, `career-news.ts`: dated public source snapshots, career/technology/workplace-AI headlines. Refresh cadence is a cache policy, not a guarantee of newer publisher data. |
+| Role matching | `scoring.ts`, `components/individual-journey.tsx`: personal skill/interest/feasibility scores. Optional reviewed US BLS growth ordering changes the displayed ranking, not the personal score. Broad SOC references are not Malaysian occupation forecasts. |
+| Learning plan | `planner.ts`, `components/individual-journey.tsx`: catalogue IDs, provider links, time/budget constraints, dated learning and workplace AI courses. Unknown durations require a user estimate. |
+| Meaningful SDG choices | `lib/sdg-choice.ts`, `components/sdg-choice.tsx`: work-theme filters in Matcher, Roles and Jobs; pathways and completion views explain targets 4.3/4.4 and 8.2/8.5. Associations are editorial, not measured impact or UN endorsement. |
+| Uncertainty | `lib/market-scenario.ts`, `components/scenario-reason.tsx`: before/after calculations, selected-year explanations and dated references. News provides context, not proof of future percentages. |
+
+### AI disclosure and data boundaries
+
+The configured testing default is `gemini-3.1-flash-lite`; model environment overrides apply. RunPod Qwen main/light endpoints are reserved and disabled unless explicitly enabled. **The live Data Sources → AI service panel is the source of truth for deployed routing**; saved replies identify the responding model. See [AI routing documentation](src/docs/ai-routing.md) for all eight bounded workflows. These are application-orchestrated workflows, not autonomous agents. No claim of zero hallucination is made.
+
+Public training/job metadata and synthetic demos are separate from private uploads, account credentials and saved learning progress. Demo CV fixtures are documented in `src/testing/demo-cv/README.md`; the fictional TVET history is labelled synthetic. Historical commits can retain removed assets; removing a file from the current tree does not erase Git history.
+
+### Hardest technical risk and fallback
+
+External feeds can become stale, unavailable or change schema; AI can time out or misinterpret evidence. Matching and scheduling use catalogue data and deterministic rules, while explanations have bounded supplied context, schema/ID checks and source references. Cached snapshots preserve their dates and stale status; missing evidence stays missing. A failed explanation does not become a validated prediction. No promise of zero downtime, guaranteed employment, verified competence or forecast accuracy is made.
+
+The employer dashboard now includes an accessible workforce skill heatmap. It separates profile evidence, inferred skills, reported course completions, skills still to learn and skills not needed for that person's chosen role. It is not an employee performance or hiring score. Skill headers open course searches for planning the next learning step.
+
+Build outputs in `dist/` are generated from source and excluded by `.gitignore`; hosting builds them during deployment. Do not commit build outputs, credentials or personal demo data.

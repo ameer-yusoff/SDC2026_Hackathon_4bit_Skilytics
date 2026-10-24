@@ -1,4 +1,12 @@
-import {useErrText} from "@/i18n";
+import {
+  SdgChoice,
+  SdgContribution,
+  CatalogueGuard,
+  SdgReason,
+} from "./sdg-choice";
+import { byGoal, roleGoals } from "@/lib/sdg-choice";
+import bls from "../../../api-server/src/data/bls-projections.json";
+import { useErrText } from "@/i18n";
 import { StudyCalendar } from "./study-calendar";
 import {
   isAiWorkplaceCourse,
@@ -152,8 +160,22 @@ export function IndividualMatcher({ p, base }: { p: Profile; base: string }) {
   const [limit, setLimit] = useState(20);
   const [selected, setSelected] = useState<number | null>(null);
   const [error, setError] = useState("");
-  const errorText=useErrText();
-  const roles = matches.data ?? [];
+  const errorText = useErrText();
+  const [goal, setGoal] = useState("all");
+  const [order, setOrder] = useState("fit");
+  const available = matches.data ?? [];
+  const goals = [...new Set(available.flatMap((x) => roleGoals(x.role)))].sort(
+    (a, b) => Number(a) - Number(b),
+  );
+  const roles = byGoal(available, goal, (x) => x.role).sort((a, b) =>
+    order === "growth"
+      ? (bls.rows.find((r) => r.socCode === b.role.socCode)?.growthPct ??
+          -Infinity) -
+          (bls.rows.find((r) => r.socCode === a.role.socCode)?.growthPct ??
+            -Infinity) || b.score - a.score
+      : b.score - a.score,
+  );
+
   const chosen = roles.find((x) => x.role.id === selected) ?? roles[0];
   if (matches.isLoading) return <Rows n={3} />;
   if (matches.isError)
@@ -183,6 +205,73 @@ export function IndividualMatcher({ p, base }: { p: Profile; base: string }) {
         <h2 className="text-2xl font-bold">{w.title}</h2>
         <p className="mt-1 text-sm text-muted-foreground">{w.note}</p>
       </header>
+      <CatalogueGuard />
+      <SdgChoice
+        goals={goals}
+        value={goal}
+        onChange={(g) => {
+          setGoal(g);
+          setSelected(null);
+          setLimit(20);
+        }}
+      />
+      <label className="block text-sm font-semibold">
+        {lang === "ms"
+          ? "Susun pilihan"
+          : lang === "zh"
+            ? "排序方式"
+            : "Order choices"}
+        <select
+          className="ml-2 min-h-11 max-w-full rounded-xl border bg-card px-3 text-sm"
+          value={order}
+          onChange={(e) => {
+            setOrder(e.target.value);
+            setSelected(null);
+          }}
+        >
+          <option value="fit">
+            {lang === "ms"
+              ? "Padanan peribadi"
+              : lang === "zh"
+                ? "个人匹配"
+                : "Personal fit"}
+          </option>
+          <option value="growth">
+            {lang === "ms"
+              ? "Pertumbuhan pekerjaan (rujukan AS)"
+              : lang === "zh"
+                ? "就业增长（美国参考）"
+                : "Job growth (US reference)"}
+          </option>
+        </select>
+      </label>
+      {order === "growth" && (
+        <p className="text-xs text-muted-foreground">
+          <a
+            href={bls.url}
+            target="_blank"
+            rel="noreferrer"
+            className="underline"
+          >
+            {bls.source} · {bls.period}
+          </a>{" "}
+          · {bls.reviewedAt}.{" "}
+          {lang === "ms"
+            ? "Skor padanan peribadi kekal sama. Bukan ramalan Malaysia; pekerjaan khusus menggunakan rujukan SOC yang lebih luas."
+            : lang === "zh"
+              ? "个人匹配分数不变。并非马来西亚预测；细分职位采用较宽泛的SOC参考。"
+              : "Personal fit scores stay the same. Not a Malaysian forecast; specialisations use broader SOC references."}
+        </p>
+      )}
+      {!roles.length && (
+        <p role="status">
+          {lang === "ms"
+            ? "Tiada kerjaya untuk tema ini."
+            : lang === "zh"
+              ? "此主题暂无匹配职业。"
+              : "No careers match this theme."}
+        </p>
+      )}
       <h3 className="font-bold">{w.top}</h3>
       <div className="grid items-stretch gap-3 md:grid-cols-3">
         {roles.slice(0, 3).map((x, i) => (
@@ -208,6 +297,28 @@ export function IndividualMatcher({ p, base }: { p: Profile; base: string }) {
             <p className="inline-flex rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-bold text-primary">
               {w.interest}: {Math.round((x.breakdown.interest / 20) * 100)}%
             </p>
+            <p className="mt-2 text-sm font-bold">
+              {lang === "ms" ? "Padanan" : lang === "zh" ? "匹配" : "Fit"}:{" "}
+              {x.score}%
+            </p>
+            <SdgReason role={x.role} />
+            {order === "growth" && (
+              <p className="mt-2 text-xs">
+                BLS {bls.period}:{" "}
+                {bls.rows.find((r) => r.socCode === x.role.socCode)
+                  ?.growthPct ?? "—"}
+                %
+              </p>
+            )}
+            <a
+              className="mt-2 text-xs underline"
+              href={x.role.sourceUrl ?? "https://www.onetonline.org/"}
+              target="_blank"
+              rel="noreferrer"
+            >
+              O*NET · {x.role.sourceVersion} ·{" "}
+              {x.role.sourceFetchedAt?.slice(0, 10) ?? "—"}
+            </a>
             <AiExposure role={x.role} />
             <div className="my-3 flex gap-1">
               <RoleGoals role={x.role} />
@@ -346,7 +457,7 @@ function day(date: Date) {
 }
 export function IndividualPathway({ p, base }: { p: Profile; base: string }) {
   const { lang } = useT();
-  const errorText=useErrText();
+  const errorText = useErrText();
   const lw = learningWords[lang];
   const sw = studyWords[lang];
   const roleList = useListRoles();
@@ -517,6 +628,8 @@ export function IndividualPathway({ p, base }: { p: Profile; base: string }) {
             <p className="mt-1 text-sm">{sw.aiNote}</p>
             <p className="mt-1 text-xs text-muted-foreground">{sw.tools}</p>
           </div>
+          <SdgContribution />
+          <CatalogueGuard />
           <StudyCalendar
             courses={dated}
             start={start}
@@ -554,7 +667,26 @@ export function IndividualPathway({ p, base }: { p: Profile; base: string }) {
               {lw.calendarNote}
             </p>
           </div>
-          {base.startsWith("/tvet") && <div className="flex flex-wrap gap-3 rounded-xl bg-primary/5 p-3 text-sm font-bold"><span>{lang==="ms"?"Kursus wajib":lang==="zh"?"必修课程":"Compulsory courses"}: {items.filter(i=>i.compulsory).length}</span><span>{lang==="ms"?"Kursus peribadi":lang==="zh"?"个性化课程":"Personalised courses"}: {items.filter(i=>!i.compulsory).length}</span></div>}
+          {base.startsWith("/tvet") && (
+            <div className="flex flex-wrap gap-3 rounded-xl bg-primary/5 p-3 text-sm font-bold">
+              <span>
+                {lang === "ms"
+                  ? "Kursus wajib"
+                  : lang === "zh"
+                    ? "必修课程"
+                    : "Compulsory courses"}
+                : {items.filter((i) => i.compulsory).length}
+              </span>
+              <span>
+                {lang === "ms"
+                  ? "Kursus peribadi"
+                  : lang === "zh"
+                    ? "个性化课程"
+                    : "Personalised courses"}
+                : {items.filter((i) => !i.compulsory).length}
+              </span>
+            </div>
+          )}
           <ol className="space-y-4 border-l-2 border-primary/25 pl-5">
             {items.map((item, index) => {
               const dates = dated[index];
@@ -567,7 +699,21 @@ export function IndividualPathway({ p, base }: { p: Profile; base: string }) {
                   className={`scroll-mt-40 rounded-2xl border border-l-4 bg-card p-4 transition-shadow ${selectedCourse === item.courseId ? "ring-2 ring-primary ring-offset-2" : ""}`}
                   style={{ borderLeftColor: color }}
                 >
-                  {base.startsWith("/tvet") && <p className="mb-2 inline-flex rounded-full bg-primary/10 px-3 py-1 text-xs font-bold text-primary">{item.compulsory ? (lang==="ms"?"Kursus wajib":lang==="zh"?"必修课程":"Compulsory course") : (lang==="ms"?"Kursus peribadi":lang==="zh"?"个性化课程":"Personalised course")}</p>}
+                  {base.startsWith("/tvet") && (
+                    <p className="mb-2 inline-flex rounded-full bg-primary/10 px-3 py-1 text-xs font-bold text-primary">
+                      {item.compulsory
+                        ? lang === "ms"
+                          ? "Kursus wajib"
+                          : lang === "zh"
+                            ? "必修课程"
+                            : "Compulsory course"
+                        : lang === "ms"
+                          ? "Kursus peribadi"
+                          : lang === "zh"
+                            ? "个性化课程"
+                            : "Personalised course"}
+                    </p>
+                  )}
                   {advancing && (
                     <p className="mb-2 text-xs font-bold text-primary">
                       {sw.ai}
@@ -585,7 +731,18 @@ export function IndividualPathway({ p, base }: { p: Profile; base: string }) {
                     {item.title}
                   </a>
                   <p className="mt-2 text-sm">
-                    {item.provider} · RM {item.costMyr}
+                    {item.provider} ·{" "}
+                    {item.costMyr === 0
+                      ? lang === "ms"
+                        ? "Percuma"
+                        : lang === "zh"
+                          ? "免费"
+                          : "Free"
+                      : `RM ${item.costMyr}`}{" "}
+                    ·{" "}
+                    {item.durationWeeks == null
+                      ? w.unknown
+                      : `${item.durationWeeks} ${lang === "ms" ? "minggu" : lang === "zh" ? "周" : "weeks"}`}
                   </p>
                   <div className="mt-3 grid grid-cols-2 gap-2 text-xs">
                     <div className="rounded-lg bg-muted p-3">
@@ -699,7 +856,9 @@ export function IndividualPathway({ p, base }: { p: Profile; base: string }) {
                     startDate: start,
                     durationWeeks: estimates,
                   });
-                  navigate(`${base}/${p.id}/${base.startsWith("/me") ? "ready" : "intake"}`);
+                  navigate(
+                    `${base}/${p.id}/${base.startsWith("/me") ? "ready" : "intake"}`,
+                  );
                 } catch {}
               }}
             >
