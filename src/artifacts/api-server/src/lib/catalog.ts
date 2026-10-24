@@ -1,3 +1,4 @@
+import {skillSdgLinks} from "./skill-sdg";
 import { ROLE_TITLE_ZH } from "../data/roles-zh";
 import { liveCourses } from "./live-courses";
 import { openLearnCourses } from "../data/openlearn";
@@ -124,10 +125,11 @@ export function roleToApi(r: RoleView, courses?: CourseView[]) {
     sector: r.sector,
     riasecCode: r.riasecCode,
     skills: r.skills.map(s => {
-      if (!courses) return s;
+      const sdgLinks=skillSdgLinks(s.name);
+      if (!courses) return {...s,sdgLinks};
       const matching = courses.filter(c => courseFitsRole(c,r.title) && c.skills.some(k => k.id === s.skillId))
         .sort((a,b) => courseSkillFit(b,s) - courseSkillFit(a,s) || a.costMyr - b.costMyr);
-      return { ...s, courseCount: matching.length, ...(matching[0] ? {courseUrl: matching[0].url} : {}) };
+      return { ...s, sdgLinks, courseCount: matching.length, ...(matching[0] ? {courseUrl: matching[0].url} : {}) };
     }),
     aiExposure: r.aiExposure,
     aiUsagePctMy: r.aiUsagePctMy,

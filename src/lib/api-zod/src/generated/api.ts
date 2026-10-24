@@ -583,7 +583,23 @@ export const GetProfileMatchesResponseItem = zod.object({
   "category": zod.string(),
   "importance": zod.number().int().describe('1 (nice to have) to 3 (core)'),
   "courseCount": zod.number().int().optional().describe('Current catalogue courses mapped to this skill; absent if not checked'),
-  "courseUrl": zod.string().optional().describe('An actual matching provider course URL')
+  "courseUrl": zod.string().optional().describe('An actual matching provider course URL'),
+  "sdgLinks": zod.array(zod.object({
+  "code": zod.string(),
+  "target": zod.string(),
+  "basis": zod.enum(['topic', 'work-context']),
+  "sourceUrl": zod.string(),
+  "topic": zod.object({
+  "en": zod.string(),
+  "ms": zod.string(),
+  "zh": zod.string()
+}),
+  "reason": zod.object({
+  "en": zod.string(),
+  "ms": zod.string(),
+  "zh": zod.string()
+})
+})).optional()
 })),
   "aiExposure": zod.number().nullish().describe('Observed AI exposure 0-1'),
   "aiUsagePctMy": zod.number().nullish(),
@@ -605,7 +621,23 @@ export const GetProfileMatchesResponseItem = zod.object({
   "category": zod.string(),
   "importance": zod.number().int().describe('1 (nice to have) to 3 (core)'),
   "courseCount": zod.number().int().optional().describe('Current catalogue courses mapped to this skill; absent if not checked'),
-  "courseUrl": zod.string().optional().describe('An actual matching provider course URL')
+  "courseUrl": zod.string().optional().describe('An actual matching provider course URL'),
+  "sdgLinks": zod.array(zod.object({
+  "code": zod.string(),
+  "target": zod.string(),
+  "basis": zod.enum(['topic', 'work-context']),
+  "sourceUrl": zod.string(),
+  "topic": zod.object({
+  "en": zod.string(),
+  "ms": zod.string(),
+  "zh": zod.string()
+}),
+  "reason": zod.object({
+  "en": zod.string(),
+  "ms": zod.string(),
+  "zh": zod.string()
+})
+})).optional()
 })),
   "gapSkills": zod.array(zod.object({
   "skillId": zod.number().int(),
@@ -613,7 +645,23 @@ export const GetProfileMatchesResponseItem = zod.object({
   "category": zod.string(),
   "importance": zod.number().int().describe('1 (nice to have) to 3 (core)'),
   "courseCount": zod.number().int().optional().describe('Current catalogue courses mapped to this skill; absent if not checked'),
-  "courseUrl": zod.string().optional().describe('An actual matching provider course URL')
+  "courseUrl": zod.string().optional().describe('An actual matching provider course URL'),
+  "sdgLinks": zod.array(zod.object({
+  "code": zod.string(),
+  "target": zod.string(),
+  "basis": zod.enum(['topic', 'work-context']),
+  "sourceUrl": zod.string(),
+  "topic": zod.object({
+  "en": zod.string(),
+  "ms": zod.string(),
+  "zh": zod.string()
+}),
+  "reason": zod.object({
+  "en": zod.string(),
+  "ms": zod.string(),
+  "zh": zod.string()
+})
+})).optional()
 })),
   "marketDemand": zod.number().nullable().describe('Unavailable until a verified Malaysian demand series is configured; AI exposure is not demand.')
 })
@@ -623,6 +671,10 @@ export const GetProfileMatchesResponse = zod.array(GetProfileMatchesResponseItem
 export const GetProfilePlanParams = zod.object({
   "id": zod.coerce.number().int()
 })
+
+export const getProfilePlanResponseOneItemsItemFutureYearsMax = 10;
+
+
 
 export const GetProfilePlanResponse = zod.union([zod.object({
   "sdgGoal": zod.string().nullish(),
@@ -635,6 +687,10 @@ export const GetProfilePlanResponse = zod.union([zod.object({
   "totalCostMyr": zod.number().nullable(),
   "uncoveredSkills": zod.array(zod.string()),
   "items": zod.array(zod.object({
+  "futureScenario": zod.enum(['moderate', 'fast']).optional(),
+  "trendReviewedAt": zod.string().optional(),
+  "futureYears": zod.number().int().min(1).max(getProfilePlanResponseOneItemsItemFutureYearsMax).optional(),
+  "trendEvidence": zod.string().optional().describe('Server-recorded public trend inputs as JSON, not user CV data'),
   "compulsory": zod.boolean().optional().describe('Institution-required course for TVET learners'),
   "courseId": zod.number().int(),
   "title": zod.string(),
@@ -660,12 +716,20 @@ export const CreateProfilePlanParams = zod.object({
 })
 
 export const createProfilePlanBodySdgGoalRegExp = new RegExp('^([1-9]|1[0-7])$');
+export const createProfilePlanBodyFutureYearsMax = 10;
+
 
 
 export const CreateProfilePlanBody = zod.object({
   "roleId": zod.number().int(),
-  "sdgGoal": zod.string().regex(createProfilePlanBodySdgGoalRegExp).optional()
+  "sdgGoal": zod.string().regex(createProfilePlanBodySdgGoalRegExp).optional(),
+  "futureScenario": zod.enum(['moderate', 'fast']).optional(),
+  "futureYears": zod.number().int().min(1).max(createProfilePlanBodyFutureYearsMax).optional()
 })
+
+export const createProfilePlanResponseItemsItemFutureYearsMax = 10;
+
+
 
 export const CreateProfilePlanResponse = zod.object({
   "sdgGoal": zod.string().nullish(),
@@ -678,6 +742,10 @@ export const CreateProfilePlanResponse = zod.object({
   "totalCostMyr": zod.number().nullable(),
   "uncoveredSkills": zod.array(zod.string()),
   "items": zod.array(zod.object({
+  "futureScenario": zod.enum(['moderate', 'fast']).optional(),
+  "trendReviewedAt": zod.string().optional(),
+  "futureYears": zod.number().int().min(1).max(createProfilePlanResponseItemsItemFutureYearsMax).optional(),
+  "trendEvidence": zod.string().optional().describe('Server-recorded public trend inputs as JSON, not user CV data'),
   "compulsory": zod.boolean().optional().describe('Institution-required course for TVET learners'),
   "courseId": zod.number().int(),
   "title": zod.string(),
@@ -792,7 +860,23 @@ export const ListRolesResponseItem = zod.object({
   "category": zod.string(),
   "importance": zod.number().int().describe('1 (nice to have) to 3 (core)'),
   "courseCount": zod.number().int().optional().describe('Current catalogue courses mapped to this skill; absent if not checked'),
-  "courseUrl": zod.string().optional().describe('An actual matching provider course URL')
+  "courseUrl": zod.string().optional().describe('An actual matching provider course URL'),
+  "sdgLinks": zod.array(zod.object({
+  "code": zod.string(),
+  "target": zod.string(),
+  "basis": zod.enum(['topic', 'work-context']),
+  "sourceUrl": zod.string(),
+  "topic": zod.object({
+  "en": zod.string(),
+  "ms": zod.string(),
+  "zh": zod.string()
+}),
+  "reason": zod.object({
+  "en": zod.string(),
+  "ms": zod.string(),
+  "zh": zod.string()
+})
+})).optional()
 })),
   "aiExposure": zod.number().nullish().describe('Observed AI exposure 0-1'),
   "aiUsagePctMy": zod.number().nullish(),
@@ -826,7 +910,23 @@ export const GetRoleResponse = zod.object({
   "category": zod.string(),
   "importance": zod.number().int().describe('1 (nice to have) to 3 (core)'),
   "courseCount": zod.number().int().optional().describe('Current catalogue courses mapped to this skill; absent if not checked'),
-  "courseUrl": zod.string().optional().describe('An actual matching provider course URL')
+  "courseUrl": zod.string().optional().describe('An actual matching provider course URL'),
+  "sdgLinks": zod.array(zod.object({
+  "code": zod.string(),
+  "target": zod.string(),
+  "basis": zod.enum(['topic', 'work-context']),
+  "sourceUrl": zod.string(),
+  "topic": zod.object({
+  "en": zod.string(),
+  "ms": zod.string(),
+  "zh": zod.string()
+}),
+  "reason": zod.object({
+  "en": zod.string(),
+  "ms": zod.string(),
+  "zh": zod.string()
+})
+})).optional()
 })),
   "aiExposure": zod.number().nullish().describe('Observed AI exposure 0-1'),
   "aiUsagePctMy": zod.number().nullish(),

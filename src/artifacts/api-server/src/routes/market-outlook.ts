@@ -1,3 +1,6 @@
+import {roleTrendReferences} from "../lib/workforce-trends";
+import {skillObservations} from "../lib/skill-observations";
+import {scenarioAssumptions,type FutureScenario} from "../lib/future-scenarios";
 import {skillDemand} from "../lib/skill-demand";
 import {explanationInput,parseScenarioExplanation,scenarioValue,scenarioPrompt,assertScenarioNumbers} from "../lib/scenario-explanation";
 import { Router } from "express";
@@ -161,6 +164,12 @@ function payload(
     news: c.context.news,
   };
 }
+router.get("/market/signals",async(_req,res)=>{
+ const [roles,courses,observation,news]=await Promise.all([loadRoles(),loadCourses(),skillObservations().catch(()=>null),loadCareerNews().catch(()=>null)]);
+ const references=roleTrendReferences(selfDirectedRoles(roles,courses)).map(ref=>{const role=roles.find(r=>r.id===ref.roleId)!;const shifts=role.skills.filter(s=>s.category!=="Human").map(s=>observation?.skills.find((k:any)=>k.id===s.skillId)?.delta).filter((v:unknown):v is number=>typeof v==="number");return {...ref,observedShift:shifts.length?shifts.reduce((a,b)=>a+b,0)/shifts.length:null}});
+ res.json({references,observation:observation?{day:observation.current.day,total:observation.current.total,previousDay:observation.previous?.day??null}:null,news:news?{count:news.articles.length,fetchedAt:news.fetchedAt}:null,checkedAt:new Date().toISOString(),method:"Personal fit stays separate. Future priority: 80% fit + 20% bounded index (50 + 2*scenario US growth + 2*mean comparable Malaysia skill-share delta); unknown references retain fit. Scenario assumptions are editorial, not calibrated Malaysian forecasts."});
+});
+router.get("/market/skill-observations",async(req,res)=>{try{res.json(await skillObservations())}catch(err){req.log.warn({err},"Skill observation unavailable");res.status(503).json({error:"jobs_unavailable"})}});
 router.get("/market/outlook", async (req, res) => {
   const horizon = z.coerce
     .number()
@@ -231,7 +240,7 @@ router.post("/market/outlook", async (req, res) => {
   }
 });
 
-async function explanationContext(mode:"ai"|"demand"|"skills",years:number,ids?:number[]){
+async function explanationContext(mode:"ai"|"demand"|"skills",years:number,ids?:number[],scenario:FutureScenario="moderate"){
  const c=await contextFor(10),ranked=payload(c,await cached(c.hash));
  const allSkills=mode==="skills"?(await skillDemand()).skills:[];
  const selectedSkills=ids?.length?ids.map(id=>allSkills.find(s=>s.id===id)):allSkills.slice(0,3);
@@ -239,10 +248,10 @@ async function explanationContext(mode:"ai"|"demand"|"skills",years:number,ids?:
  if((mode==="skills"?selectedSkills:selectedRoles).some(r=>!r))throw new z.ZodError([{code:"custom",path:["ids"],message:"Unknown displayed item"}]);
  const raw=mode==="skills"?selectedSkills.map(s=>({name:s!.name,baseline:s!.count})):
   selectedRoles.map(r=>({name:r!.title!,nameMs:r!.titleMs,nameZh:r!.titleZh,baseline:mode==="ai"?r!.aiExposure!:r!.projection?.growthPct??null}));
- const rows=raw.map(r=>({...r,previous:scenarioValue(mode,r.baseline,years-1),selected:scenarioValue(mode,r.baseline,years)}));
+ const rows=raw.map(r=>({...r,previous:scenarioValue(mode,r.baseline,years-1,scenario),selected:scenarioValue(mode,r.baseline,years,scenario)}));
  const references=[...c.references,...c.context.news.articles.slice(0,12).map(a=>({label:`${a.region === "my"?"Malaysia-related":"Global"} · ${a.domain}: ${a.title}`,url:a.url,dataDate:a.seenAt.slice(0,10)}))];
- const context={mode,baseYear:c.context.baseYear,previousYear:c.context.baseYear+years-1,selectedYear:c.context.baseYear+years,years,rows,
-  formula:mode==="ai"?"100 * (1 - (1 - observed exposure) * 0.95^years); assumes 5% of remaining tasks each year":mode==="demand"?"100 * ((1 + supplied BLS ten-year growth / 100)^(years/10) - 1); smooth annual interpolation, not annual BLS forecasts":"baseline learning-priority index * 1.05^years; assumed 5% yearly increase, not employer percentage",
+ const context={mode,scenario,assumptions:scenarioAssumptions[scenario],baseYear:c.context.baseYear,previousYear:c.context.baseYear+years-1,selectedYear:c.context.baseYear+years,years,rows,
+  formula:`Use scenario ${scenario}; annual remaining-task pace ${scenarioAssumptions[scenario].pace}, reference growth exponent multiplier ${scenarioAssumptions[scenario].growthMultiplier}. AI=100*(1-(1-baseline)*(1-pace)^years); demand=100*((1+growth/100)^(years/10*multiplier)-1); skills=baseline*(1+pace)^years. Editorial assumptions, not calibrated forecasts.`,
   newsStale:c.context.news.stale,newsCheckedAt:c.context.news.fetchedAt,references:references.map((r,id)=>({id,...r}))};
  return {context,references,hash:hashInput("scenario-explanation-v1",context)};
 }
@@ -251,9 +260,9 @@ function explanationResponse(c:Awaited<ReturnType<typeof explanationContext>>,ro
  const saved=row?parseScenarioExplanation(row.content,c.references.length):null;
  return {mode:c.context.mode,years:c.context.years,baseYear:c.context.baseYear,rows:c.context.rows,generated:!!saved,translations:saved?.translations??null,sources:saved?saved.referenceIds.map(id=>c.references[id]):c.references.slice(0,4),generatedAt:row?.createdAt??null,newsStale:c.context.newsStale};
 }
-router.get("/market/scenario-explanation",async(req,res)=>{const input=explanationInput.parse(req.query),c=await explanationContext(input.mode,input.years,input.ids);res.setHeader("Cache-Control","no-store");res.json(explanationResponse(c,await savedExplanation(c.hash)));});
+router.get("/market/scenario-explanation",async(req,res)=>{const input=explanationInput.parse(req.query),c=await explanationContext(input.mode,input.years,input.ids,input.scenario);res.setHeader("Cache-Control","no-store");res.json(explanationResponse(c,await savedExplanation(c.hash)));});
 router.post("/market/scenario-explanation",async(req,res)=>{
- const input=explanationInput.parse(req.body),c=await explanationContext(input.mode,input.years,input.ids),existing=await savedExplanation(c.hash);
+ const input=explanationInput.parse(req.body),c=await explanationContext(input.mode,input.years,input.ids,input.scenario),existing=await savedExplanation(c.hash);
  if(existing){res.json(explanationResponse(c,existing));return;}
  const rate=consumeAiRequest(req.user?"user":"guest",String(req.user?.id??req.guestToken??req.ip));if(!rate.allowed){res.status(429).json({error:"ai_rate_limited"});return;}
  let job=running.get(c.hash);

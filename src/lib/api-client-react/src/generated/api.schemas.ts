@@ -278,6 +278,35 @@ export interface Skill {
   category: string;
 }
 
+export type RoleSkillSdgLinksItemBasis = typeof RoleSkillSdgLinksItemBasis[keyof typeof RoleSkillSdgLinksItemBasis];
+
+
+export const RoleSkillSdgLinksItemBasis = {
+  topic: 'topic',
+  'work-context': 'work-context',
+} as const;
+
+export type RoleSkillSdgLinksItemTopic = {
+  en: string;
+  ms: string;
+  zh: string;
+};
+
+export type RoleSkillSdgLinksItemReason = {
+  en: string;
+  ms: string;
+  zh: string;
+};
+
+export type RoleSkillSdgLinksItem = {
+  code: string;
+  target: string;
+  basis: RoleSkillSdgLinksItemBasis;
+  sourceUrl: string;
+  topic: RoleSkillSdgLinksItemTopic;
+  reason: RoleSkillSdgLinksItemReason;
+};
+
 export interface RoleSkill {
   skillId: number;
   name: string;
@@ -288,6 +317,7 @@ export interface RoleSkill {
   courseCount?: number;
   /** An actual matching provider course URL */
   courseUrl?: string;
+  sdgLinks?: RoleSkillSdgLinksItem[];
 }
 
 export type RoleMyColStatus = typeof RoleMyColStatus[keyof typeof RoleMyColStatus];
@@ -376,7 +406,24 @@ export interface SdgTarget {
   description: string;
 }
 
+export type PlanItemFutureScenario = typeof PlanItemFutureScenario[keyof typeof PlanItemFutureScenario];
+
+
+export const PlanItemFutureScenario = {
+  moderate: 'moderate',
+  fast: 'fast',
+} as const;
+
 export interface PlanItem {
+  futureScenario?: PlanItemFutureScenario;
+  trendReviewedAt?: string;
+  /**
+     * @minimum 1
+     * @maximum 10
+     */
+  futureYears?: number;
+  /** Server-recorded public trend inputs as JSON, not user CV data */
+  trendEvidence?: string;
   /** Institution-required course for TVET learners */
   compulsory?: boolean;
   courseId: number;
@@ -418,10 +465,24 @@ export interface Plan {
   createdAt: string;
 }
 
+export type PlanInputFutureScenario = typeof PlanInputFutureScenario[keyof typeof PlanInputFutureScenario];
+
+
+export const PlanInputFutureScenario = {
+  moderate: 'moderate',
+  fast: 'fast',
+} as const;
+
 export interface PlanInput {
   roleId: number;
   /** @pattern ^([1-9]|1[0-7])$ */
   sdgGoal?: string;
+  futureScenario?: PlanInputFutureScenario;
+  /**
+     * @minimum 1
+     * @maximum 10
+     */
+  futureYears?: number;
 }
 
 export interface SourceRef {

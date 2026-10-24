@@ -1,21 +1,23 @@
+import {scenarioValue,scenarioAssumptions,type FutureScenario} from "./future-scenarios";
 import type {CareerNews} from "./career-news";
 import { hashInput } from "./agents";
 import type { companyData } from "./company";
 
 type Company = Awaited<ReturnType<typeof companyData>>;
 /** No names, employee IDs, raw CVs or cross-company records enter the advisor context. */
-export function companyFutureContext(company: Company, years: number, news?:CareerNews) {
+export function companyFutureContext(company: Company, years: number, news?:CareerNews,scenario:FutureScenario="moderate") {
   return {
     ...company,
     members: company.members.map(({ id, name, ...m }) => m),
     updatedAt: undefined,
     years,
+    scenario,
     news: news?{articles:news.articles.slice(0,12),stale:news.stale}:null,
-    yearComparison: company.portal === "tvet" ? {previousYear:2026+years-1,selectedYear:2026+years,previous:Math.min(100,(company.institutionHistory?.annual.at(-1)?.rate??0)+2*(years-1)),selected:Math.min(100,(company.institutionHistory?.annual.at(-1)?.rate??0)+2*years),synthetic:true} : {previousYear:new Date().getFullYear()+years-1,selectedYear:new Date().getFullYear()+years,previous:company.avgExposure==null?null:100*(1-(1-company.avgExposure)*.95**(years-1)),selected:company.avgExposure==null?null:100*(1-(1-company.avgExposure)*.95**years)},
+    yearComparison: company.portal === "tvet" ? {previousYear:2026+years-1,selectedYear:2026+years,previous:Math.min(100,(company.institutionHistory?.annual.at(-1)?.rate??0)+(scenario==="fast"?4:2)*(years-1)),selected:Math.min(100,(company.institutionHistory?.annual.at(-1)?.rate??0)+(scenario==="fast"?4:2)*years),synthetic:true} : {previousYear:new Date().getFullYear()+years-1,selectedYear:new Date().getFullYear()+years,previous:company.avgExposure==null?null:scenarioValue("ai",company.avgExposure,years-1,scenario),selected:company.avgExposure==null?null:scenarioValue("ai",company.avgExposure,years,scenario)},
     baseYear: new Date().getFullYear(),
-    graduateEmploymentScenario: company.portal === "tvet" ? {baseYear:2026,annualPercentagePointAssumption:2,cap:100,synthetic:true} : null,
+    graduateEmploymentScenario: company.portal === "tvet" ? {baseYear:2026,annualPercentagePointAssumption:scenario==="fast"?4:2,cap:100,synthetic:true} : null,
     assumption:
-      "Illustrative adoption scenario only: each year AI overlaps 5% of remaining tasks; no empirical company forecast, work-capacity or job-loss estimate. Skill gaps and completions are current observations, not future measurements.",
+      `Illustrative ${scenario} scenario: annual remaining-task overlap rate ${scenarioAssumptions[scenario].pace*100}%. Graduate example adds ${scenario==="fast"?4:2} percentage points/year. Assumptions, not measured company forecasts. Gaps and completions are current observations.`,
     suggestedKpis:
       "Label every target as a proposal, not a measured outcome. Use course completion, voluntary practice tasks and assessment of relevant gaps; never fabricated ROI.",
   };
@@ -76,11 +78,11 @@ export function generateDeterministicCompanyAnalysis(
   if(context.portal === "tvet") {
     const rows=context.institutionHistory?.annual ?? [];
     const baseline=rows.at(-1)?.rate;
-    const scenario=baseline==null?null:Math.min(100,baseline+2*years);
+    const scenario=baseline==null?null:Math.min(100,baseline+(context.scenario==="fast"?4:2)*years);
     return {
-      en:`### Synthetic graduate example\nThe fictional 2026 employment rate is ${baseline?.toFixed(1)??"unknown"}%. With an assumed +2 percentage points each year, the ${2026+years} example is ${scenario?.toFixed(1)??"unknown"}%. These are not this institution's measured results.\n\n### Current learning\nThere are ${context.profileCount} student records and ${context.completedCourses}/${context.totalCourses} course check-ins. Keep compulsory learning and personalised career practice visible.\n\n### Proposed review\nReview required-course completion and a small work sample every month. Set targets after checking the baseline; do not promise employment.`,
-      ms:`### Contoh graduan sintetik\nKadar pekerjaan rekaan 2026 ialah ${baseline?.toFixed(1)??"tidak diketahui"}%. Dengan andaian +2 mata peratus setahun, contoh ${2026+years} ialah ${scenario?.toFixed(1)??"tidak diketahui"}%. Ini bukan hasil sebenar institusi ini.\n\n### Pembelajaran semasa\nTerdapat ${context.profileCount} rekod pelajar dan ${context.completedCourses}/${context.totalCourses} semakan selesai kursus. Bezakan kursus wajib dan latihan kerjaya peribadi.\n\n### Semakan dicadangkan\nSemak penyelesaian kursus wajib dan satu hasil kerja kecil setiap bulan. Tetapkan sasaran selepas menyemak asas; jangan janjikan pekerjaan.`,
-      zh:`### 合成毕业生示例\n虚构的2026年就业率为${baseline?.toFixed(1)??"未知"}%。假设每年增加2个百分点，${2026+years}年的示例为${scenario?.toFixed(1)??"未知"}%。这些并非本机构实测结果。\n\n### 当前学习\n共有${context.profileCount}条学生记录，课程完成自报为${context.completedCourses}/${context.totalCourses}。请区分必修学习与个性化职业练习。\n\n### 建议回顾\n每月回顾必修完成情况和一份小型作品。核对基准后再设目标，不承诺就业。`,
+      en:`### Synthetic graduate example\nThe fictional 2026 employment rate is ${baseline?.toFixed(1)??"unknown"}%. With an assumed +${context.scenario==="fast"?4:2} percentage points each year, the ${2026+years} example is ${scenario?.toFixed(1)??"unknown"}%. These are not this institution's measured results.\n\n### Current learning\nThere are ${context.profileCount} student records and ${context.completedCourses}/${context.totalCourses} course check-ins. Keep compulsory learning and personalised career practice visible.\n\n### Proposed review\nReview required-course completion and a small work sample every month. Set targets after checking the baseline; do not promise employment.`,
+      ms:`### Contoh graduan sintetik\nKadar pekerjaan rekaan 2026 ialah ${baseline?.toFixed(1)??"tidak diketahui"}%. Dengan andaian +${context.scenario==="fast"?4:2} mata peratus setahun, contoh ${2026+years} ialah ${scenario?.toFixed(1)??"tidak diketahui"}%. Ini bukan hasil sebenar institusi ini.\n\n### Pembelajaran semasa\nTerdapat ${context.profileCount} rekod pelajar dan ${context.completedCourses}/${context.totalCourses} semakan selesai kursus. Bezakan kursus wajib dan latihan kerjaya peribadi.\n\n### Semakan dicadangkan\nSemak penyelesaian kursus wajib dan satu hasil kerja kecil setiap bulan. Tetapkan sasaran selepas menyemak asas; jangan janjikan pekerjaan.`,
+      zh:`### 合成毕业生示例\n虚构的2026年就业率为${baseline?.toFixed(1)??"未知"}%。假设每年增加${context.scenario==="fast"?4:2}个百分点，${2026+years}年的示例为${scenario?.toFixed(1)??"未知"}%。这些并非本机构实测结果。\n\n### 当前学习\n共有${context.profileCount}条学生记录，课程完成自报为${context.completedCourses}/${context.totalCourses}。请区分必修学习与个性化职业练习。\n\n### 建议回顾\n每月回顾必修完成情况和一份小型作品。核对基准后再设目标，不承诺就业。`,
     };
   }
   if(context.avgExposure==null)return {
@@ -89,7 +91,7 @@ export function generateDeterministicCompanyAnalysis(
    zh:'### 没有匹配的AI观察\n缺少匹配的暴露度基准，无法计算AI数值情景。请核对当前学习差距，参考公开链接规划小型练习。建议目标并非实测结果。'
   };
   const currentExposure = context.avgExposure;
-  const projectedExposure = 1 - (1 - currentExposure) * Math.pow(0.95, years);
+  const projectedExposure = scenarioValue("ai",currentExposure,years,context.scenario)!/100;
   const topSkills =
     context.topGaps && context.topGaps.length
       ? context.topGaps

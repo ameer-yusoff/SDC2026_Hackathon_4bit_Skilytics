@@ -13,7 +13,7 @@ export const institutionWords = {
     future: "Grads Future",
     scenario: "Employment · planning example",
     scenarioNote:
-      "Example only: add 2 percentage points per year to the synthetic 2026 rate, capped at 100%. Not a forecast.",
+      "Example only: add 2 or 4 percentage points per year under the selected assumption to the synthetic 2026 rate, capped at 100%. Not a forecast.",
     baseline: "Synthetic 2026 employment",
     years: "Years ahead",
     advice: "Graduate learning advice",
@@ -62,7 +62,7 @@ export const institutionWords = {
     future: "Masa depan graduan",
     scenario: "Pekerjaan · contoh perancangan",
     scenarioNote:
-      "Contoh sahaja: tambah 2 mata peratus setahun kepada kadar sintetik 2026, sehingga 100%. Bukan ramalan.",
+      "Contoh sahaja: tambah 2 atau 4 mata peratus setahun mengikut andaian dipilih kepada kadar sintetik 2026, sehingga 100%. Bukan ramalan.",
     baseline: "Kadar pekerjaan sintetik 2026",
     years: "Tahun ke hadapan",
     advice: "Cadangan pembelajaran graduan",
@@ -110,7 +110,7 @@ export const institutionWords = {
     future: "毕业生未来",
     scenario: "就业 · 规划示例",
     scenarioNote:
-      "仅为示例：在合成2026年就业率上每年增加2个百分点，最高100%。不是预测。",
+      "仅为示例：在合成2026年就业率上按所选假设每年增加2或4个百分点，最高100%。不是预测。",
     baseline: "合成2026年就业率",
     years: "未来年数",
     advice: "毕业生学习建议",

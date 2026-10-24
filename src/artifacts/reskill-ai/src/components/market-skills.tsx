@@ -1,3 +1,6 @@
+import {SkillTrends} from "./skill-trends";
+import {ScenarioComparison,useFutureScenario} from "./future-scenario";
+import {scenarioValue} from "../../../api-server/src/lib/future-scenarios";
 import { ScenarioReason } from "./scenario-reason";
 import { MarketGuide } from "./portal-guides";
 import { ChangingValue, HorizonSlider } from "./projection-feedback";
@@ -23,7 +26,7 @@ export const jobWords = {
       "No Malaysian listings with recognised skills in the current sample. No ranking can be supported yet.",
     years: "Years ahead",
     scenario:
-      "Planning example: index grows 5% per year. This is an assumption, not a forecast.",
+      "Planning example: the selected assumption grows the index by 5% or 10% per year. Not a forecast.",
     now: "Baseline index",
     next: "Scenario index",
     jobs: "Find a job",
@@ -45,7 +48,7 @@ export const jobWords = {
       "Tiada iklan Malaysia dengan kemahiran dikenal pasti dalam sampel semasa. Belum ada bukti untuk susunan kedudukan.",
     years: "Tahun ke hadapan",
     scenario:
-      "Contoh perancangan: indeks meningkat 5% setahun. Ini andaian, bukan ramalan.",
+      "Contoh perancangan: andaian dipilih menaikkan indeks 5% atau 10% setahun. Bukan ramalan.",
     now: "Indeks asas",
     next: "Indeks senario",
     jobs: "Cari pekerjaan",
@@ -65,7 +68,7 @@ export const jobWords = {
     note: "已审核的马来西亚参考数据：DOSM JMI 2025年第4季度的五个选定职业，映射至有课程的O*NET技能。这是学习优先级指数，并非招聘数量。情景值可能超过100。",
     empty: "当前样本没有可识别技能的马来西亚职位，暂时无法提供有依据的排名。",
     years: "未来年数",
-    scenario: "规划示例：假设指数每年增长5%。这是假设，不是预测。",
+    scenario: "规划示例：所选假设每年增长5%或10%，并非预测。",
     now: "基准指数",
     next: "情景指数",
     jobs: "寻找工作",
@@ -87,6 +90,7 @@ export function MarketSkills({
   const company = useCompany(employer);
   const { lang } = useT(),
     w = jobWords[lang];
+  const [scenario]=useFutureScenario();
   const [years, setYears] = useState(3),
     [limit, setLimit] = useState(10);
   const q = useQuery({
@@ -105,6 +109,7 @@ export function MarketSkills({
       title={hideHeader ? undefined : w.title}
       meta={hideHeader ? undefined : w.note}
     >
+      <SkillTrends/>
       <HorizonSlider
         id={employer ? "company-skill-years" : "skill-years"}
         years={years}
@@ -112,6 +117,7 @@ export function MarketSkills({
         label={w.years}
       />
       <p className="mb-4 text-xs text-muted-foreground">{w.scenario}</p>
+      <ScenarioComparison mode="skills" years={years} rows={q.data?.skills.slice(0,3).map(s=>({name:skillLabel(s.name,lang),baseline:s.count}))??[]}/>
       <div className="mb-4"><ScenarioReason mode="skills" years={years} ids={q.data?.skills.slice(0,3).map(s=>s.id)} evidenceKey={JSON.stringify(q.data?.skills.slice(0,3))}/></div>
       {q.isLoading ? (
         <Rows n={3} />
@@ -143,7 +149,7 @@ export function MarketSkills({
                     {w.next} · {new Date().getFullYear() + years}
                   </p>
                   <ChangingValue
-                    value={(s.count * 1.05 ** years).toFixed(1)}
+                    value={scenarioValue("skills",s.count,years,scenario)!.toFixed(1)}
                     className="my-1 text-4xl font-extrabold text-primary"
                   />
                   <p className="text-xs text-muted-foreground">
@@ -167,7 +173,7 @@ export function MarketSkills({
                     {w.next} · {new Date().getFullYear() + years}
                   </p>
                   <ChangingValue
-                    value={(s.count * 1.05 ** years).toFixed(1)}
+                    value={scenarioValue("skills",s.count,years,scenario)!.toFixed(1)}
                     className="text-2xl font-extrabold text-primary"
                   />
                   <p className="text-[10px] text-muted-foreground">

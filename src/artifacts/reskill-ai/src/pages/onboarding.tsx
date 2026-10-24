@@ -766,21 +766,21 @@ function CvStep({
             ? "Terus isi data contoh tanpa AI. Upload CV sendiri masih dibaca AI."
             : lang === "zh" ? "直接填写示例资料，不调用 AI。上传自己的简历仍由 AI 读取。" : "Fill sample details instantly, without AI. Your own CV upload still uses AI."}
         </p>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
-          <SyntheticBadge/>
+        <div className="mb-3 [&>p]:w-full [&>p]:rounded-xl"><SyntheticBadge/></div>
+        <div className="grid grid-cols-3 gap-2.5">
           {demoItems.map((demo) => {
             const Icon = demo.icon;
             return (
               <div
                 key={demo.id}
-                className="group relative flex items-stretch rounded-xl border border-border/80 bg-background/90 hover:border-primary/80 hover:bg-background transition-all shadow-xs overflow-hidden"
+                className="group relative flex flex-col sm:flex-row min-w-0 items-stretch rounded-xl border border-border/80 bg-background/90 hover:border-primary/80 hover:bg-background transition-all shadow-xs overflow-hidden"
               >
                 {/* Main card button: Click to load demo and advance to next step */}
                 <button
                   type="button"
                   disabled={up.isPending || demoBusy}
                   onClick={() => loadDemoCv(demo.id)}
-                  className="flex-1 py-2.5 pl-3 pr-1.5 flex flex-col items-start gap-1 text-left cursor-pointer transition-colors hover:bg-primary/[0.04] disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none"
+                  className="min-w-0 flex-1 py-2.5 pl-2 sm:pl-3 pr-1.5 flex flex-col items-start gap-1 text-left cursor-pointer transition-colors hover:bg-primary/[0.04] disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none"
                   data-testid={`button-demo-cv-${demo.id}`}
                   title={lang === "ms" ? `Gunakan ${demo.title} & teruskan` : `Use ${demo.title} & proceed`}
                 >
@@ -800,7 +800,7 @@ function CvStep({
                     e.stopPropagation();
                     setPreviewDemo(demo);
                   }}
-                  className="px-2.5 flex items-center justify-center text-muted-foreground/70 hover:text-primary hover:bg-primary/10 border-l border-border/50 transition-colors disabled:opacity-50"
+                  className="min-h-11 sm:min-w-11 px-2.5 flex items-center justify-center text-muted-foreground/70 hover:text-primary hover:bg-primary/10 border-t sm:border-t-0 sm:border-l border-border/50 transition-colors disabled:opacity-50"
                   title={lang === "ms" ? `Pratonton dokumen asal ${demo.title}` : `Preview original ${demo.title} document`}
                   aria-label={`Preview ${demo.title}`}
                 >

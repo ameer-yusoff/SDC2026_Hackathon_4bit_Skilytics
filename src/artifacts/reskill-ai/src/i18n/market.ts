@@ -37,7 +37,7 @@ export const marketWords = {
     demandMetric: "Job growth scenario",
     compared: "Compared with today",
     aiAssumption:
-      "Example pace: AI reaches 5% of the remaining tasks each year. This is an app assumption, not a research finding.",
+      "Example pace: AI reaches 5% or 10% of remaining tasks each year, under the selected assumption. This is an app assumption, not a research finding.",
     demandAssumption:
       "Uses a steady yearly pace from BLS 2025–2035 US growth. Years beyond 2035 extend that pace; actual hiring may differ.",
     scenario: "Illustrative scenario",
@@ -106,7 +106,7 @@ export const marketWords = {
     demandMetric: "Senario pertumbuhan kerja",
     compared: "Berbanding hari ini",
     aiAssumption:
-      "Kadar contoh: AI meliputi 5% tugasan yang masih berbaki setiap tahun. Ini andaian aplikasi, bukan dapatan kajian.",
+      "Kadar contoh: AI meliputi 5% atau 10% baki tugasan setiap tahun mengikut andaian dipilih. Ini andaian aplikasi, bukan dapatan kajian.",
     demandAssumption:
       "Menggunakan kadar tahunan tetap daripada pertumbuhan AS BLS 2025–2035. Selepas 2035, kadar itu dilanjutkan; pengambilan sebenar mungkin berbeza.",
     scenario: "Senario ilustrasi",
@@ -173,7 +173,7 @@ export const marketWords = {
     demandMetric: "就业增长情景",
     compared: "与现在相比",
     aiAssumption:
-      "示例速度：AI 每年覆盖剩余任务的 5%。这是应用假设，并非研究结论。",
+      "示例速度：按所选假设 AI 每年覆盖剩余任务的 5% 或 10%。这是应用假设，并非研究结论。",
     demandAssumption:
       "按 BLS 美国 2025–2035 增长数据计算固定年率。2035 年之后延续该速度；实际招聘可能不同。",
     scenario: "假设情景",

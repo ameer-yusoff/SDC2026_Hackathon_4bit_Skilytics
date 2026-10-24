@@ -172,7 +172,7 @@ router.post("/enterprise/employees/:id/summary", async (req, res) => {
 router.get("/enterprise/future/analysis", async (req, res) => {
   const years = z.coerce.number().int().min(1).max(10).parse(req.query.years ?? 3);
   const company = await companyData(req);
-  const context = companyFutureContext(company, years, await loadCareerNews());
+  const context = companyFutureContext(company, years, await loadCareerNews(), z.enum(["moderate","fast"]).default("moderate").parse(req.method==="GET"?req.query.scenario:req.body.scenario));
   const inputHash = companyAnalysisHash(req.user!.organization, context);
   try {
     const [cached] = await db
@@ -207,7 +207,7 @@ router.post("/enterprise/future/analysis", async (req, res) => {
     .object({ years: z.number().int().min(1).max(10) })
     .parse(req.body);
   const company = await companyData(req);
-  const context = companyFutureContext(company, years, await loadCareerNews());
+  const context = companyFutureContext(company, years, await loadCareerNews(), z.enum(["moderate","fast"]).default("moderate").parse(req.method==="GET"?req.query.scenario:req.body.scenario));
   const inputHash = companyAnalysisHash(req.user!.organization, context);
   try {
     const result = await db.transaction(async (tx) => {
@@ -245,7 +245,7 @@ router.post("/enterprise/future/analysis", async (req, res) => {
       try {
         const out = await chat(
           "main",
-          policy + (context.portal === "tvet" ? " For TVET context, graduate outcome history is a synthetic reference template, never actual institutional employment evidence. The employment scenario assumes +2 percentage points per year capped at 100; state this is an illustration. Refer to students, institution and graduate learning, not employees or company performance. Distinguish institution-required courses from personalised courses." : "") +
+          policy + (context.portal === "tvet" ? " For TVET context, graduate outcome history is a synthetic reference template, never actual institutional employment evidence. The employment scenario uses the annualPercentagePointAssumption supplied in context, capped at 100; state this is an illustration. Refer to students, institution and graduate learning, not employees or company performance. Distinguish institution-required courses from personalised courses." : "") +
             " Explain the supplied yearComparison before/after values and their formula. Round percentages to one decimal. Use dated career, technology and AI headline signals only as tentative context; cite the supplied publisher/date and use its exact link, never claim headlines prove scenario percentages. Never invent future events; uncertainty increases with the horizon. If news is stale or absent say so. Give exactly 4 concise sections: what is changing; learning priorities; 3 proposed measurable organisation KPIs with time windows; limitations and next review. Differentiate observed data from the illustrative scenario and suggested targets. Use everyday ELI5 words; explain technical terms with a simple example. Under 180 words per language.",
           JSON.stringify(context),
           { agent: "analyst", timeoutMs: 30_000 },
@@ -389,7 +389,7 @@ router.post("/enterprise/future/chat", async (req, res) => {
     return;
   }
   const company = await companyData(req);
-  const context = companyFutureContext(company, body.years, await loadCareerNews());
+  const context = companyFutureContext(company, body.years, await loadCareerNews(),z.enum(["moderate","fast"]).default("moderate").parse(req.body.scenario));
   if (
     analysis.horizonYears !== body.years ||
     analysis.inputHash !== companyAnalysisHash(req.user!.organization, context)

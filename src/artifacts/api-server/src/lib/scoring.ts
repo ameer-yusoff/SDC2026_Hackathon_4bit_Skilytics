@@ -1,3 +1,4 @@
+import {ROLE_TITLE_ZH} from "../data/roles-zh";
 import type { SkillRow, StoredProfileSkill, StoredRiasec } from "@workspace/db";
 import type { CourseView, RoleSkillView, RoleView } from "./catalog";
 import { hasCurrentRiasec } from "./riasec-scoring";
@@ -69,8 +70,9 @@ export function scoreRole(profile: ProfileForScoring, role: RoleView, skills: Sk
     : WEIGHTS.interest / 2;
 
   const text = `${profile.goals ?? ""} ${profile.currentRole ?? ""}`.toLowerCase();
-  const words = `${role.title} ${role.titleMs} ${role.sector}`.toLowerCase().split(/[^a-z]+/).filter((w) => w.length > 3);
-  const mentioned = words.some((w) => text.includes(w));
+  const normalize=(v:string)=>v.normalize("NFKC").toLowerCase().replace(/[\s/\-]+/g," ").trim();
+  const intent=normalize(text);
+  const mentioned = [role.title,role.titleMs,ROLE_TITLE_ZH[role.title]].filter((v):v is string=>!!v).some(v=>intent.includes(normalize(v)));
   const preferences = mentioned ? WEIGHTS.preferences : WEIGHTS.preferences / 2;
 
   const gapHours = gaps.reduce((a, g) => a + cheapestCourseHours(g.skillId, courses, profile.budgetMyr), 0);

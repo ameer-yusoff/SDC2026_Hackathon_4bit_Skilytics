@@ -12,7 +12,7 @@ export const enterpriseWords = {
     coverage: "Employees with matched exposure data",
     scenario: "AI task overlap · planning scenario",
     scenarioNote:
-      "Illustration: AI overlaps 5% of remaining tasks each year. This is not a measured forecast, work capacity or a job-loss probability.",
+      "Illustration: AI overlaps 5% or 10% of remaining tasks each year, depending on the selected assumption. This is not a measured forecast, work capacity or a job-loss probability.",
     now: "Observed now",
     years: "Years ahead",
     unknown: "No matched data",
@@ -78,7 +78,7 @@ export const enterpriseWords = {
     coverage: "Pekerja dengan data pendedahan yang sepadan",
     scenario: "Pertindihan tugas AI · senario perancangan",
     scenarioNote:
-      "Ilustrasi: AI meliputi 5% baki tugas setiap tahun. Ini bukan ramalan terukur, kapasiti kerja atau kebarangkalian kehilangan pekerjaan.",
+      "Ilustrasi: AI meliputi 5% atau 10% baki tugas setiap tahun mengikut andaian dipilih. Ini bukan ramalan terukur, kapasiti kerja atau kebarangkalian kehilangan pekerjaan.",
     now: "Diperhatikan kini",
     years: "Tahun ke hadapan",
     unknown: "Tiada data sepadan",
@@ -144,7 +144,7 @@ export const enterpriseWords = {
     coverage: "拥有匹配暴露数据的员工",
     scenario: "AI任务重叠 · 规划情景",
     scenarioNote:
-      "示例假设：AI每年覆盖剩余任务的5%。这不是实测预测、工作产能或失业概率。",
+      "示例假设：按所选假设AI每年覆盖剩余任务的5%或10%。这不是实测预测、工作产能或失业概率。",
     now: "当前观察值",
     years: "未来年数",
     unknown: "没有匹配数据",

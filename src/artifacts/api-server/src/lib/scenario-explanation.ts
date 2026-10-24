@@ -1,6 +1,9 @@
+import {scenarioValue} from "./future-scenarios";
+export {scenarioValue};
 import { z } from "zod";
 export const explanationInput = z.object({
   mode: z.enum(["ai", "demand", "skills"]),
+  scenario:z.enum(["moderate","fast"]).default("moderate"),
   years: z.coerce.number().int().min(1).max(10),
   ids:z.preprocess(v=>typeof v === "string" ? v.split(",").filter(Boolean).map(Number):v,z.array(z.number().int()).max(3).refine(ids=>new Set(ids).size===ids.length).optional()),
 });
@@ -26,19 +29,6 @@ export function parseScenarioExplanation(
     throw new Error("unknown_scenario_reference");
   return { ...out, referenceIds: [...new Set(out.referenceIds)] };
 }
-export function scenarioValue(
-  mode: "ai" | "demand" | "skills",
-  baseline: number | null,
-  years: number,
-) {
-  if (baseline == null || !Number.isFinite(baseline)) return null;
-  if (mode === "ai")
-    return 100 * (1 - (1 - Math.min(1, Math.max(0, baseline))) * 0.95 ** years);
-  if (mode === "skills") return baseline * 1.05 ** years;
-  return baseline <= -100
-    ? null
-    : 100 * ((1 + baseline / 100) ** (years / 10) - 1);
-}
 export function scenarioPrompt(context: unknown) {
   return {
     system:
@@ -58,6 +48,8 @@ export function assertScenarioNumbers(
 ) {
   const allowed = [
     5,
+    10,
+    35,
     100,
     ...rows.flatMap((r) => [
       r.previous,

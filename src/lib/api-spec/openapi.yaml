@@ -861,6 +861,30 @@ components:
         importance: { type: integer, description: "1 (nice to have) to 3 (core)" }
         courseCount: { type: integer, description: "Current catalogue courses mapped to this skill; absent if not checked" }
         courseUrl: { type: string, description: "An actual matching provider course URL" }
+        sdgLinks:
+          type: array
+          items:
+            type: object
+            required: [code, target, basis, topic, reason, sourceUrl]
+            properties:
+              code: { type: string }
+              target: { type: string }
+              basis: { type: string, enum: [topic, work-context] }
+              sourceUrl: { type: string }
+              topic:
+                type: object
+                required: [en, ms, zh]
+                properties:
+                  en: { type: string }
+                  ms: { type: string }
+                  zh: { type: string }
+              reason:
+                type: object
+                required: [en, ms, zh]
+                properties:
+                  en: { type: string }
+                  ms: { type: string }
+                  zh: { type: string }
 
     Role:
       type: object
@@ -956,6 +980,10 @@ components:
       type: object
       required: [courseId, title, provider, url, startWeek, durationWeeks, costMyr, hrdcStatus, skills, sdgTargets]
       properties:
+        futureScenario: { type: string, enum: [moderate, fast] }
+        trendReviewedAt: { type: string }
+        futureYears: { type: integer, minimum: 1, maximum: 10 }
+        trendEvidence: { type: string, description: "Server-recorded public trend inputs as JSON, not user CV data" }
         compulsory: { type: boolean, description: Institution-required course for TVET learners }
         courseId: { type: integer }
         title: { type: string }
@@ -1001,6 +1029,8 @@ components:
       properties:
         roleId: { type: integer }
         sdgGoal: { type: string, pattern: "^([1-9]|1[0-7])$" }
+        futureScenario: { type: string, enum: [moderate, fast] }
+        futureYears: { type: integer, minimum: 1, maximum: 10 }
 
     SourceRef:
       type: object

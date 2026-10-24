@@ -5,9 +5,16 @@
  * Skilytics API
  * OpenAPI spec version: 0.1.0
  */
+import type { PlanInputFutureScenario } from './planInputFutureScenario';
 
 export interface PlanInput {
   roleId: number;
   /** @pattern ^([1-9]|1[0-7])$ */
   sdgGoal?: string;
+  futureScenario?: PlanInputFutureScenario;
+  /**
+     * @minimum 1
+     * @maximum 10
+     */
+  futureYears?: number;
 }

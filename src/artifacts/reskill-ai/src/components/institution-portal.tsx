@@ -1,3 +1,4 @@
+import {useFutureScenario} from "./future-scenario";
 import { AnalysisEvidence, ScenarioMath } from "./scenario-reason";
 import { MarketGuide, usePortalGuide } from "./portal-guides";
 import { useEffect, useState } from "react";
@@ -58,6 +59,7 @@ function Guide({body,title}:{body:string;title:string}) {
  ]}/>;
 }
 function OutcomeChart({ years = 0 }: { years?: number }) {
+  const [assumption]=useFutureScenario();
   const { lang } = useT(),
     w = institutionWords[lang];
   const baseline = annual.at(-1)!.rate;
@@ -70,7 +72,7 @@ function OutcomeChart({ years = 0 }: { years?: number }) {
     ...Array.from({ length: years }, (_, n) => ({
       year: 2027 + n,
       history: null,
-      scenario: Math.min(100, baseline + 2 * (n + 1)),
+      scenario: Math.min(100, baseline + (assumption==="fast"?4:2) * (n + 1)),
     })),
   ];
   return (
@@ -259,6 +261,7 @@ export function InstitutionFuture() {
   );
 }
 function GraduateProjection() {
+  const [assumption]=useFutureScenario();
   const { lang } = useT(),
     w = institutionWords[lang],
     q = useCompany(),
@@ -266,11 +269,11 @@ function GraduateProjection() {
   const [years, setYears] = useState(3),
     [saved, setSaved] = useState<Record<string, CompanyAnalysis>>({});
   const fingerprint = JSON.stringify(c ? { ...c, updatedAt: undefined } : null),
-    key = `${fingerprint}:${years}`;
+    key = `${fingerprint}:${years}:${assumption}`;
   const existing = useQuery({
-    queryKey: ["institution-analysis", fingerprint, years],
+    queryKey: ["institution-analysis", fingerprint, years, assumption],
     queryFn: () =>
-      enterpriseGet<CompanyAnalysis>(`future/analysis?years=${years}`),
+      enterpriseGet<CompanyAnalysis>(`future/analysis?years=${years}&scenario=${assumption}`),
     enabled: !!c && !saved[key],
     retry: false,
   });
@@ -279,7 +282,7 @@ function GraduateProjection() {
     mutationFn: async ({ at, forKey }: { at: number; forKey: string }) => ({
       forKey,
       result: await enterprisePost<CompanyAnalysis>("future/analysis", {
-        years: at,
+        years: at, scenario:assumption,
       }),
     }),
     onSuccess: ({ forKey, result }) =>
@@ -289,7 +292,7 @@ function GraduateProjection() {
   if (!c || q.isError)
     return <ErrorBox error={q.error} retry={() => q.refetch()} />;
   const latest = annual.at(-1)!,
-    scenario = Math.min(100, latest.rate + 2 * years);
+    scenario = Math.min(100, latest.rate + (assumption==="fast"?4:2) * years);
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
@@ -317,7 +320,7 @@ function GraduateProjection() {
           label={w.years}
         />
         <OutcomeChart years={years} />
-        <div className="mt-4"><ScenarioMath mode="graduate" years={years} baseYear={2026} rows={[{name:w.future,previous:Math.min(100,latest.rate+2*(years-1)),selected:scenario}]}/></div>
+        <div className="mt-4"><ScenarioMath mode="graduate" years={years} baseYear={2026} rows={[{name:w.future,previous:Math.min(100,latest.rate+(assumption==="fast"?4:2)*(years-1)),selected:scenario}]}/></div>
       </Panel>
       <Panel title={w.advice} meta={w.synthetic}>
         <Button

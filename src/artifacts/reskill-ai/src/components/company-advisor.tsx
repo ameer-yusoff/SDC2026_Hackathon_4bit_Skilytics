@@ -1,3 +1,4 @@
+import {useFutureScenario} from "./future-scenario";
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { MessageCircle, Send, Loader2 } from "lucide-react";
@@ -101,6 +102,7 @@ export function CompanyAdvisor({
   const { lang } = useT(),
     w = institution ? institutionCopy[lang] : words[lang],
     qc = useQueryClient();
+  const [scenario]=useFutureScenario();
   const [question, setQuestion] = useState("");
   const key = ["company-advisor", analysis.id];
   const q = useQuery({
@@ -115,7 +117,7 @@ export function CompanyAdvisor({
     mutationFn: (text: string) =>
       enterprisePost<Turn>("future/chat", {
         analysisId: analysis.id,
-        years,
+        years, scenario,
         question: text,
         parentId: q.data?.at(-1)?.id ?? null,
       }),

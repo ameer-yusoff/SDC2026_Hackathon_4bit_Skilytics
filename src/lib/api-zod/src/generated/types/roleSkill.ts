@@ -5,6 +5,7 @@
  * Skilytics API
  * OpenAPI spec version: 0.1.0
  */
+import type { RoleSkillSdgLinksItem } from './roleSkillSdgLinksItem';
 
 export interface RoleSkill {
   skillId: number;
@@ -16,4 +17,5 @@ export interface RoleSkill {
   courseCount?: number;
   /** An actual matching provider course URL */
   courseUrl?: string;
+  sdgLinks?: RoleSkillSdgLinksItem[];
 }

@@ -1,3 +1,5 @@
+import {ReferenceDirections} from "./matcher-trends";
+import {ScenarioComparison,useFutureScenario} from "./future-scenario";
 import { ScenarioReason } from "./scenario-reason";
 import { ChangingValue, HorizonSlider } from "./projection-feedback";
 import { GuideButton } from "./page-guide";
@@ -102,6 +104,7 @@ export function MarketOutlook({
   const { lang } = useT(),
     w = marketWords[lang];
   const qc = useQueryClient();
+  const [scenario] = useFutureScenario();
   const search = new URLSearchParams(useSearch());
   const inputYear = Number(search.get("years"));
   const [horizon, setHorizon] = useState(
@@ -155,11 +158,11 @@ export function MarketOutlook({
       ? "—"
       : `${signed && value > 0 ? "+" : ""}${value.toLocaleString(locale, { maximumFractionDigits: 1, minimumFractionDigits: 1 })}%`;
   const metric = (r: Candidate, n = horizon) =>
-    pct(scenarioPercent(mode, r, n), mode === "demand");
+    pct(scenarioPercent(mode, r, n, scenario), mode === "demand");
   const chart = Array.from({ length: 11 }, (_, n) => ({
     n,
     ...Object.fromEntries(
-      top.map((r, i) => [`r${i}`, scenarioPercent(mode, r, n)]),
+      top.map((r, i) => [`r${i}`, scenarioPercent(mode, r, n, scenario)]),
     ),
   }));
   const label = mode === "ai" ? w.aiMetric : w.demandMetric;
@@ -355,6 +358,8 @@ export function MarketOutlook({
           {mode === "ai" ? w.aiAssumption : w.demandAssumption}
         </p>
       </section>
+      <ReferenceDirections/>
+      <ScenarioComparison mode={mode} years={horizon} rows={top.map(r=>({name:roleTitle(r,lang),baseline:mode==="ai"?r.aiExposure:r.projection?.growthPct??null}))}/>
       <ScenarioReason mode={mode} years={horizon} ids={top.map(r=>r.roleId)} evidenceKey={JSON.stringify(top.map(r=>[r.roleId,r.aiExposure,r.projection?.growthPct]))}/>
       {!selectedMode && (
         <div

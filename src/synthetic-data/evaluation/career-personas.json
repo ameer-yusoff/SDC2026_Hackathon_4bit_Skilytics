@@ -1,0 +1,357 @@
+{
+  "synthetic": true,
+  "createdAt": "2026-10-24",
+  "purpose": "Counterfactual language parity, relevance review and planner constraint tests. Not production users or labour-market observations.",
+  "review": "Initial editorial fixture design by Codex; independent human/domain expert validation pending.",
+  "cases": [
+    {
+      "id": "fictional-01",
+      "target": "SEO Specialist",
+      "skills": [
+        "Search Engine Optimisation",
+        "Digital Marketing"
+      ],
+      "weeklyHours": 2,
+      "budgetMyr": 0,
+      "goals": {
+        "en": "I want to become a SEO Specialist",
+        "ms": "Saya ingin menjadi Pakar SEO",
+        "zh": "我想成为搜索引擎优化专员"
+      },
+      "editorialRationale": "Existing topic skills plausibly support this learning direction; role-specific gaps still need review. This is a constructed expectation, not an expert-validated career outcome."
+    },
+    {
+      "id": "fictional-02",
+      "target": "Social Media Specialist",
+      "skills": [
+        "Social Media Management",
+        "Digital Marketing"
+      ],
+      "weeklyHours": 4,
+      "budgetMyr": 300,
+      "goals": {
+        "en": "I want to become a Social Media Specialist",
+        "ms": "Saya ingin menjadi Pakar Media Sosial",
+        "zh": "我想成为社交媒体专员"
+      },
+      "editorialRationale": "Existing topic skills plausibly support this learning direction; role-specific gaps still need review. This is a constructed expectation, not an expert-validated career outcome."
+    },
+    {
+      "id": "fictional-03",
+      "target": "Email Marketing Specialist",
+      "skills": [
+        "Digital Marketing",
+        "CRM Systems"
+      ],
+      "weeklyHours": 6,
+      "budgetMyr": 0,
+      "goals": {
+        "en": "I want to become a Email Marketing Specialist",
+        "ms": "Saya ingin menjadi Pakar Pemasaran E-mel",
+        "zh": "我想成为电子邮件营销专员"
+      },
+      "editorialRationale": "Existing topic skills plausibly support this learning direction; role-specific gaps still need review. This is a constructed expectation, not an expert-validated career outcome."
+    },
+    {
+      "id": "fictional-04",
+      "target": "Marketing Operations Specialist",
+      "skills": [
+        "CRM Systems",
+        "Digital Marketing"
+      ],
+      "weeklyHours": 8,
+      "budgetMyr": 300,
+      "goals": {
+        "en": "I want to become a Marketing Operations Specialist",
+        "ms": "Saya ingin menjadi Pakar Operasi Pemasaran",
+        "zh": "我想成为营销运营专员"
+      },
+      "editorialRationale": "Existing topic skills plausibly support this learning direction; role-specific gaps still need review. This is a constructed expectation, not an expert-validated career outcome."
+    },
+    {
+      "id": "fictional-05",
+      "target": "Content Marketing Specialist",
+      "skills": [
+        "Content Writing",
+        "Digital Marketing"
+      ],
+      "weeklyHours": 12,
+      "budgetMyr": 0,
+      "goals": {
+        "en": "I want to become a Content Marketing Specialist",
+        "ms": "Saya ingin menjadi Pakar Pemasaran Kandungan",
+        "zh": "我想成为内容营销专员"
+      },
+      "editorialRationale": "Existing topic skills plausibly support this learning direction; role-specific gaps still need review. This is a constructed expectation, not an expert-validated career outcome."
+    },
+    {
+      "id": "fictional-06",
+      "target": "Technical Writer",
+      "skills": [
+        "Business Writing",
+        "Content Writing"
+      ],
+      "weeklyHours": 2,
+      "budgetMyr": 300,
+      "goals": {
+        "en": "I want to become a Technical Writer",
+        "ms": "Saya ingin menjadi Penulis Teknikal",
+        "zh": "我想成为技术文档撰稿人"
+      },
+      "editorialRationale": "Existing topic skills plausibly support this learning direction; role-specific gaps still need review. This is a constructed expectation, not an expert-validated career outcome."
+    },
+    {
+      "id": "fictional-07",
+      "target": "Front-end Developer",
+      "skills": [
+        "JavaScript",
+        "HTML and CSS"
+      ],
+      "weeklyHours": 4,
+      "budgetMyr": 0,
+      "goals": {
+        "en": "I want to become a Front-end Developer",
+        "ms": "Saya ingin menjadi Pembangun Bahagian Hadapan",
+        "zh": "我想成为前端开发人员"
+      },
+      "editorialRationale": "Existing topic skills plausibly support this learning direction; role-specific gaps still need review. This is a constructed expectation, not an expert-validated career outcome."
+    },
+    {
+      "id": "fictional-08",
+      "target": "Back-end Developer",
+      "skills": [
+        "Python",
+        "JavaScript",
+        "SQL"
+      ],
+      "weeklyHours": 6,
+      "budgetMyr": 300,
+      "goals": {
+        "en": "I want to become a Back-end Developer",
+        "ms": "Saya ingin menjadi Pembangun Bahagian Belakang",
+        "zh": "我想成为后端开发人员"
+      },
+      "editorialRationale": "Existing topic skills plausibly support this learning direction; role-specific gaps still need review. This is a constructed expectation, not an expert-validated career outcome."
+    },
+    {
+      "id": "fictional-09",
+      "target": "Software QA Tester",
+      "skills": [
+        "Software Testing",
+        "Python"
+      ],
+      "weeklyHours": 8,
+      "budgetMyr": 0,
+      "goals": {
+        "en": "I want to become a Software QA Tester",
+        "ms": "Saya ingin menjadi Penguji Kualiti Perisian",
+        "zh": "我想成为软件质量测试员"
+      },
+      "editorialRationale": "Existing topic skills plausibly support this learning direction; role-specific gaps still need review. This is a constructed expectation, not an expert-validated career outcome."
+    },
+    {
+      "id": "fictional-10",
+      "target": "Database Administrator",
+      "skills": [
+        "SQL",
+        "Cloud Computing"
+      ],
+      "weeklyHours": 12,
+      "budgetMyr": 300,
+      "goals": {
+        "en": "I want to become a Database Administrator",
+        "ms": "Saya ingin menjadi Pentadbir Pangkalan Data",
+        "zh": "我想成为数据库管理员"
+      },
+      "editorialRationale": "Existing topic skills plausibly support this learning direction; role-specific gaps still need review. This is a constructed expectation, not an expert-validated career outcome."
+    },
+    {
+      "id": "fictional-11",
+      "target": "AI Application Developer",
+      "skills": [
+        "Python",
+        "Generative AI Tools",
+        "JavaScript"
+      ],
+      "weeklyHours": 2,
+      "budgetMyr": 0,
+      "goals": {
+        "en": "I want to become a AI Application Developer",
+        "ms": "Saya ingin menjadi Pembangun Aplikasi AI",
+        "zh": "我想成为AI 应用开发人员"
+      },
+      "editorialRationale": "Existing topic skills plausibly support this learning direction; role-specific gaps still need review. This is a constructed expectation, not an expert-validated career outcome."
+    },
+    {
+      "id": "fictional-12",
+      "target": "Cloud Application Developer",
+      "skills": [
+        "Cloud Computing",
+        "Python",
+        "JavaScript"
+      ],
+      "weeklyHours": 4,
+      "budgetMyr": 300,
+      "goals": {
+        "en": "I want to become a Cloud Application Developer",
+        "ms": "Saya ingin menjadi Pembangun Aplikasi Awan",
+        "zh": "我想成为云应用开发人员"
+      },
+      "editorialRationale": "Existing topic skills plausibly support this learning direction; role-specific gaps still need review. This is a constructed expectation, not an expert-validated career outcome."
+    },
+    {
+      "id": "fictional-13",
+      "target": "Data Analyst",
+      "skills": [
+        "SQL",
+        "Microsoft Excel",
+        "Data Visualisation",
+        "Python",
+        "Statistics",
+        "Power BI",
+        "Stakeholder Communication"
+      ],
+      "weeklyHours": 6,
+      "budgetMyr": 0,
+      "goals": {
+        "en": "I want to become a Data Analyst",
+        "ms": "Saya ingin menjadi Penganalisis Data",
+        "zh": "我想成为数据分析师"
+      },
+      "editorialRationale": "Existing topic skills plausibly support this learning direction; role-specific gaps still need review. This is a constructed expectation, not an expert-validated career outcome."
+    },
+    {
+      "id": "fictional-14",
+      "target": "Data Scientist",
+      "skills": [
+        "Python",
+        "Machine Learning",
+        "Statistics",
+        "SQL",
+        "Data Visualisation",
+        "Cloud Computing"
+      ],
+      "weeklyHours": 8,
+      "budgetMyr": 300,
+      "goals": {
+        "en": "I want to become a Data Scientist",
+        "ms": "Saya ingin menjadi Saintis Data",
+        "zh": "我想成为数据科学家"
+      },
+      "editorialRationale": "Existing topic skills plausibly support this learning direction; role-specific gaps still need review. This is a constructed expectation, not an expert-validated career outcome."
+    },
+    {
+      "id": "fictional-15",
+      "target": "AI / Machine Learning Engineer",
+      "skills": [
+        "Python",
+        "Machine Learning",
+        "Cloud Computing",
+        "Version Control (Git)",
+        "Linux",
+        "Generative AI Tools"
+      ],
+      "weeklyHours": 12,
+      "budgetMyr": 0,
+      "goals": {
+        "en": "I want to become a AI / Machine Learning Engineer",
+        "ms": "Saya ingin menjadi Jurutera AI / Pembelajaran Mesin",
+        "zh": "我想成为人工智能 / 机器学习工程师"
+      },
+      "editorialRationale": "Existing topic skills plausibly support this learning direction; role-specific gaps still need review. This is a constructed expectation, not an expert-validated career outcome."
+    },
+    {
+      "id": "fictional-16",
+      "target": "Software Developer",
+      "skills": [
+        "JavaScript",
+        "Version Control (Git)",
+        "SQL",
+        "Software Testing",
+        "Cloud Computing",
+        "Python"
+      ],
+      "weeklyHours": 2,
+      "budgetMyr": 300,
+      "goals": {
+        "en": "I want to become a Software Developer",
+        "ms": "Saya ingin menjadi Pembangun Perisian",
+        "zh": "我想成为软件开发人员"
+      },
+      "editorialRationale": "Existing topic skills plausibly support this learning direction; role-specific gaps still need review. This is a constructed expectation, not an expert-validated career outcome."
+    },
+    {
+      "id": "fictional-17",
+      "target": "Web Developer",
+      "skills": [
+        "HTML and CSS",
+        "JavaScript",
+        "Version Control (Git)",
+        "UX Design"
+      ],
+      "weeklyHours": 4,
+      "budgetMyr": 0,
+      "goals": {
+        "en": "I want to become a Web Developer",
+        "ms": "Saya ingin menjadi Pembangun Web",
+        "zh": "我想成为网页开发人员"
+      },
+      "editorialRationale": "Existing topic skills plausibly support this learning direction; role-specific gaps still need review. This is a constructed expectation, not an expert-validated career outcome."
+    },
+    {
+      "id": "fictional-18",
+      "target": "Cybersecurity Analyst",
+      "skills": [
+        "Cybersecurity",
+        "Networking",
+        "Linux",
+        "Cloud Computing",
+        "Problem Solving"
+      ],
+      "weeklyHours": 6,
+      "budgetMyr": 300,
+      "goals": {
+        "en": "I want to become a Cybersecurity Analyst",
+        "ms": "Saya ingin menjadi Penganalisis Keselamatan Siber",
+        "zh": "我想成为网络安全分析师"
+      },
+      "editorialRationale": "Existing topic skills plausibly support this learning direction; role-specific gaps still need review. This is a constructed expectation, not an expert-validated career outcome."
+    },
+    {
+      "id": "fictional-19",
+      "target": "Network and Cloud Administrator",
+      "skills": [
+        "Networking",
+        "Cloud Computing",
+        "Linux",
+        "Cybersecurity"
+      ],
+      "weeklyHours": 8,
+      "budgetMyr": 0,
+      "goals": {
+        "en": "I want to become a Network and Cloud Administrator",
+        "ms": "Saya ingin menjadi Pentadbir Rangkaian dan Awan",
+        "zh": "我想成为网络与云管理员"
+      },
+      "editorialRationale": "Existing topic skills plausibly support this learning direction; role-specific gaps still need review. This is a constructed expectation, not an expert-validated career outcome."
+    },
+    {
+      "id": "fictional-20",
+      "target": "IT Support Specialist",
+      "skills": [
+        "IT Support and Troubleshooting",
+        "Networking",
+        "Customer Service",
+        "Linux"
+      ],
+      "weeklyHours": 12,
+      "budgetMyr": 300,
+      "goals": {
+        "en": "I want to become a IT Support Specialist",
+        "ms": "Saya ingin menjadi Pakar Sokongan IT",
+        "zh": "我想成为IT 支持专员"
+      },
+      "editorialRationale": "Existing topic skills plausibly support this learning direction; role-specific gaps still need review. This is a constructed expectation, not an expert-validated career outcome."
+    }
+  ]
+}

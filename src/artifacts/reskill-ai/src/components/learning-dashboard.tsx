@@ -1,3 +1,4 @@
+import {SkillSdg} from "./skill-sdg";
 import {SdgContribution,SdgExplanation} from "./sdg-choice";
 import {useState} from "react";
 import {jobWords} from "./market-skills";
@@ -148,7 +149,7 @@ export function LearningDashboard({ p, employer=false, portal="hr" }: { p: Profi
                   {w.open} ↗
                 </a>
               </div>
-              <SdgExplanation goals={i.sdgCodes} subject={i.title} skills={i.skills} kind="course"/>
+              <details className="my-3 text-xs"><summary className="min-h-11 cursor-pointer py-3">{lang==="ms"?"Kemahiran & kaitan SDG":lang==="zh"?"技能与SDG关联":"Skills & SDG links"}</summary><div className="grid gap-2 sm:grid-cols-2">{i.skills.map(name=><SkillSdg key={name} name={name}/>)}</div></details><SdgExplanation goals={i.sdgCodes} subject={i.title} skills={i.skills} kind="course"/>
               <label className="mt-3 inline-flex min-h-11 cursor-pointer items-center gap-2 text-sm">
                 <input
                   type="checkbox"

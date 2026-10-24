@@ -6,9 +6,19 @@
  * OpenAPI spec version: 0.1.0
  */
 import type { HrdcStatus } from './hrdcStatus';
+import type { PlanItemFutureScenario } from './planItemFutureScenario';
 import type { SdgTarget } from './sdgTarget';
 
 export interface PlanItem {
+  futureScenario?: PlanItemFutureScenario;
+  trendReviewedAt?: string;
+  /**
+     * @minimum 1
+     * @maximum 10
+     */
+  futureYears?: number;
+  /** Server-recorded public trend inputs as JSON, not user CV data */
+  trendEvidence?: string;
   /** Institution-required course for TVET learners */
   compulsory?: boolean;
   courseId: number;

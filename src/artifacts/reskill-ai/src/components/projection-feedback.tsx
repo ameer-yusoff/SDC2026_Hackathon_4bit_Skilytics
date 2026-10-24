@@ -1,3 +1,4 @@
+import { FutureScenarioChoice } from "./future-scenario";
 import { useEffect, useRef } from "react";
 import type { ReactNode } from "react";
 import { motion, useReducedMotion } from "framer-motion";
@@ -63,7 +64,7 @@ export function HorizonSlider({
   const { lang } = useT(),
     w = words[lang];
   return (
-    <div className="mb-4 rounded-2xl border border-primary/15 bg-primary/5 p-4">
+    <div><FutureScenarioChoice graduate={id==="graduate-years"}/><div className="mb-4 rounded-2xl border border-primary/15 bg-primary/5 p-4">
       <label
         htmlFor={id}
         className="flex flex-wrap items-center justify-between gap-3 text-sm font-semibold"
@@ -104,6 +105,6 @@ export function HorizonSlider({
         <span>{baseYear + 1}</span>
         <span>{baseYear + 10}</span>
       </div>
-    </div>
+    </div></div>
   );
 }

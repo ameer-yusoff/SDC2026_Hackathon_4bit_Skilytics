@@ -1,3 +1,8 @@
+import {ChangingValue,HorizonSlider} from "./projection-feedback";
+import {SkillSdg} from "./skill-sdg";
+import {RoleTrendEvidence,MatcherTrends,useMarketSignals} from "./matcher-trends";
+import {useFutureScenario} from "./future-scenario";
+import {futurePriority} from "../../../api-server/src/lib/future-scenarios";
 import {
   SdgChoice,
   SdgExplanation,
@@ -164,13 +169,17 @@ export function IndividualMatcher({ p, base }: { p: Profile; base: string }) {
   const [error, setError] = useState("");
   const errorText = useErrText();
   const [goal, setGoal] = useState("all");
-  const [order, setOrder] = useState("fit");
+  const [order, setOrder] = useState("future");
+  const [years,setYears]=useState(3);
+  const [scenario]=useFutureScenario();
+  const signals=useMarketSignals();
+  const priority=(x:{score:number;role:{id:number}})=>futurePriority(x.score,signals.data?.references.find(r=>r.roleId===x.role.id),years,scenario);
   const available = matches.data ?? [];
   const goals = [...new Set(available.flatMap((x) => roleGoals(x.role)))].sort(
     (a, b) => Number(a) - Number(b),
   );
   const roles = byGoal(available, goal, (x) => x.role).sort((a, b) =>
-    order === "growth"
+    order === "future" ? priority(b)-priority(a)||b.score-a.score : order === "growth"
       ? (bls.rows.find((r) => r.socCode === b.role.socCode)?.growthPct ??
           -Infinity) -
           (bls.rows.find((r) => r.socCode === a.role.socCode)?.growthPct ??
@@ -192,7 +201,7 @@ export function IndividualMatcher({ p, base }: { p: Profile; base: string }) {
       qc.setQueryData(getGetProfileQueryKey(p.id), profile);
       const plan = await createPlan.mutateAsync({
         id: p.id,
-        data: { roleId: id, ...(goal !== "all" ? { sdgGoal: goal } : {}) },
+        data: { roleId: id, ...{futureScenario:scenario,futureYears:years}, ...(goal !== "all" ? { sdgGoal: goal } : {}) },
       });
       qc.setQueryData(getGetProfilePlanQueryKey(p.id), plan);
       await qc.invalidateQueries({ queryKey: ["learning", p.id] });
@@ -208,6 +217,7 @@ export function IndividualMatcher({ p, base }: { p: Profile; base: string }) {
         <p className="mt-1 text-sm text-muted-foreground">{w.note}</p>
       </header>
       <CatalogueGuard />
+      <MatcherTrends years={years} setYears={setYears}/>
       <SdgChoice
         goals={goals}
         value={goal}
@@ -231,6 +241,7 @@ export function IndividualMatcher({ p, base }: { p: Profile; base: string }) {
             setSelected(null);
           }}
         >
+          <option value="future">{lang==="ms"?"Keutamaan masa depan":lang==="zh"?"未来优先级":"Future priority"}</option>
           <option value="fit">
             {lang === "ms"
               ? "Padanan peribadi"
@@ -282,6 +293,7 @@ export function IndividualMatcher({ p, base }: { p: Profile; base: string }) {
             className={`relative flex flex-col rounded-2xl border p-5 motion-safe:transition-all motion-safe:duration-300 hover:shadow-lg ${chosen?.role.id === x.role.id ? "ring-2 ring-primary ring-offset-2 shadow-md" : ""} ${i === 0 ? "border-accent bg-[hsl(var(--gold-soft))] md:order-2" : i === 1 ? "border-border bg-card md:mt-8 md:order-1" : "border-border bg-card md:mt-14 md:order-3"}`}
           >
             <span className="text-3xl font-black text-accent">#{i + 1}</span>
+            {order==="future"&&<p className="my-2 rounded-xl bg-primary/10 p-2 text-xs"><ChangingValue value={priority(x)} className="font-bold"/> /100 · {lang==="ms"?"Keutamaan masa depan":lang==="zh"?"未来优先级":"Future priority"}<br/>{lang==="ms"?"Kedudukan padanan asal":lang==="zh"?"原个人匹配排名":"Original fit rank"}: #{[...available].sort((a,b)=>b.score-a.score).findIndex(a=>a.role.id===x.role.id)+1}</p>}
             <h3 className="mt-2 text-lg font-bold">
               {roleTitle(x.role, lang)}
             </h3>
@@ -303,7 +315,7 @@ export function IndividualMatcher({ p, base }: { p: Profile; base: string }) {
               {lang === "ms" ? "Padanan" : lang === "zh" ? "匹配" : "Fit"}:{" "}
               {x.score}%
             </p>
-            <SdgReason role={x.role} />
+            <RoleTrendEvidence roleId={x.role.id} fit={x.score} years={years}/><SdgReason role={x.role} />
             {order === "growth" && (
               <p className="mt-2 text-xs">
                 BLS {bls.period}:{" "}
@@ -423,7 +435,7 @@ export function IndividualMatcher({ p, base }: { p: Profile; base: string }) {
                   <div className="w-44">
                     <AiExposure role={x.role} />
                   </div>
-                  <RoleGoals role={x.role} />
+                  <div><RoleGoals role={x.role}/>{order==="future"&&<p className="mt-2 text-xs font-bold text-primary">{lang==="ms"?"Keutamaan":lang==="zh"?"优先级":"Priority"}: {priority(x)}</p>}</div>
                   <Button
                     variant="outline"
                     disabled={update.isPending || createPlan.isPending}
@@ -464,6 +476,9 @@ export function IndividualPathway({ p, base }: { p: Profile; base: string }) {
   const sw = studyWords[lang];
   const roleList = useListRoles();
   const courses = useListCourses();
+  const [scenario]=useFutureScenario();
+  const [futureYears,setFutureYears]=useState(3);
+  const loadedPlan=useRef<number|null>(null);
   const [sdgGoal, setSdgGoal] = useState("all");
   const [selectedCourse, setSelectedCourse] = useState<number | null>(null);
   const [, navigate] = useLocation();
@@ -482,6 +497,7 @@ export function IndividualPathway({ p, base }: { p: Profile; base: string }) {
   }, [plan.data?.id]);
   const create = useCreateProfilePlan();
   const update = useUpdateProfile();
+  useEffect(()=>{if(plan.data?.id && loadedPlan.current!==plan.data.id){loadedPlan.current=plan.data.id;setFutureYears(plan.data.items[0]?.futureYears??3);}},[plan.data]);
   const [hours, setHours] = useState(String(p.weeklyHours));
   const [budget, setBudget] = useState(String(p.budgetMyr));
   const [start, setStart] = useState(
@@ -519,7 +535,7 @@ export function IndividualPathway({ p, base }: { p: Profile; base: string }) {
       const result = await create.mutateAsync({
         id: p.id,
         data: {
-          roleId: p.targetRoleId,
+          roleId: p.targetRoleId, ...{futureScenario:scenario,futureYears},
           ...(sdgGoal !== "all" ? { sdgGoal } : {}),
         },
       });
@@ -576,6 +592,7 @@ export function IndividualPathway({ p, base }: { p: Profile; base: string }) {
   ].sort((a, b) => Number(a) - Number(b));
   return (
     <div className="space-y-5">
+      {plan.data?.items[0]?.futureScenario&&<p className="rounded-xl border bg-primary/5 p-3 text-xs">{lang==="ms"?"Andaian pelan disimpan":lang==="zh"?"已保存计划假设":"Saved plan assumption"}: {plan.data.items[0].futureScenario==="fast"?(lang==="ms"?"Lebih cepat":lang==="zh"?"较快":"Faster"):(lang==="ms"?"Sederhana":lang==="zh"?"中等":"Moderate")} · {new Date(plan.data.createdAt).getUTCFullYear()+(plan.data.items[0].futureYears??3)} · BLS {plan.data.items[0].trendReviewedAt??"—"}</p>}
       <form
         className="grid gap-3 rounded-2xl border bg-card p-4 sm:grid-cols-3"
         onSubmit={(e) => {
@@ -583,7 +600,7 @@ export function IndividualPathway({ p, base }: { p: Profile; base: string }) {
           void rebuild();
         }}
       >
-        <div className="sm:col-span-3">
+        <div className="sm:col-span-3"><HorizonSlider id="pathway-years" years={futureYears} onChange={setFutureYears} label={lang==="ms"?"Tahun persediaan":lang==="zh"?"准备年份":"Preparation year"}/><p className="mb-3 text-xs text-muted-foreground">{lang==="ms"?"Tukar andaian, kemudian tekan kemas kini untuk menyimpan pelan baharu. Pelan semasa kekal sehingga disahkan.":lang==="zh"?"更改假设后点击更新才会保存新计划；确认前现有计划保持不变。":"Change an assumption, then update to save a new plan. Your current plan stays until confirmed."}</p>
           <SdgChoice
             learning
             goals={goalOptions}
@@ -679,6 +696,7 @@ export function IndividualPathway({ p, base }: { p: Profile; base: string }) {
             goals={items.flatMap((i) => i.sdgTargets.map((t) => t.code))}
           />
           <CatalogueGuard />
+
           <StudyCalendar
             courses={dated}
             start={start}
@@ -864,7 +882,7 @@ export function IndividualPathway({ p, base }: { p: Profile; base: string }) {
                         />
                       ))}
                   </div>
-                  <SdgExplanation goals={item.sdgTargets.map(t=>t.code)} subject={item.title} skills={item.skills} kind="course"/>
+                  <details className="my-3 text-xs"><summary className="min-h-11 cursor-pointer py-3">{lang==="ms"?"Kemahiran & kaitan SDG":lang==="zh"?"技能与SDG关联":"Skills & SDG links"}</summary><div className="grid gap-2 sm:grid-cols-2">{item.skills.map(name=><SkillSdg key={name} name={name}/>)}</div></details><SdgExplanation goals={item.sdgTargets.map(t=>t.code)} subject={item.title} skills={item.skills} kind="course"/>
                 </li>
               );
             })}

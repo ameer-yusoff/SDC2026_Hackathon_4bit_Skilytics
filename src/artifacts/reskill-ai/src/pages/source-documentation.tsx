@@ -13,6 +13,8 @@ type Row = { label: DictKey; k?: DictKey[]; ref?: string; url?: string };
 type Doc = { id: string; types: DocType[]; name: DictKey; sourceIds?: string[]; ai?: boolean; rows: Row[] };
 
 const DOCS: Doc[] = [
+  {id:"future_methods",types:["derived","external"],name:"docs.future.name",rows:[{label:"docs.f.method",k:["docs.future.method","docs.future.observations"]},{label:"docs.f.files",ref:"src/artifacts/api-server/src/lib/future-scenarios.ts · workforce-trends.ts · skill-observations.ts"}]},
+  {id:"matching_evaluation",types:["demo","static"],name:"docs.future.name",rows:[{label:"docs.f.method",k:["docs.future.evaluation"]},{label:"docs.f.files",ref:"src/synthetic-data/evaluation/career-personas.json · src/docs/workforce-evaluation.md"}]},
   {id:"demo_fixtures",types:["demo","static"],name:"docs.synthetic.fixtures",rows:[{label:"docs.f.files",ref:"src/testing/demo-cv/ · src/artifacts/api-server/src/lib/demo.ts · synthetic data/"},{label:"docs.f.method",k:["docs.demo.org","docs.demo.cv"]},{label:"docs.f.limits",k:["docs.synthetic.limits"]}]},
   {id:"legacy_examples",types:["demo","static"],name:"docs.synthetic.legacy",rows:[{label:"docs.f.files",ref:"src/artifacts/api-server/src/data/courses.ts"},{label:"docs.f.method",k:["docs.synthetic.legacyNote"]}]},
   {id:"match",types:["derived"],name:"docs.name.match",rows:[{label:"docs.f.method",k:["docs.match.weights","docs.match.feasibility","docs.scenario.reason"]},{label:"docs.f.limits",k:["docs.match.demand"]}]},
@@ -177,10 +179,10 @@ const TYPES: DocType[] = ["external", "static", "derived", "service", "demo", "u
 const CATEGORIES = [
   { key: "market", ids: ["dosm", "dosm_jmi", "aei_usage", "aei_exposure", "bls", "career_news"] },
   { key: "jobs", ids: ["himalayas", "remotive", "remoteok"] },
-  { key: "career", ids: ["riasec", "onet", "skill_reference", "match"] },
+  { key: "career", ids: ["future_methods", "riasec", "onet", "skill_reference", "match"] },
   { key: "learning", ids: ["courses", "hubspot", "freecodecamp", "githubskills", "huggingface", "openlearn", "sdg"] },
   { key: "aiService", ids: ["runpod"] },
-  { key: "synthetic", ids: ["tvet_synthetic", "demo_fixtures", "legacy_examples"] },
+  { key: "synthetic", ids: ["matching_evaluation", "tvet_synthetic", "demo_fixtures", "legacy_examples"] },
   { key: "privacy", ids: ["demo", "learningRecords"] },
 ] as const;
 const TYPE_TONE: Record<DocType, string> = {

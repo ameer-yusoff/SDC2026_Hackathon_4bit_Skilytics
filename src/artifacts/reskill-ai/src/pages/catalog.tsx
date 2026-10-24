@@ -1,3 +1,4 @@
+import {SkillSdg} from "@/components/skill-sdg";
 import { SdgChoice, SdgExplanation, SdgReason } from "@/components/sdg-choice";
 import { byGoal } from "@/lib/sdg-choice";
 import { useMemo, useState } from "react";
@@ -310,7 +311,7 @@ export function RoleDetail() {
                           .map((s) => (
                             <span
                               key={s.skillId}
-                              className="inline-flex items-center gap-1"
+                              className="inline-flex flex-col items-start gap-1 rounded-xl border p-2"
                             >
                               <SkillBadge
                                 name={skillLabel(s.name, lang)}
@@ -320,6 +321,7 @@ export function RoleDetail() {
                               <span className="tnum text-[10px] text-muted-foreground">
                                 {s.importance}/3
                               </span>
+                              <SkillSdg name={s.name}/>
                               {s.courseUrl && (
                                 <a
                                   className="inline-flex min-h-11 items-center text-xs text-primary underline"
@@ -596,11 +598,10 @@ export function Courses({
               />
               <div className="mt-2 flex flex-wrap gap-1.5">
                 {c.skills.map((s) => (
-                  <SkillBadge
-                    key={s.id}
-                    name={skillLabel(s.name, lang)}
-                    category={s.category}
-                  />
+                  <div key={s.id} className="min-w-0 rounded-xl border p-2">
+                    <SkillBadge name={skillLabel(s.name, lang)} category={s.category}/>
+                    <SkillSdg name={s.name}/>
+                  </div>
                 ))}
               </div>
               <div className="mt-3 flex flex-wrap items-center justify-between gap-2">

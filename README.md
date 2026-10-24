@@ -3,7 +3,7 @@
 ### **AI-Powered Future-Ready Workforce & Career Reskilling Platform**
 *Bridging the gap between "Who I am today" and "Where I can be in the AI Era"*
 
-> A human-centred, AI-powered career analytics and workforce reskilling platform that tracks AI advancements and labour market signals to predict emerging skills, match individuals to future-proof roles, and generate personalised reskilling pathways for working adults, career switchers, students, fresh graduates, HR/L&D managers, and TVET/university career centres.
+> A human-centred, AI-powered career analytics and workforce reskilling platform that uses dated AI and labour-market references to compare illustrative future scenarios, suggest plausible career directions, and build personalised reskilling pathways for working adults, career switchers, students, fresh graduates, HR/L&D managers, and TVET/university career centres.
 
 ---
 
@@ -51,12 +51,12 @@ As university students, we witness on our own how industry skill demands change 
 ### Key Features
 
 - **🧠 Explain Like I'm 5 (ELI5) AI Reasoning Engine** — Complex labour statistics, skill gaps, and psychometric intersections are translated into friendly, easy-to-understand **ELI5 explanations**—ensuring every user understands *why* a career path or learning plan is recommended for them.
-- **📄 Multi-Modal Skills Profile Intake (CV + RIASEC)** — Combines automated OCR/PDF resume parsing with the scientifically validated **Holland Code (RIASEC)** psychometric test, synthesised by AI to form a holistic profile of both technical capability and personal work preferences.
+- **📄 Multi-Modal Skills Profile Intake (CV + RIASEC)** — Combines automated OCR/PDF resume parsing with the **adapted RIASEC interest guide** (the app’s questions/translations are not independently psychometrically validated), synthesised by AI to form a holistic profile of both technical capability and personal work preferences.
 - **📡 Live AI-Trend Signal Layer & Market Pulse** — Integrates real-time, citable public data sources—displaying unemployment & participation rates, labour force trends, AI usage by role, and most AI-exposed roles.
 - **🎯 Explainable Future-Role Matching & Skill Mapping** — Ranks best-fit future roles with transparent match scores, role-specific skill maps, and labelled 1–10-year planning scenarios with source-linked explanations.
 - **🗺️ Personalised Reskilling Pathways** — Generates ordered, time-bound learning plans tailored to the user's weekly study hours and budget constraints, utilizing public online course catalogues. HRD eligibility is employer-only and never asserted without verification.
 - **🌍 Meaningful UN SDG Mapping** — Tags every course, role and skill to relevant UN Sustainable Development Goals.
-- **🏆 Gamified Workspace & Certification** — Tracks learning milestones, awards skill badges/achievements, and generates a verifiable **Certificate of Accomplishment** upon course completion.
+- **🏆 Gamified Workspace & Certification** — Tracks learning milestones, awards skill badges/achievements, and generates an app-branded **completion milestone** with an app record ID based on user check-ins; this is not provider certification or independently verified competence.
 
 ### Tech Stack
 
@@ -65,7 +65,7 @@ As university students, we witness on our own how industry skill demands change 
 | Frontend      | TypeScript (v5.x), React (v18.x), Vite (v6.x), Tailwind CSS (v3.x), Radix UI / Shadcn UI, Recharts (v2.x), Framer Motion (v12.x), Wouter (v3.x), TanStack React Query (v5.x), Lucide React |
 | Backend       | Node.js (v20.x), Express.js (v4.x), TypeScript (v5.x), Zod (v3.x), Orval (v7.x), Pino & Pino-HTTP (v9.x)                                                               |
 | Database      | Neon Serverless PostgreSQL (`@neondatabase/serverless`), Drizzle ORM (v0.x), `node-postgres` (`pg` v8.x)                                                               |
-| AI / Compute  | RunPod Serverless GPU Endpoints (`Qwen 3.5-27b` & `Qwen3.5-9b`), Google Generative AI SDK (`@google/genai`), Python (v3.10+), Tesseract.js (v7.x), PDF.js (`pdfjs-dist` v4.x & `unpdf` v1.x) |
+| AI / Compute  | Google Gemini API (testing default), optional RunPod Serverless Qwen main/light adapters, Python (v3.10+), Tesseract.js (v7.x), PDF.js (`pdfjs-dist` v4.x & `unpdf` v1.x) |
 | Hosting / Dev | Replit (Foundational Code & Prototyping), Vercel (Frontend Hosting), Render (Backend Hosting)                                                                          |
 
 #### **Languages, Frameworks & Libraries**
@@ -151,10 +151,8 @@ As university students, we witness on our own how industry skill demands change 
 │   ├── pnpm-workspace.yaml                  # pnpm workspace definition
 │   └── replit.md
 ├── submission/                              # Required submission documents
-│   ├── SDC2026_4bit_Preliminary.pdf         # Preliminary submission
-│   ├── SDC2026_4bit_TechDeclaration.pdf     # Technology declaration
-│   ├── SDC2026_4bit_Replit_POU.pdf          # Replit proof of use
-│   └── SDC2026_4bit_Runpod_POU.pdf          # RunPod proof of use
+│   ├── 3. SDC2026_4bit_Replit_POU.pdf      # Existing proof of use
+│   └── 4. SDC2026_4bit_RunPod_POU.pdf      # Existing proof of use
 ├── .env.example                             # Root environment variables template
 ├── .gitignore
 ├── LICENSE                                  # Apache License 2.0
@@ -165,7 +163,7 @@ As university students, we witness on our own how industry skill demands change 
 ### Architecture
 
 ```
-User ──► Replit / Web App (React Frontend & Express API) ──► RunPod Serverless Endpoints (Qwen 3.5-27b & Qwen3.5-9b)
+User → Vercel web app (React + Express) → Gemini API in testing; optional RunPod text inference in enabled hybrid mode
                                 │
                                 └──► Response returned to user
 ```
@@ -189,7 +187,7 @@ User ──► Replit / Web App (React Frontend & Express API) ──► RunPod 
                 ▼                                       ▼
 ┌───────────────────────────────────┐   ┌─────────────────────────────────┐
 │        AI MODEL & OCR LAYER       │   │          DATABASE LAYER         │
-│ • RunPod Serverless LLMs (Python) │   │ • Drizzle ORM + node-postgres   │
+│ • Gemini / optional RunPod APIs  │   │ • Drizzle ORM + node-postgres   │
 │ • Google Gemini SDK (@google/genai│   │ • Neon Serverless PostgreSQL    │
 │ • Tesseract.js & PDF.js (CV Parse)│   │   (Profiles, Skills & Catalog)  │
 └───────────────────────────────────┘   └─────────────────────────────────┘
@@ -197,7 +195,7 @@ User ──► Replit / Web App (React Frontend & Express API) ──► RunPod 
 
 * **User Interface (Frontend):** A React single-page application built with Vite (`src/artifacts/reskill-ai`) that captures user interactions, profile configurations, and RIASEC assessment responses.
 * **Backend API:** A Node.js Express server (`src/artifacts/api-server`) that processes client REST requests, handling routing, authentication, and core evaluation logic.
-* **AI Model / API:** Interacts with AI agent services (`src/artifacts/api-server/src/lib/llm.ts`) via RunPod Serverless GPU Endpoints (`Qwen 3.5-27b` & `Qwen3.5-9b`) and Google Gemini to process CVs, evaluate skill gaps, and generate AI-driven ELI5 career recommendations.
+* **AI Model / API:** Interacts with AI agent services (`src/artifacts/api-server/src/lib/llm.ts`) via Gemini by default in testing, with optional RunPod text routing in explicitly enabled hybrid mode. CV understanding uses the vision-capable route; matching and scheduling remain deterministic. AI provides bounded ELI5 explanations.
 * **Database Layer:** Managed via Drizzle ORM (`src/lib/db`) connected to a Neon Serverless PostgreSQL database, storing user profiles, skill matrices, and course catalog items.
 * **Cloud Hosting:** Foundational code built in **Replit** (`src/.replit`), with cloud infrastructure deployed via **Render** (`deployment/render.yaml`) for backend deployment and **Vercel** (`deployment/vercel.json`) for frontend hosting.
 
@@ -249,15 +247,15 @@ The table below describes each required variable, sorted alphabetically to align
 | :--- | :---: | :--- | :--- |
 | `DATABASE_URL` | Yes | `postgresql://user:pass@host/db?sslmode=require` | Pooled PostgreSQL connection string (Neon Serverless PostgreSQL) used for application-level data queries through Drizzle ORM. |
 | `DATABASE_URL_UNPOOLED` | Yes | `postgresql://user:pass@host/db?sslmode=require` | Direct (unpooled) PostgreSQL connection string dedicated to running database schema migrations and direct management commands. |
-| `GEMINI_API_KEY` | Yes | `AIzaSy...` | Google Gemini API key (`@google/genai`) utilized for resume parsing, document understanding, and structured skill extraction. |
+| `GEMINI_API_KEY` | Yes | `AIzaSy...` | Google Gemini API key, used by the server HTTP adapter, utilized for resume parsing, document understanding, and structured skill extraction. |
 | `LOG_LEVEL` | No | `info` | Logging verbosity level for the Pino logging service (options: `fatal`, `error`, `warn`, `info`, `debug`, `trace`). |
 | `NODE_ENV` | No | `development` | Target execution runtime environment (`development`, `test`, or `production`). |
 | `PORT` | No | `5000` | Local or containerized TCP port on which the Express application server listens for incoming HTTP traffic. |
-| `RUNPOD_API_KEY` | Yes | `rpa_...` | Authentication token used to authorize requests against RunPod Serverless GPU endpoints. |
-| `RUNPOD_LIGHT_ENDPOINT_ID` | Yes | `bs50a57qmoqrpp` | RunPod serverless endpoint identifier designated for fast, low-latency reasoning and lighter language model tasks (`https://api.runpod.ai/v2/bs50a57qmoqrpp/run`). |
-| `RUNPOD_LIGHT_MODEL` | Yes | `Qwen3.5-9b` | Model checkpoint identifier loaded on the lightweight RunPod serverless worker. |
-| `RUNPOD_LLM_ENDPOINT_ID` | Yes | `3pvoygmk4mn0ad` | Primary RunPod serverless endpoint identifier assigned for complex analytical reasoning, career path synthesis, and deep evaluations (`https://api.runpod.ai/v2/3pvoygmk4mn0ad/run`). |
-| `RUNPOD_LLM_MODEL` | Yes | `Qwen 3.5-27b` | Primary large language model checkpoint identifier deployed on the main RunPod compute worker. |
+| `RUNPOD_API_KEY` | Hybrid only | `rpa_...` | Authentication token used to authorize requests against RunPod Serverless GPU endpoints. |
+| `RUNPOD_LIGHT_ENDPOINT_ID` | Hybrid only | `bs50a57qmoqrpp` | RunPod serverless endpoint identifier designated for fast, low-latency reasoning and lighter language model tasks (`https://api.runpod.ai/v2/bs50a57qmoqrpp/run`). |
+| `RUNPOD_LIGHT_MODEL` | Hybrid only | `Qwen3.5-9b` | Model checkpoint identifier loaded on the lightweight RunPod serverless worker. |
+| `RUNPOD_LLM_ENDPOINT_ID` | Hybrid only | `3pvoygmk4mn0ad` | Primary RunPod serverless endpoint identifier assigned for complex analytical reasoning, career path synthesis, and deep evaluations (`https://api.runpod.ai/v2/3pvoygmk4mn0ad/run`). |
+| `RUNPOD_LLM_MODEL` | Hybrid only | `Qwen 3.5-27b` | Primary large language model checkpoint identifier deployed on the main RunPod compute worker. |
 | `SESSION_SECRET` | Yes | `generate-a-strong-random-key` | High-entropy cryptographic string used to sign, verify, and secure HTTP session cookies against tampering. |
 
 ---
@@ -379,17 +377,15 @@ We used **Replit** to build the foundational code of the Skilytics website and s
 
 📄 Proof of use: [`submission/SDC2026_4bit_Replit_POU.pdf`](submission/3.%20SDC2026_4bit_Replit_POU.pdf)
 
-## How We Use RunPod *(Required)*
+## RunPod integration and proof of use
 
-We deploy and consume **Qwen 3.5-27b** and **Qwen3.5-9b** hosted on **RunPod Serverless GPU Endpoints** to power our dual-tier AI reasoning architecture:
+The Qwen main/light endpoint adapters and proof-of-use files are included for the hackathon's separate platform requirements. **Current credit-saving testing routes all eight workflows through Gemini**. Configured endpoint IDs and historical proof do not mean that the deployed app currently executes RunPod requests.
 
-- **Primary Deep-Reasoning Workload (`Suggested: Qwen 3.5-27b`):**
-  - **Endpoint:** `https://api.runpod.ai/v2/3pvoygmk4mn0ad/run` 
-  - **Role in Skilytics:** Handles complex analytical reasoning, multi-modal CV + Holland Code (RIASEC) psychometric synthesis, deep skill-gap evaluations, and generating personalised reskilling pathways.
-- **Lightweight Low-Latency Workload (`Suggested: Qwen3.5-9b`):**
-  - **Endpoint:** `https://api.runpod.ai/v2/bs50a57qmoqrpp/run` 
-  - **Role in Skilytics:** Handles fast, low-latency inference for interactive UI reasoning, quick skill/role lookups, and friendly **ELI5 ("Explain Like I'm 5")** career summaries.
-- **Integration:** Our backend AI routing engine (`src/artifacts/api-server/src/lib/llm.ts` & `agent-routing.ts`) dynamically dispatches structured prompts to the RunPod Serverless endpoints using `RUNPOD_API_KEY`, `RUNPOD_LLM_ENDPOINT_ID`, and `RUNPOD_LIGHT_ENDPOINT_ID`.
+- Enable RunPod text inference only with `AI_AGENT_ROUTING=hybrid` and `RUNPOD_ENABLE_GENERATION=true`, plus working endpoint credentials. Without these flags, endpoints remain placeholders.
+- The main tier can provide Fitter/Planner explanations, Analyst context and Company Advisor replies. Matching scores and course scheduling are deterministic catalogue-based code.
+- The light tier can provide bounded Holland/SDG explanations. CV and Profiler stay on Gemini in normal hybrid routing; a text endpoint is not claimed to read multimodal CVs.
+- The authoritative deployed routing is `/api/ai/routing`; saved replies identify the actual responding model. Do not infer current model use from the examples below.
+- Historical proof: [RunPod proof of use](submission/4.%20SDC2026_4bit_RunPod_POU.pdf). The team must check the overall platform requirement separately from the Domain 1 rubric.
 
 Example request:
 
@@ -508,3 +504,14 @@ External feeds can become stale, unavailable or change schema; AI can time out o
 The employer dashboard now includes an accessible workforce skill heatmap. It separates profile evidence, inferred skills, reported course completions, skills still to learn and skills not needed for that person's chosen role. It is not an employee performance or hiring score. Skill headers open course searches for planning the next learning step.
 
 Build outputs in `dist/` are generated from source and excluded by `.gitignore`; hosting builds them during deployment. Do not commit build outputs, credentials or personal demo data.
+
+
+## Future-ready decision evidence (24 October 2026)
+
+- Personal fit is deterministic and separate from future priority. Scenario assumptions, weights, source periods and missing-data behavior are documented in [the method note](src/docs/future-decision-method.md).
+- Moderate and faster assumptions compare the same selected year; changing a slider does not train a forecasting model. US BLS references are not Malaysian role-demand measurements. News is qualitative context, not numerical calibration.
+- Daily Malaysia-labelled public listing snapshots provide source-comparable skill-share changes only after enough history; no worker-shortage claims or invented historical data.
+- Skill-level SDG links have editorial provenance and ELI5 reasons. SDG associations describe possible uses, not verified global impact.
+- The synthetic evaluation covers 20 personas across EN/BM/ZH; see [evaluation limitations](src/docs/workforce-evaluation.md). Automated checks are not validated hiring accuracy or a domain-expert assessment.
+- Eight bounded AI workflows are configured; personal fit and constraint planning use deterministic code. Testing routing uses Gemini; RunPod placeholders do not prove current live RunPod inference.
+- Proposal, technology declaration, slide deck and video must be supplied by the team where marked pending. Existing proof-of-use PDFs are not substitutes for the missing proposal or evidence that every workflow currently calls that provider.

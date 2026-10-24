@@ -1,3 +1,5 @@
+import {skillObservations} from "../lib/skill-observations";
+import {futureSkillWeights,roleTrendReferences} from "../lib/workforce-trends";
 import { compulsoryIds } from "../lib/institution";
 import { guestProfileScope, keepOneGuestProfile } from "../lib/guest-profile";
 import demoFixtures from "../../../../testing/demo-cv/profiles.json";
@@ -474,6 +476,8 @@ router.get("/profiles/:id/plan", async (req, res) => {
 router.post("/profiles/:id/plan", async (req, res) => {
   const { id } = GetProfileParams.parse(req.params);
   const { roleId,sdgGoal } = CreateProfilePlanBody.parse(req.body);
+  const futureScenario=z.enum(["moderate","fast"]).optional().parse(req.body.futureScenario);
+  const futureYears=z.number().int().min(1).max(10).default(3).parse(req.body.futureYears);
   const p = await requireProfile(id, req, res);
   if (!p) return;
   const journey = (!req.user || req.user.role === "individual" || req.user.role === "hr" || req.user.role === "tvet") ? await learningState(p.id) : null;
@@ -491,7 +495,9 @@ router.post("/profiles/:id/plan", async (req, res) => {
   const compulsoryCourses = requiredIds.map(id=>courses.find(c=>c.id===id));
   if(compulsoryCourses.some(c=>!c || c.durationHours===null)){res.status(409).json({error:"compulsory_catalogue_changed"});return;}
   if(compulsoryCourses.reduce((n,c)=>n+(c?.costMyr??0),0)>p.budgetMyr){res.status(409).json({error:"compulsory_budget_exceeded"});return;}
-  const plan = buildPlan({ sdgGoal, compulsoryCourses: compulsoryCourses.filter((c):c is NonNullable<typeof c>=>!!c), gaps: gapSkills, courses, budgetMyr: p.budgetMyr, weeklyHours: p.weeklyHours, hrdcEligible: req.user?.role === "hr" && p.hrdcEligible, roleTitle: role.title, aiAdvancement: !req.user || req.user.role === "individual" || req.user.role === "hr" || req.user.role === "tvet" });
+  const observed = futureScenario ? await skillObservations().catch(()=>null) : null;
+  const shifts:Record<number,number>=Object.fromEntries((observed?.skills??[]).filter((s:any)=>s.delta!=null).map((s:any)=>[s.id,s.delta]));
+  const plan = buildPlan({ sdgGoal, futureScenario, ...(futureScenario?{futureSkillWeights:futureSkillWeights(role,courses,futureScenario,shifts,futureYears),futureYears,trendEvidence:JSON.stringify({reference:roleTrendReferences([role])[0],currentDay:observed?.current.day??null,previousDay:observed?.previous?.day??null,sample:observed?.current.total??null,skillShifts:shifts}),trendReviewedAt:roleTrendReferences([role])[0].reviewedAt}:{}), compulsoryCourses: compulsoryCourses.filter((c):c is NonNullable<typeof c>=>!!c), gaps: gapSkills, courses, budgetMyr: p.budgetMyr, weeklyHours: p.weeklyHours, hrdcEligible: req.user?.role === "hr" && p.hrdcEligible, roleTitle: role.title, aiAdvancement: !req.user || req.user.role === "individual" || req.user.role === "hr" || req.user.role === "tvet" });
   const [row] = await db
     .insert(plansTable)
     .values({ profileId: id, roleId, roleTitle: role.title, ...plan })

@@ -1,3 +1,4 @@
+import {useFutureScenario} from "./future-scenario";
 import {TeamHeatmap} from "./team-heatmap";
 import { AnalysisEvidence, ScenarioMath } from "./scenario-reason";
 import { MarketGuide, usePortalGuide } from "./portal-guides";
@@ -276,6 +277,7 @@ function ProjectionMetric({
   );
 }
 function CompanyProjection() {
+  const [scenario] = useFutureScenario();
   const { lang } = useT(),
     w = enterpriseWords[lang],
     q = useCompany(),
@@ -283,12 +285,12 @@ function CompanyProjection() {
   const [years, setYears] = useState(3);
   const [saved, setSaved] = useState<Record<string, CompanyAnalysis>>({});
   const fingerprint = JSON.stringify(c ? { ...c, updatedAt: undefined } : null);
-  const localResult = saved[`${fingerprint}:${years}`];
+  const localResult = saved[`${fingerprint}:${years}:${scenario}`];
 
   const existingQuery = useQuery({
-    queryKey: ["company-analysis", fingerprint, years],
+    queryKey: ["company-analysis", fingerprint, years, scenario],
     queryFn: () =>
-      enterpriseGet<CompanyAnalysis>(`future/analysis?years=${years}`),
+      enterpriseGet<CompanyAnalysis>(`future/analysis?years=${years}&scenario=${scenario}`),
     enabled: !!c && !localResult,
     retry: false,
   });
@@ -299,7 +301,7 @@ function CompanyProjection() {
     mutationFn: async ({ years: at, key }: { years: number; key: string }) => ({
       key,
       result: await enterprisePost<CompanyAnalysis>("future/analysis", {
-        years: at,
+        years: at, scenario:scenario,
       }),
     }),
     onSuccess: ({ key, result: res }) =>
@@ -309,7 +311,7 @@ function CompanyProjection() {
   if (q.isError || !c)
     return <ErrorBox error={q.error} retry={() => q.refetch()} />;
   const projected = (exposure: number | null, n: number) =>
-    scenarioPercent("ai", { aiExposure: exposure, projection: null }, n);
+    scenarioPercent("ai", { aiExposure: exposure, projection: null }, n, scenario);
   const chart = Array.from({ length: years + 1 }, (_, n) => ({
     year: new Date().getFullYear() + n,
     observed: n === 0 && c.avgExposure !== null ? 100 * c.avgExposure : null,
@@ -398,7 +400,7 @@ function CompanyProjection() {
         <div className="flex flex-wrap items-center gap-3">
           <Button
             disabled={ai.isPending || !c.profileCount}
-            onClick={() => ai.mutate({ years, key: `${fingerprint}:${years}` })}
+            onClick={() => ai.mutate({ years, key: `${fingerprint}:${years}:${scenario}` })}
             className="shadow-sm font-semibold"
           >
             {ai.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
@@ -419,7 +421,7 @@ function CompanyProjection() {
           <div className="mt-3">
             <ErrorBox
               error={ai.error}
-              retry={() => ai.mutate({ years, key: `${fingerprint}:${years}` })}
+              retry={() => ai.mutate({ years, key: `${fingerprint}:${years}:${scenario}` })}
             />
           </div>
         )}
@@ -451,10 +453,11 @@ function CompanyProjection() {
 function EmployeeProjection({ m, years }: { m: CompanyMember; years: number }) {
   const { lang } = useT(),
     w = enterpriseWords[lang];
+  const [scenario] = useFutureScenario();
   const value = scenarioPercent(
     "ai",
     { aiExposure: m.exposure, projection: null },
-    years,
+    years, scenario,
   );
   return (
     <li className="rounded-xl border p-3">

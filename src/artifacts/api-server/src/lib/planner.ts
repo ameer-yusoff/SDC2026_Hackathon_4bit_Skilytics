@@ -16,6 +16,11 @@ export function buildPlan(opts: {
   roleTitle?: string;
   aiAdvancement?: boolean;
   sdgGoal?: string;
+  futureScenario?: "moderate"|"fast";
+  trendReviewedAt?:string;
+  futureYears?:number;
+  trendEvidence?:string;
+  futureSkillWeights?:Record<number,number>;
   compulsoryCourses?: CourseView[];
 }) {
   const { courses, weeklyHours, hrdcEligible } = opts;
@@ -54,7 +59,7 @@ export function buildPlan(opts: {
       if (chosen.includes(c)) continue;
       if (personalCost(c) > budget) continue;
       const gain = c.skills.reduce(
-        (a, s) => a + (remaining.get(s.id)?.importance ?? 0),
+        (a, s) => a + (remaining.get(s.id)?.importance ?? 0)*(opts.futureSkillWeights?.[s.id]??1),
         0,
       );
       if (gain === 0) continue;
@@ -84,6 +89,8 @@ export function buildPlan(opts: {
   );
   chosen.sort((a, b) => {
     if(compulsory.includes(a)!==compulsory.includes(b))return compulsory.includes(a)?-1:1;
+    const priority=(c:CourseView)=>Math.max(1,...c.skills.map(s=>opts.futureSkillWeights?.[s.id]??1));
+    if(opts.futureScenario && priority(a)!==priority(b))return priority(b)-priority(a);
     const ca = a.skills.some((s) => coreIds.has(s.id)) ? 0 : 1;
     const cb = b.skills.some((s) => coreIds.has(s.id)) ? 0 : 1;
     return ca - cb || a.costMyr - b.costMyr;
@@ -140,7 +147,7 @@ export function buildPlan(opts: {
     };
   });
 
-  for(const item of items) if(opts.sdgGoal) item.sdgGoal=opts.sdgGoal;
+  for(const item of items) {if(opts.sdgGoal) item.sdgGoal=opts.sdgGoal;if(opts.futureScenario){item.futureScenario=opts.futureScenario;item.trendReviewedAt=opts.trendReviewedAt;item.futureYears=opts.futureYears;item.trendEvidence=opts.trendEvidence;}}
   const totalWeeks = items.reduce(
     (a, i) =>
       i.startWeek !== null && i.durationWeeks !== null

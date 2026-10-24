@@ -1,3 +1,4 @@
+import {useFutureScenario} from "./future-scenario";
 import {roleTitle} from "@/lib/fmt";
 import {skillLabel} from "@/lib/skill-label";
 import { useEffect, useState } from "react";
@@ -15,13 +16,13 @@ const copy = {
     selected: "Selected year",
     news: "Career, technology & AI signals",
     note: "AI explains the calculation and dated evidence. Headlines do not set these numbers. This is a scenario, not a measured forecast.",
-    ai: "Each year adds 5% of the tasks still outside the observed AI overlap. The rate is a planning assumption.",
+    ai: "The selected assumption sets how quickly task overlap changes. This is not measured adoption.",
     demand:
-      "The reviewed US ten-year growth is spread smoothly across ten years. These are not official yearly or Malaysian forecasts.",
+      "The selected assumption adjusts the US reference growth trajectory. These are not official yearly or Malaysian forecasts.",
     skills:
-      "The learning-priority index grows by an assumed 5% per year. It is not a vacancy count or employer percentage.",
+      "The selected assumption grows the learning index by 5% or 10% per year, not a measured vacancy count.",
     graduate:
-      "This fictional 2026 example adds 2 percentage points per year, capped at 100%. News cannot turn it into real institution employment data.",
+      "This fictional 2026 example adds 2 or 4 percentage points per year, depending on the selected assumption, capped at 100%. News cannot turn it into real institution employment data.",
     sources: "Evidence used",
     stale:
       "Recent news is unavailable or stale; statistical references remain available.",
@@ -34,13 +35,13 @@ const copy = {
     selected: "Tahun dipilih",
     news: "Isyarat kerjaya, teknologi & AI",
     note: "AI menerangkan kiraan dan bukti bertarikh. Berita tidak menetapkan angka ini. Ini senario, bukan ramalan terukur.",
-    ai: "Setiap tahun menambah 5% tugas yang masih di luar pertindihan AI diperhatikan. Kadar ini ialah andaian perancangan.",
+    ai: "Andaian dipilih menetapkan kelajuan perubahan pertindihan tugas. Bukan penggunaan AI yang diukur.",
     demand:
-      "Pertumbuhan sepuluh tahun Amerika Syarikat disebarkan secara sekata. Ini bukan ramalan tahunan rasmi atau ramalan Malaysia.",
+      "Andaian dipilih melaraskan trajektori pertumbuhan rujukan AS. Ini bukan ramalan tahunan rasmi atau Malaysia.",
     skills:
-      "Indeks keutamaan belajar meningkat dengan andaian 5% setahun. Bukan jumlah vacancy atau peratus majikan.",
+      "Andaian dipilih menaikkan indeks belajar 5% atau 10% setahun, bukan bilangan vacancy diukur.",
     graduate:
-      "Contoh rekaan 2026 ini menambah 2 mata peratus setahun, sehingga 100%. Berita tidak menjadikannya data pekerjaan sebenar institusi.",
+      "Contoh rekaan 2026 ini menambah 2 atau 4 mata peratus setahun mengikut andaian dipilih, sehingga 100%. Berita tidak menjadikannya data pekerjaan sebenar institusi.",
     sources: "Bukti dirujuk",
     stale:
       "Berita terkini tiada atau sudah lama; rujukan statistik masih tersedia.",
@@ -53,12 +54,12 @@ const copy = {
     selected: "所选年份",
     news: "职业、技术与AI信号",
     note: "AI解释计算和注明日期的证据。新闻不决定这些数值。这是情景，并非实测预测。",
-    ai: "每年假设纳入尚未被观察到AI重叠覆盖任务的5%。这是规划假设。",
+    ai: "所选假设决定任务重叠变化的速度，并非实测采用率。",
     demand:
-      "将已审核的美国十年增长平滑分配到十年。这不是官方年度或马来西亚预测。",
-    skills: "学习优先级指数假设每年增长5%，并非职位数量或雇主百分比。",
+      "所选假设调整美国参考增长轨迹，并非官方年度或马来西亚预测。",
+    skills: "所选假设使学习指数每年增长5%或10%，并非实测职位数量。",
     graduate:
-      "虚构2026年示例每年增加2个百分点，最高100%。新闻不会将它变为本机构真实就业数据。",
+      "虚构2026年示例按所选假设每年增加2或4个百分点，最高100%。新闻不会将它变为本机构真实就业数据。",
     sources: "参考依据",
     stale: "近期新闻缺失或已过时；仍可参考统计资料。",
   },
@@ -125,25 +126,26 @@ export function ScenarioReason({mode,years,ids=[],evidenceKey=""}:{mode:Mode;yea
   const { lang } = useT(),
     w = copy[lang],
     qc = useQueryClient();
+  const [scenario] = useFutureScenario();
   const [settled, setSettled] = useState(years);
   useEffect(() => {
     const id = setTimeout(() => setSettled(years), 300);
     return () => clearTimeout(id);
   }, [years]);
   const selectedIds=ids.join(",");
-  const key = (at: number) => ["scenario-explanation", mode, at, selectedIds,evidenceKey];
+  const key = (at: number) => ["scenario-explanation", mode, at, selectedIds,evidenceKey,scenario];
   const q = useQuery({
     queryKey: key(settled),
     queryFn: ({ signal }) =>
       customFetch<Reply>(
-        `/api/market/scenario-explanation?mode=${mode}&years=${settled}&ids=${selectedIds}`,
+        `/api/market/scenario-explanation?mode=${mode}&years=${settled}&ids=${selectedIds}&scenario=${scenario}`,
         { signal },
       ),
     staleTime: 300000,
     retry: false,
   });
   const ai = useMutation({
-    mutationFn: async ({at,forMode,forIds,cacheKey}:{at:number;forMode:Mode;forIds:number[];cacheKey:(string|number)[]})=>({cacheKey,data:await customFetch<Reply>("/api/market/scenario-explanation",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({mode:forMode,years:at,ids:forIds})})}),
+    mutationFn: async ({at,forMode,forIds,cacheKey}:{at:number;forMode:Mode;forIds:number[];cacheKey:(string|number)[]})=>({cacheKey,data:await customFetch<Reply>("/api/market/scenario-explanation",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({mode:forMode,years:at,ids:forIds,scenario})})}),
     onSuccess:({cacheKey,data})=>qc.setQueryData(cacheKey,data),
   });
   const data = q.data?.years === years ? q.data : undefined;
@@ -178,7 +180,7 @@ export function ScenarioReason({mode,years,ids=[],evidenceKey=""}:{mode:Mode;yea
       )}
       {q.isError && <ErrorBox error={q.error} retry={() => q.refetch()} />}{" "}
       {ai.isError &&
-        ai.variables?.at === years &&
+        ai.variables?.at === years && ai.variables?.cacheKey.at(-1) === scenario &&
         ai.variables?.forMode === mode && ai.variables?.forIds.join(",") === selectedIds && <ErrorBox error={ai.error} />}{" "}
       {data?.newsStale && (
         <p className="mt-3 text-xs text-muted-foreground">{w.stale}</p>

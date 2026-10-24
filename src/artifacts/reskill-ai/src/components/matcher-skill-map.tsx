@@ -1,3 +1,4 @@
+import {SkillSdg} from "./skill-sdg";
 import type { Profile, Role, RoleMatch } from "@workspace/api-client-react";
 import { MapPin, ArrowUpRight, Check, Lightbulb, BookOpen } from "lucide-react";
 import { SdgBadge } from "./kit";
@@ -158,7 +159,7 @@ export function MatcherSkillMap({
         style={{ animationDelay: `${Math.min(i, 8) * 40}ms` }}
         className={`motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-2 rounded-xl border p-3 text-sm transition-shadow hover:shadow-md ${inferred ? "border-sky-500/40 bg-sky-500/10" : known ? "border-emerald-500/40 bg-emerald-500/10" : "border-amber-500/40 bg-amber-500/10"}`}
       >
-        <b>{skillLabel(s.name, lang)}</b>
+        <b>{skillLabel(s.name, lang)}</b><SkillSdg name={s.name}/>
         <p className="mt-2 flex items-center gap-1 text-xs">
           <Icon className="h-3.5 w-3.5 shrink-0" />
           {inferred ? w.inferred : known ? w.known : w.learn}
@@ -208,7 +209,7 @@ export function MatcherSkillMap({
       {groups.map(
         (g) =>
           g.skills.length > 0 && (
-            <div key={g.title} className="mb-5">
+            <div key={g.title === w.specific ? "specific" : "basics"} className="mb-5">
               <h4 className="mb-2 text-sm font-bold">
                 {g.title}{" "}
                 {g.title === w.specific && (
@@ -222,7 +223,7 @@ export function MatcherSkillMap({
                   {w.foundationNote}
                 </p>
               )}
-              <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="grid items-start gap-2 sm:grid-cols-2 lg:grid-cols-3">
                 {g.skills.map(tile)}
               </div>
             </div>
@@ -236,7 +237,7 @@ export function MatcherSkillMap({
           <div className="mt-3 grid gap-2 sm:grid-cols-2">
             {uncovered.map((s) => (
               <div key={s.skillId} className="text-xs">
-                <b>{skillLabel(s.name, lang)}</b>
+                <b>{skillLabel(s.name, lang)}</b><SkillSdg name={s.name}/>
                 <p className="text-muted-foreground">
                   {s.courseCount == null ? w.unknown : w.unavailable}
                 </p>

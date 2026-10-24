@@ -1,0 +1,288 @@
+{
+  "fixtureOnly": true,
+  "evaluatedAt": "2026-10-24",
+  "notRealWorldAccuracy": true,
+  "independentHumanReview": "pending",
+  "results": [
+    {
+      "id": "fictional-01",
+      "target": "SEO Specialist",
+      "parity": true,
+      "top3": [
+        "SEO Specialist",
+        "Content Marketing Specialist",
+        "Marketing Operations Specialist"
+      ],
+      "targetInTop3": true,
+      "gapCount": 1,
+      "withinBudget": true,
+      "allCoursesFromFixture": true
+    },
+    {
+      "id": "fictional-02",
+      "target": "Social Media Specialist",
+      "parity": true,
+      "top3": [
+        "Social Media Specialist",
+        "Digital Marketing Specialist",
+        "Marketing Operations Specialist"
+      ],
+      "targetInTop3": true,
+      "gapCount": 1,
+      "withinBudget": true,
+      "allCoursesFromFixture": true
+    },
+    {
+      "id": "fictional-03",
+      "target": "Email Marketing Specialist",
+      "parity": true,
+      "top3": [
+        "Marketing Operations Specialist",
+        "Email Marketing Specialist",
+        "Content Marketing Specialist"
+      ],
+      "targetInTop3": true,
+      "gapCount": 1,
+      "withinBudget": true,
+      "allCoursesFromFixture": true
+    },
+    {
+      "id": "fictional-04",
+      "target": "Marketing Operations Specialist",
+      "parity": true,
+      "top3": [
+        "Marketing Operations Specialist",
+        "Email Marketing Specialist",
+        "Content Marketing Specialist"
+      ],
+      "targetInTop3": true,
+      "gapCount": 1,
+      "withinBudget": true,
+      "allCoursesFromFixture": true
+    },
+    {
+      "id": "fictional-05",
+      "target": "Content Marketing Specialist",
+      "parity": true,
+      "top3": [
+        "Content Marketing Specialist",
+        "Email Marketing Specialist",
+        "SEO Specialist"
+      ],
+      "targetInTop3": true,
+      "gapCount": 1,
+      "withinBudget": true,
+      "allCoursesFromFixture": true
+    },
+    {
+      "id": "fictional-06",
+      "target": "Technical Writer",
+      "parity": true,
+      "top3": [
+        "Technical Writer",
+        "Content Writer",
+        "Content Marketing Specialist"
+      ],
+      "targetInTop3": true,
+      "gapCount": 1,
+      "withinBudget": true,
+      "allCoursesFromFixture": true
+    },
+    {
+      "id": "fictional-07",
+      "target": "Front-end Developer",
+      "parity": true,
+      "top3": [
+        "Front-end Developer",
+        "Web Developer",
+        "Back-end Developer"
+      ],
+      "targetInTop3": true,
+      "gapCount": 1,
+      "withinBudget": true,
+      "allCoursesFromFixture": true
+    },
+    {
+      "id": "fictional-08",
+      "target": "Back-end Developer",
+      "parity": true,
+      "top3": [
+        "Back-end Developer",
+        "AI Application Developer",
+        "Cloud Application Developer"
+      ],
+      "targetInTop3": true,
+      "gapCount": 1,
+      "withinBudget": true,
+      "allCoursesFromFixture": true
+    },
+    {
+      "id": "fictional-09",
+      "target": "Software QA Tester",
+      "parity": true,
+      "top3": [
+        "Software QA Tester",
+        "Back-end Developer",
+        "AI Application Developer"
+      ],
+      "targetInTop3": true,
+      "gapCount": 1,
+      "withinBudget": true,
+      "allCoursesFromFixture": true
+    },
+    {
+      "id": "fictional-10",
+      "target": "Database Administrator",
+      "parity": true,
+      "top3": [
+        "Database Administrator",
+        "Cloud Application Developer",
+        "Back-end Developer"
+      ],
+      "targetInTop3": true,
+      "gapCount": 1,
+      "withinBudget": true,
+      "allCoursesFromFixture": true
+    },
+    {
+      "id": "fictional-11",
+      "target": "AI Application Developer",
+      "parity": true,
+      "top3": [
+        "AI Application Developer",
+        "Back-end Developer",
+        "Cloud Application Developer"
+      ],
+      "targetInTop3": true,
+      "gapCount": 1,
+      "withinBudget": true,
+      "allCoursesFromFixture": true
+    },
+    {
+      "id": "fictional-12",
+      "target": "Cloud Application Developer",
+      "parity": true,
+      "top3": [
+        "Cloud Application Developer",
+        "AI Application Developer",
+        "Back-end Developer"
+      ],
+      "targetInTop3": true,
+      "gapCount": 1,
+      "withinBudget": true,
+      "allCoursesFromFixture": true
+    },
+    {
+      "id": "fictional-13",
+      "target": "Data Analyst",
+      "parity": true,
+      "top3": [
+        "Data Analyst",
+        "Data Scientist",
+        "Back-end Developer"
+      ],
+      "targetInTop3": true,
+      "gapCount": 1,
+      "withinBudget": true,
+      "allCoursesFromFixture": true
+    },
+    {
+      "id": "fictional-14",
+      "target": "Data Scientist",
+      "parity": true,
+      "top3": [
+        "Data Scientist",
+        "Database Administrator",
+        "AI / Machine Learning Engineer"
+      ],
+      "targetInTop3": true,
+      "gapCount": 1,
+      "withinBudget": true,
+      "allCoursesFromFixture": true
+    },
+    {
+      "id": "fictional-15",
+      "target": "AI / Machine Learning Engineer",
+      "parity": true,
+      "top3": [
+        "AI / Machine Learning Engineer",
+        "AI Application Developer",
+        "Cloud Application Developer"
+      ],
+      "targetInTop3": true,
+      "gapCount": 1,
+      "withinBudget": true,
+      "allCoursesFromFixture": true
+    },
+    {
+      "id": "fictional-16",
+      "target": "Software Developer",
+      "parity": true,
+      "top3": [
+        "Back-end Developer",
+        "Software QA Tester",
+        "Cloud Application Developer"
+      ],
+      "targetInTop3": false,
+      "gapCount": 1,
+      "withinBudget": true,
+      "allCoursesFromFixture": true
+    },
+    {
+      "id": "fictional-17",
+      "target": "Web Developer",
+      "parity": true,
+      "top3": [
+        "Web Developer",
+        "Front-end Developer",
+        "Software Developer"
+      ],
+      "targetInTop3": true,
+      "gapCount": 1,
+      "withinBudget": true,
+      "allCoursesFromFixture": true
+    },
+    {
+      "id": "fictional-18",
+      "target": "Cybersecurity Analyst",
+      "parity": true,
+      "top3": [
+        "Network and Cloud Administrator",
+        "Cybersecurity Analyst",
+        "Database Administrator"
+      ],
+      "targetInTop3": true,
+      "gapCount": 1,
+      "withinBudget": true,
+      "allCoursesFromFixture": true
+    },
+    {
+      "id": "fictional-19",
+      "target": "Network and Cloud Administrator",
+      "parity": true,
+      "top3": [
+        "Network and Cloud Administrator",
+        "Cybersecurity Analyst",
+        "Database Administrator"
+      ],
+      "targetInTop3": true,
+      "gapCount": 1,
+      "withinBudget": true,
+      "allCoursesFromFixture": true
+    },
+    {
+      "id": "fictional-20",
+      "target": "IT Support Specialist",
+      "parity": true,
+      "top3": [
+        "IT Support Specialist",
+        "Network and Cloud Administrator",
+        "Cybersecurity Analyst"
+      ],
+      "targetInTop3": true,
+      "gapCount": 1,
+      "withinBudget": true,
+      "allCoursesFromFixture": true
+    }
+  ]
+}

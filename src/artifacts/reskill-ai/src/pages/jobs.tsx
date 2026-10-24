@@ -1,3 +1,4 @@
+import {SkillSdg} from "@/components/skill-sdg";
 import { SdgChoice,SdgExplanation } from "@/components/sdg-choice";
 import { byGoal } from "@/lib/sdg-choice";
 import { useState } from "react";
@@ -161,6 +162,7 @@ export default function Jobs() {
           ),
         )}
       </div>
+      <details className="my-3 text-xs"><summary className="min-h-11 cursor-pointer py-3">{lang==="ms"?"Kemahiran & kaitan SDG":lang==="zh"?"技能与SDG关联":"Skills & SDG links"}</summary>{[...new Set([...j.matched,...j.missing])].map(name=><SkillSdg name={name} key={name}/>)}</details>
       <SdgExplanation goals={roleGoals(j.exposureRole??{title:j.title,sector:""})} subject={j.exposureRole?.title??j.title} skills={[...j.matched,...j.missing]} kind="vacancy"/>
       <div className="mt-auto flex flex-wrap items-center justify-between gap-3 border-t pt-4">
         <a
