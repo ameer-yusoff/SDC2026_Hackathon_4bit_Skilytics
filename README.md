@@ -51,10 +51,10 @@ Skilytics is an AI-powered career guidance and reskilling platform that helps wo
 
 | Layer         | Technology                   |
 | ------------- | ---------------------------- |
-| Frontend      | TypeScript (v5.x), React (v18.x), Vite (v5.x), Tailwind CSS (v3.x), Radix UI / Shadcn UI, TanStack React Query (v5.x), Recharts (v2.x), Framer Motion (v12.x), Wouter (v3.x), Lucide React |
-| Backend       | Node.js (v20.x), Express.js (v4.x), TypeScript (v5.x), Python (v3.10+), Zod (v3.x), Orval (v7.x), Tesseract.js (v7.x), PDF.js (v4.x/v1.x), Pino & Pino-HTTP (v9.x) |
-| Database      | Neon Serverless PostgreSQL, Drizzle ORM (v0.x), Neon Serverless SDK (`@neondatabase/serverless`), `node-postgres` (`pg` v8.x) |
-| AI / Compute  | RunPod Serverless GPU (H100 GPUs running Qwen 3.5-27b, Qwen3.5-9b), Google Gemini API (`Gemini-flash-lite 3.1` via `@google/genai`) |
+| Frontend      | TypeScript 5.9, React 19.1, Vite 7.3, Tailwind CSS 4.1, Radix UI / Shadcn UI, TanStack React Query 5, Recharts 2, Framer Motion 12, Wouter 3, Lucide React |
+| Backend       | Node.js 20.19+ or 22.12+ (Vite-compatible runtime), Express 5, TypeScript 5.9, Zod 3, Orval 8, Tesseract.js 7, PDF.js 4, unpdf 1, Pino 9 / Pino-HTTP 10 |
+| Database      | Neon PostgreSQL, Drizzle ORM 0.45, `node-postgres` (`pg` 8); schema in `src/lib/db` |
+| AI / Compute  | Google Gemini (`gemini-3.1-flash-lite`, configurable) through a server-side REST client; RunPod Qwen3.5-27B / Qwen3.5-9B integration is temporarily paused to conserve credits |
 | Hosting / Dev | Vercel (Frontend), Render (Backend API), Replit (Cloud IDE & Staging), GitHub |
 
 ---
@@ -79,7 +79,7 @@ Skilytics is an AI-powered career guidance and reskilling platform that helps wo
 │   │   │       ├── lib/                 # AI agents, LLM routing, CV parsing, & unit tests
 │   │   │       └── routes/              # REST API route handlers
 │   │   ├── mockup-sandbox/              # Rapid UI prototyping sandbox
-│   │   └── reskill-ai/                  # React 18 + Vite Frontend SPA (PWA)
+│   │   └── reskill-ai/                  # React 19 + Vite Frontend SPA (PWA)
 │   │       ├── public/                  # Static assets, SDG icons, demo CVs, & RunPod proofs
 │   │       └── src/
 │   │           ├── components/          # UI & feature components (heatmaps, portals, etc.)
@@ -124,7 +124,7 @@ User ──► Vercel (React + Vite SPA: src/artifacts/reskill-ai)
            │      ├──► RunPod Serverless GPU (Qwen 3.5-27b / Qwen3.5-9b)
            │      └──► Google Gemini API (Gemini-flash-lite 3.1)
            │
-           ├──► Embedding & Database Layer (Drizzle ORM: src/lib/db)
+           ├──► Database Layer (Drizzle ORM + pg: src/lib/db)
            │      └──► Neon Serverless PostgreSQL (Profiles, RIASEC, Courses)
            │
            └──► External Data & Course Feeds (OpenDOSM, O*NET, Anthropic Index, etc.)
@@ -136,13 +136,9 @@ User ──► Vercel (React + Vite SPA: src/artifacts/reskill-ai)
 
 ### Option 1 — Run on Replit (Recommended)
 
-1. Import this repository on Replit via **Create Repl → Import from GitHub** (`https://github.com/ameer-yusoff/SDC2026_Hackathon_4bit_Skilytics`). (Replit Workspace Link: N/A)
-2. Open the **Secrets** tab (🔒) and add the variables listed in `.env.example` / `src/.env.example`:
-   - `DATABASE_URL`
-   - `GEMINI_API_KEY`
-   - `RUNPOD_API_KEY`
-   - `RUNPOD_ENDPOINT_ID`
-3. Click **Run**. Replit uses `src/.replit` to start the full-stack workspace.
+1. Import this repository on Replit via **Create Repl → Import from GitHub** (`https://github.com/ameer-yusoff/SDC2026_Hackathon_4bit_Skilytics`). Open `src` as the workspace directory; the Replit configuration is `src/.replit`.
+2. Add `DATABASE_URL`, `DATABASE_URL_UNPOOLED`, a unique `SESSION_SECRET`, and `GEMINI_API_KEY` to **Secrets**. Use the Gemini routing settings in `src/.env.example`. RunPod credentials are optional while its integration is paused.
+3. In the `src` directory, follow the install, database setup and two-terminal commands below. The repository does not define a complete one-click Replit Run workflow.
 
 ### Option 2 — Run Locally
 
@@ -151,28 +147,43 @@ User ──► Vercel (React + Vite SPA: src/artifacts/reskill-ai)
 git clone https://github.com/ameer-yusoff/SDC2026_Hackathon_4bit_Skilytics.git
 cd SDC2026_Hackathon_4bit_Skilytics
 
-# 2. (Optional) Create a Python virtual environment & install Python validation dependencies
-python -m venv venv
-venv\Scripts\activate        # MacOS/Linux: source venv/bin/activate
-pip install -r requirements.txt
-
-# 3. Install Node.js monorepo dependencies
+# 2. Install dependencies (Node.js 20.19+ or 22.12+, pnpm 9.15.4)
 cd src
 pnpm install
 
-# 4. Configure environment variables
-copy .env.example .env            # then fill in your DATABASE_URL, GEMINI_API_KEY, RUNPOD_API_KEY, etc.
+# 3. Configure environment variables (Windows PowerShell)
+Copy-Item .env.example .env
+# macOS/Linux: cp .env.example .env
+# Fill DATABASE_URL, DATABASE_URL_UNPOOLED, SESSION_SECRET and GEMINI_API_KEY.
 
-# 5. Run the application (starts API server & React frontend)
+# 4. On a NEW development database, create the schema; review Drizzle's prompts.
+pnpm db:push
+
+# 5. Terminal 1, from src: start the API (default http://localhost:5000)
+pnpm dev:api
+
+# 6. Terminal 2, from src: start the frontend (default http://localhost:3000)
 pnpm run dev
 ```
+
+`pnpm run dev` displays the frontend only. Its `/api` proxy expects the separately running API at port 5000; set `API_URL` for another API address. API startup seeds the built-in catalogue and fictional demo accounts, then starts source refreshes. Use a separate development database. Python is not required to run the web application; `requirements.txt` lists optional Python tooling, and no Python validation scripts are currently committed.
 
 ### Run Tests
 
 ```bash
 cd src
-pnpm test
+# Pure routing and intake logic checks; no database or AI credits required
+pnpm --filter @workspace/api-server exec tsx --test src/lib/agent-routing.test.ts src/lib/intake-replacement.test.ts
+
+# Frontend logic regression checks
+pnpm --filter @workspace/reskill-ai exec tsx --test src/lib/*.test.ts
+
+# Compile-time checks
+pnpm --filter @workspace/api-server typecheck
+pnpm --filter @workspace/reskill-ai typecheck
 ```
+
+The workspace has no root `test` script. The complete backend suite is `pnpm --filter @workspace/api-server test`; some tests create and delete database fixtures, so run it only with `DATABASE_URL` pointing to a dedicated test database with the schema already created. Do not use the production database for integration tests.
 
 ---
 
@@ -190,7 +201,7 @@ pnpm test
 - **Setup:** Configured scale-to-zero serverless workers deployed as **RunPod Serverless Endpoints**:
   - **Qwen 3.5-27b:** `https://api.runpod.ai/v2/3pvoygmk4mn0ad/run`
   - **Qwen3.5-9b:** `https://api.runpod.ai/v2/bs50a57qmoqrpp/run`
-- **Integration:** The backend API (`src/artifacts/api-server/src/lib/llm.ts`) and Python validation scripts send structured inference requests via REST API (`Python` and `CURL`) using `RUNPOD_API_KEY` to evaluate career paths and generate reskilling roadmaps, providing multi-vendor resilience alongside Google Gemini.
+- **Integration:** The backend REST client (`src/artifacts/api-server/src/lib/llm.ts`) supports RunPod using `RUNPOD_API_KEY`, `RUNPOD_LLM_ENDPOINT_ID` and `RUNPOD_LIGHT_ENDPOINT_ID`. RunPod generation is currently paused to conserve credits; Gemini serves the eight routed AI roles. See `src/docs/ai-routing.md` for configuration and workflow boundaries. OpenJev is not integrated in the committed application.
 
 Example request:
 

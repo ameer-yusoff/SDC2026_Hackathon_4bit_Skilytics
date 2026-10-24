@@ -126,7 +126,7 @@ export const docsEn = {
   "docs.ai.checks": "Status checks read model metadata and health only. They do not generate text, so a healthy status does not prove a reply will succeed.",
   "docs.ai.cold": "RunPod generation and health checks are disabled during Gemini-only testing. Enabling hybrid routing and generation may wake a paid worker.",
   "docs.ai.ids": "Endpoint IDs are not public secrets. API keys are never shown.",
-  "docs.ai.configured": "Provider, model and health come from the live AI status. If the API key is missing, the service shows as not configured.",
+  "docs.ai.configured": "Integrated models: Gemini, Qwen3.5-27B and Qwen3.5-9B. Gemini currently handles AI requests; the RunPod Qwen endpoints are paused. Provider, model and configuration status come from the live API. Configured means credentials are present, not that a request succeeded.",
   "docs.ai.privacy": "With your consent, CV text and images go to Gemini. All eight routed AI roles currently use Gemini. RunPod is temporarily paused to conserve remaining credits. Original files are discarded; extracted text and evidence stay with your profile. Guest profiles are kept for 7 days. Employer employee summaries combine saved CV facts and fixed Holland results into English, Malay and Mandarin in one request, stored by input fingerprint. Company Future uses organisation-scoped learning and exposure data; its AI button caches the three-language analysis for each input and horizon. KPI targets are suggestions, not measured outcomes. Company/Institution Advisor retrieves this account’s organisation snapshot, saved analysis, up to six recent conversation turns and relevant catalogue references. Answers and references are saved in all three languages. A changed horizon or company snapshot requires a fresh analysis; it cannot take autonomous actions.",
 
   "docs.riasec.items": "30 workplace activities adapted from O*NET Interest Profiler domains, with English, Malay and Mandarin wording. Five items per RIASEC area; response scale 1–5. This adaptation is not the validated Mini-IP.",
@@ -285,7 +285,7 @@ export const docsMs: Record<DocsKey, string> = {
   "docs.ai.checks": "Semakan status hanya membaca metadata dan kesihatan model. Ia tidak menjana teks, jadi status sihat tidak membuktikan jawapan akan berjaya.",
   "docs.ai.cold": "Penjanaan dan semakan kesihatan RunPod dimatikan semasa ujian Gemini sahaja. Mengaktifkan laluan hibrid dan penjanaan mungkin membangunkan pekerja berbayar.",
   "docs.ai.ids": "ID titik akhir bukan rahsia awam. Kunci API tidak pernah ditunjukkan.",
-  "docs.ai.configured": "Penyedia, model dan kesihatan datang daripada status AI langsung. Jika kunci API tiada, perkhidmatan ditunjukkan sebagai belum dikonfigurasi.",
+  "docs.ai.configured": "Model yang disepadukan: Gemini, Qwen3.5-27B dan Qwen3.5-9B. Gemini kini mengendalikan permintaan AI; endpoint Qwen RunPod dihentikan sementara. Penyedia, model dan status konfigurasi datang daripada API langsung. Dikonfigurasi bermaksud kelayakan tersedia, bukan permintaan telah berjaya.",
   "docs.ai.privacy": "Dengan persetujuan anda, teks dan imej CV dihantar kepada Gemini. Lapan peranan AI kini menggunakan Gemini. RunPod dihentikan sementara untuk menjimatkan baki kredit. Fail asal dibuang; teks dan bukti disimpan bersama profil. Profil tetamu disimpan selama 7 hari. Ringkasan pekerja mengaitkan CV dan keputusan Holland tetap, menjana dan menyimpan tiga bahasa dalam satu permintaan. Company Future menggunakan data syarikat sendiri; analisis AI disimpan mengikut input dan tempoh. Sasaran KPI ialah cadangan, bukan hasil terukur. Penasihat Syarikat/Institusi merujuk snapshot organisasi akaun ini, analisis disimpan, sehingga enam giliran chat terkini dan rujukan kursus berkaitan. Jawapan dan rujukan disimpan dalam tiga bahasa. Perubahan tahun atau data syarikat memerlukan analisis baharu; AI ini tidak mengambil tindakan sendiri.",
 
   "docs.riasec.items": "30 aktiviti kerja diadaptasi daripada domain O*NET Interest Profiler dalam English, Bahasa Melayu dan Mandarin. Lima item bagi setiap kategori RIASEC; skala jawapan 1–5. Adaptasi ini bukan Mini-IP yang telah divalidasi.",
@@ -442,7 +442,7 @@ export const docsZh: Record<DocsKey, string> = {
   "docs.ai.checks": "状态检查只读取模型元数据和健康状况，不生成文本，因此状态正常并不保证回复一定成功。",
   "docs.ai.cold": "仅使用 Gemini 测试期间，RunPod 生成功能和健康检查均已关闭。启用混合路由与生成后，可能唤醒付费工作节点。",
   "docs.ai.ids": "接口 ID 不是公开机密。API 密钥从不显示。",
-  "docs.ai.configured": "服务商、模型与健康状况来自实时 AI 状态。若缺少 API 密钥，服务会显示为未配置。",
+  "docs.ai.configured": "已集成模型：Gemini、Qwen3.5-27B 和 Qwen3.5-9B。目前由 Gemini 处理 AI 请求；RunPod Qwen 端点暂时停用。服务商、模型及配置状态来自实时 API。已配置仅表示凭据存在，不代表请求已成功。",
   "docs.ai.privacy": "经你同意，简历文字和图像发送至 Gemini。目前全部八个AI角色使用 Gemini；RunPod 暂时停用以保留剩余额度。原文件不保留，提取的文字和依据随档案保存；访客档案保留 7 天。员工摘要结合简历及固定霍兰德结果，一次生成并保存三种语言。公司未来分析仅使用所属公司的学习与暴露数据，按输入和年数缓存。KPI目标是建议，并非实测结果。公司/机构顾问检索本账号的机构快照、已保存分析、最多六轮近期对话和相关课程资料，三语回答及参考资料一起保存。年份或公司数据更改后需要重新分析；它不会自主执行操作。",
 
   "docs.riasec.items": "根据 O*NET Interest Profiler 领域改编的 30 项工作活动，提供英语、马来语和中文。每个 RIASEC 领域五题，评分为 1–5。本改编版本并非已验证的 Mini-IP。",
