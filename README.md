@@ -377,7 +377,7 @@ We used **Replit** to build the foundational code of the Skilytics website and s
 - **Database & API Integration:** Configured Drizzle ORM migrations and Neon Serverless PostgreSQL connectivity alongside our AI agent routing layer within the Replit development environment.
 - **Secrets Management:** All API keys and credentials (`DATABASE_URL`, `RUNPOD_API_KEY`, `RUNPOD_LLM_ENDPOINT_ID`, `RUNPOD_LIGHT_ENDPOINT_ID`, `GEMINI_API_KEY`, `SESSION_SECRET`) are stored securely in environment secrets and never hardcoded in the repository.
 
-📄 Proof of use: [`submission/SDC2026_4bit_Replit_POU.pdf`](submission/SDC2026_4bit_Replit_POU.pdf)
+📄 Proof of use: [`submission/SDC2026_4bit_Replit_POU.pdf`](submission/3.%20SDC2026_4bit_Replit_POU.pdf)
 
 ## How We Use RunPod *(Required)*
 
@@ -415,7 +415,7 @@ curl -X POST https://api.runpod.ai/v2/bs50a57qmoqrpp/run \
   }'
 ```
 
-📄 Proof of use: [`submission/SDC2026_4bit_Runpod_POU.pdf`](submission/SDC2026_4bit_Runpod_POU.pdf)
+📄 Proof of use: [`submission/SDC2026_4bit_Runpod_POU.pdf`](submission/4.%20SDC2026_4bit_Runpod_POU.pdf)
 
 ---
 
