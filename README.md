@@ -24,7 +24,7 @@
 | RunPod Endpoint (Qwen 3.5-27b)   | https://api.runpod.ai/v2/3pvoygmk4mn0ad/run                       |
 | RunPod Endpoint (Qwen3.5-9b)     | https://api.runpod.ai/v2/bs50a57qmoqrpp/run                       |
 | Slide Deck                       | https://drive.google.com/file/d/1844_XLOdT_Aj30J95oGCap6r_7MMLmm4/view?usp=sharing                                                               |
-| Demo Video                       | N/A                                                               |
+| Demo Video                       | https://youtu.be/VEIoKEkvKLM                                                               |
 | Submission Docs (GDrive)                       | https://drive.google.com/drive/folders/1U7oinIT5e4GN9I0DyWFv8Vw134N5u3do?usp=drive_link                                                             |
 
 ---
