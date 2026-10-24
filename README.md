@@ -55,7 +55,7 @@ As university students, we witness on our own how industry skill demands change 
 - **📡 Live AI-Trend Signal Layer & Market Pulse** — Integrates real-time, citable public data sources—displaying unemployment & participation rates, labour force trends, AI usage by role, and most AI-exposed roles.
 - **🎯 Explainable Future-Role Matching & Skill Mapping** — Ranks best-fit future roles with transparent match scores, role-specific skill maps, and labelled 1–10-year planning scenarios with source-linked explanations.
 - **🗺️ Personalised Reskilling Pathways** — Generates ordered, time-bound learning plans tailored to the user's weekly study hours and budget constraints, utilizing public online course catalogues. HRD eligibility is employer-only and never asserted without verification.
-- **🌍 Meaningful UN SDG Mapping** — Tags every recommended role and skill to relevant UN Sustainable Development Goals (**SDG 4** Quality Education, **SDG 8** Decent Work & Economic Growth, **SDG 9** Industry and Innovation & Infrastructure).
+- **🌍 Meaningful UN SDG Mapping** — Tags every course, role and skill to relevant UN Sustainable Development Goals.
 - **🏆 Gamified Workspace & Certification** — Tracks learning milestones, awards skill badges/achievements, and generates a verifiable **Certificate of Accomplishment** upon course completion.
 
 ### Tech Stack
