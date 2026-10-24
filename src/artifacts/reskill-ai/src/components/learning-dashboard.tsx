@@ -1,4 +1,4 @@
-import {SdgContribution} from "./sdg-choice";
+import {SdgContribution,SdgExplanation} from "./sdg-choice";
 import {useState} from "react";
 import {jobWords} from "./market-skills";
 import type { Profile } from "@workspace/api-client-react";
@@ -148,6 +148,7 @@ export function LearningDashboard({ p, employer=false, portal="hr" }: { p: Profi
                   {w.open} ↗
                 </a>
               </div>
+              <SdgExplanation goals={i.sdgCodes} subject={i.title} skills={i.skills} kind="course"/>
               <label className="mt-3 inline-flex min-h-11 cursor-pointer items-center gap-2 text-sm">
                 <input
                   type="checkbox"

@@ -16,7 +16,7 @@ export const en = {
   "cat.Domain": "Subject knowledge",
   "sdg.related": "Related SDG",
   "sdg.main": "Main SDG",
-  "courses.live": "Microsoft Learn and freeCodeCamp course data refresh every six hours. Durations appear only when published by the provider. SDG links describe learning themes, not certified impact.",
+  "courses.live": "Live provider catalogues are checked every six hours; OpenLearn is a reviewed selection, not a live feed. Durations appear only when published by the provider. SDG links describe learning themes, not certified impact.",
   "courses.durationUnknown": "Duration not published",
   "courses.stale": "Last checked {d} · provider unavailable",
   "level.self-paced": "Self-paced",

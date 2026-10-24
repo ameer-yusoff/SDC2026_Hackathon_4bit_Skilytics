@@ -1,3 +1,6 @@
+import { sdgExplanation } from "@/lib/sdg-explanations";
+import { useId } from "react";
+import { Filter, RotateCcw, ChevronDown } from "lucide-react";
 import { useT } from "@/i18n";
 import { roleGoals } from "@/lib/sdg-choice";
 import { SdgBadge } from "./kit";
@@ -66,30 +69,98 @@ export function SdgChoice({
 }) {
   const { lang, tk } = useT(),
     w = words[lang];
+  const inputId = useId();
+  const available = [...new Set(goals.map((g) => g.split(".")[0]))].filter(
+    (g) => /^(?:[1-9]|1[0-7])$/.test(g),
+  );
+  const current = value === "all" || available.includes(value) ? value : "all";
+  const label =
+    lang === "ms" ? "Tema SDG" : lang === "zh" ? "SDG主题" : "SDG theme";
+  const reset =
+    lang === "ms"
+      ? "Reset penapis SDG"
+      : lang === "zh"
+        ? "重置SDG筛选"
+        : "Reset SDG filter";
   return (
-    <fieldset className="rounded-2xl border bg-card p-4">
-      <legend className="px-1 text-sm font-bold">
-        {learning
-          ? lang === "ms"
-            ? "Apakah yang anda mahu sokong melalui pembelajaran?"
-            : lang === "zh"
-              ? "你希望学习支持什么？"
-              : "What would you like your learning to support?"
-          : w.choose}
+    <fieldset
+      className="min-w-0 rounded-2xl border bg-card p-3 sm:p-4"
+      data-testid="sdg-filter"
+    >
+      <legend id={inputId + "-label"} className="px-1 text-sm font-bold">
+        <span className="sm:hidden">{label}</span>
+        <span className="hidden sm:inline">
+          {learning
+            ? lang === "ms"
+              ? "Apakah yang anda mahu sokong melalui pembelajaran?"
+              : lang === "zh"
+                ? "你希望学习支持什么？"
+                : "What would you like your learning to support?"
+            : w.choose}
+        </span>
       </legend>
-      <div className="flex flex-wrap gap-2">
-        {["all", ...goals].map((g) => (
+      <div className="flex min-w-0 items-center gap-2 sm:hidden">
+        <div
+          className={`flex min-w-0 flex-1 items-center gap-2 rounded-xl border px-3 focus-within:ring-2 focus-within:ring-primary/40 ${current !== "all" ? "border-primary/40 bg-primary/5" : "bg-background"}`}
+        >
+          {current === "all" ? (
+            <Filter
+              aria-hidden="true"
+              className="h-5 w-5 shrink-0 text-primary"
+            />
+          ) : (
+            <img
+              key={current}
+              src={`/sdg/${current}.png`}
+              alt=""
+              className="h-8 w-8 shrink-0 motion-safe:animate-in motion-safe:fade-in"
+            />
+          )}
+          <select
+            id={inputId}
+            aria-labelledby={inputId + "-label"}
+            className="min-h-12 min-w-0 flex-1 appearance-none bg-transparent pr-1 text-base font-medium focus:outline-none"
+            value={current}
+            onChange={(e) => onChange(e.target.value)}
+          >
+            <option value="all">{w.all}</option>
+            {available.map((g) => (
+              <option key={g} value={g}>
+                {tk("sdg", g)}
+              </option>
+            ))}
+          </select>
+          <ChevronDown
+            aria-hidden="true"
+            className="pointer-events-none h-4 w-4 shrink-0"
+          />
+        </div>
+        {current !== "all" && (
+          <button
+            type="button"
+            aria-label={reset}
+            title={reset}
+            onClick={() => onChange("all")}
+            className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border bg-background text-primary active:scale-95 motion-safe:transition-transform"
+          >
+            <RotateCcw className="h-4 w-4" />
+          </button>
+        )}
+      </div>
+      <div className="hidden flex-wrap gap-2 sm:flex">
+        {["all", ...available].map((g) => (
           <button
             key={g}
             type="button"
-            aria-pressed={value === g}
+            aria-pressed={current === g}
             onClick={() => onChange(g)}
-            className={`inline-flex min-h-11 items-center gap-2 rounded-xl border px-3 py-2 text-left text-xs font-semibold ${value === g ? "border-primary bg-primary text-primary-foreground" : "hover:bg-muted"}`}
+            className={`inline-flex min-h-11 items-center gap-2 rounded-xl border px-3 py-2 text-left text-xs font-semibold focus-visible:ring-2 focus-visible:ring-primary motion-safe:transition-colors ${current === g ? "border-primary bg-primary text-primary-foreground" : "hover:bg-muted"}`}
           >
             {g !== "all" && (
               <img
                 src={`/sdg/${g}.png`}
                 alt=""
+                loading="lazy"
                 className="h-8 w-8 object-contain"
               />
             )}
@@ -97,96 +168,132 @@ export function SdgChoice({
           </button>
         ))}
       </div>
-      <p className="mt-2 text-xs text-muted-foreground">
-        {note ??
-          (learning
-            ? lang === "ms"
-              ? "Tapis kursus mengikut tema pembelajaran."
-              : lang === "zh"
-                ? "按学习主题筛选课程。"
-                : "Filter courses by learning theme."
-            : w.note)}
-      </p>
-      <p className="mt-1 text-xs text-muted-foreground">{lang==="ms"?"Tema dipaparkan mengikut padanan dalam senarai semasa. Semua 17 SDG boleh digunakan jika relevan.":lang==="zh"?"此处显示当前结果中有匹配的主题；相关时可采用全部17项目标。":"Themes shown have matches in the current list. Any of the 17 SDGs can apply when relevant."}</p>
+      <details className="mt-1 text-xs text-muted-foreground">
+        <summary className="min-h-10 cursor-pointer content-center font-medium">
+          {lang === "ms"
+            ? "Tentang penapis ini"
+            : lang === "zh"
+              ? "关于此筛选"
+              : "About this filter"}
+        </summary>
+        <p className="pb-2 leading-relaxed">
+          {note ??
+            (learning
+              ? lang === "ms"
+                ? "Tapis kursus mengikut tema pembelajaran."
+                : lang === "zh"
+                  ? "按学习主题筛选课程。"
+                  : "Filter courses by learning theme."
+              : w.note)}{" "}
+          {lang === "ms"
+            ? "Hanya tema yang ada padanan dipaparkan. Kesemua 17 SDG disokong jika relevan."
+            : lang === "zh"
+              ? "仅显示有匹配的主题，相关时支持全部17项目标。"
+              : "Only themes with matches are shown. All 17 goals are supported when relevant."}
+        </p>
+      </details>
     </fieldset>
   );
 }
+
 export function SdgReason({
   role,
 }: {
-  role: { title: string; sector: string };
+  role: { title: string; sector: string; skills?: { name: string }[] };
 }) {
-  const { lang, tk } = useT(),
-    w = words[lang];
   return (
-    <p className="mt-3 text-xs text-muted-foreground">
-      {w.role}{" "}
-      {roleGoals(role)
-        .map((g) => tk("sdg", g))
-        .join(" · ")}
-      .
-    </p>
+    <SdgExplanation
+      goals={roleGoals(role)}
+      kind="role"
+      subject={role.title}
+      skills={role.skills?.map((s) => s.name)}
+    />
   );
 }
-const goalReasons = {
-  en: [
-    "Explore poverty reduction and access to support.",
-    "Explore food security and sustainable agriculture.",
-    "Build knowledge for health and well-being.",
-    "Build skills and share learning opportunities.",
-    "Support gender equality and empowerment.",
-    "Explore clean water and sanitation.",
-    "Learn about clean energy and efficient use.",
-    "Practise productive work and employment skills.",
-    "Build tools, research and better infrastructure.",
-    "Learn inclusive and accessible practices.",
-    "Explore safer and more sustainable communities.",
-    "Learn responsible use of resources.",
-    "Build knowledge for climate action.",
-    "Explore protecting oceans and marine life.",
-    "Learn to protect land, forests and wildlife.",
-    "Learn accountable and inclusive practices.",
-    "Build cooperation and shared learning.",
-  ],
-  ms: [
-    "Terokai pengurangan kemiskinan dan akses sokongan.",
-    "Terokai keselamatan makanan dan pertanian lestari.",
-    "Bina pengetahuan kesihatan dan kesejahteraan.",
-    "Bina kemahiran dan kongsi peluang pembelajaran.",
-    "Sokong kesaksamaan gender dan pemerkasaan.",
-    "Terokai air bersih dan sanitasi.",
-    "Pelajari tenaga bersih dan penggunaan cekap.",
-    "Latih kemahiran kerja produktif dan pekerjaan.",
-    "Bina alat, penyelidikan dan infrastruktur lebih baik.",
-    "Pelajari amalan inklusif dan mudah diakses.",
-    "Terokai komuniti lebih selamat dan lestari.",
-    "Pelajari penggunaan sumber secara bertanggungjawab.",
-    "Bina pengetahuan tindakan iklim.",
-    "Terokai perlindungan lautan dan hidupan marin.",
-    "Pelajari perlindungan daratan, hutan dan hidupan liar.",
-    "Pelajari amalan telus, bertanggungjawab dan inklusif.",
-    "Bina kerjasama dan perkongsian pembelajaran.",
-  ],
-  zh: [
-    "了解减贫与获得社会支持。",
-    "了解粮食安全与可持续农业。",
-    "学习健康与福祉知识。",
-    "培养技能并分享学习机会。",
-    "支持性别平等与赋权。",
-    "了解清洁用水与卫生。",
-    "学习清洁能源与高效利用。",
-    "练习生产力与就业技能。",
-    "发展工具、研究与基础设施。",
-    "学习包容及无障碍实践。",
-    "了解更安全、可持续的社区。",
-    "学习负责任地使用资源。",
-    "培养气候行动知识。",
-    "了解保护海洋与海洋生命。",
-    "学习保护陆地、森林与野生动物。",
-    "学习负责、透明与包容的实践。",
-    "建立合作与共享学习。",
-  ],
-};
+export function SdgExplanation({
+  goals,
+  subject = "",
+  skills = [],
+  kind = "course",
+  expanded = false,
+}: {
+  goals: string[];
+  subject?: string;
+  skills?: string[];
+  kind?: "course" | "role" | "vacancy" | "pathway";
+  expanded?: boolean;
+}) {
+  const { lang, tk } = useT();
+  const selected = [...new Set(goals.map((g) => g.split(".")[0]))].filter((g) =>
+    /^(?:[1-9]|1[0-7])$/.test(g),
+  );
+  if (!selected.length) return null;
+  const w = {
+    en: {
+      title: "Why these SDGs?",
+      you: "For you",
+      world: "Bigger picture",
+      note: "A possible link through the topic, not measured impact or a job guarantee.",
+      vacancy:
+        "These themes refer to a similar occupation. They are not an assessment of this employer.",
+    },
+    ms: {
+      title: "Mengapa SDG ini?",
+      you: "Untuk anda",
+      world: "Gambaran global",
+      note: "Kaitan yang mungkin melalui topik ini, bukan impak diukur atau jaminan pekerjaan.",
+      vacancy:
+        "Tema ini merujuk pekerjaan seumpama. Ia bukan penilaian terhadap majikan ini.",
+    },
+    zh: {
+      title: "为什么关联这些SDG？",
+      you: "对你而言",
+      world: "放眼全球",
+      note: "这是主题上的可能联系，并非实测影响或就业保证。",
+      vacancy: "这些主题参考相似职业，并非对该雇主的评估。",
+    },
+  }[lang];
+  return (
+    <details
+      open={expanded || undefined}
+      className="group/sdg mt-3 min-w-0 rounded-xl border border-primary/15 bg-primary/[0.025] px-3 text-xs"
+    >
+      <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-2 font-semibold text-primary">
+        {w.title}
+        <ChevronDown
+          aria-hidden="true"
+          className="h-4 w-4 shrink-0 group-open/sdg:rotate-180 motion-safe:transition-transform"
+        />
+      </summary>
+      <div className="space-y-3 pb-3">
+        {selected.map((g) => {
+          const reason = sdgExplanation(g, subject, skills, lang)!;
+          return (
+            <div
+              key={g}
+              className="rounded-lg bg-card p-3 motion-safe:animate-in motion-safe:fade-in"
+            >
+              <div className="mb-2 flex items-center gap-2">
+                <SdgBadge code={g} compact />
+                <b>{tk("sdg", g)}</b>
+              </div>
+              <p className="leading-relaxed">
+                <b>{w.you}: </b> {reason.personal}
+              </p>
+              <p className="mt-2 leading-relaxed">
+                <b>{w.world}: </b> {reason.global}
+              </p>
+            </div>
+          );
+        })}
+        <p className="text-[11px] leading-relaxed text-muted-foreground">
+          {kind === "vacancy" ? w.vacancy + " " : ""}
+          {w.note}
+        </p>
+      </div>
+    </details>
+  );
+}
 export function SdgContribution({ goals = [] }: { goals?: string[] }) {
   const { lang, tk } = useT(),
     w = words[lang];
@@ -222,11 +329,14 @@ export function SdgContribution({ goals = [] }: { goals?: string[] }) {
             <SdgBadge code={g} />
             <div>
               <b className="text-sm">{tk("sdg", g)}</b>
-              <p className="mt-1 text-xs">{goalReasons[lang][Number(g) - 1]}</p>
+              <p className="mt-1 text-xs">
+                {sdgExplanation(g, "", [], lang)?.personal}
+              </p>
             </div>
           </div>
         ))}
       </div>
+      <SdgExplanation goals={selected} kind="pathway" />
       <p className="mt-3 text-xs text-muted-foreground">{w.limit}</p>
     </section>
   );

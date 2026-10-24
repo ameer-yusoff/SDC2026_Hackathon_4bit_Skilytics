@@ -17,7 +17,7 @@ export const ms: Record<DictKey, string> = {
   "level.beginner": "Asas",
   "sdg.related": "SDG berkaitan",
   "sdg.main": "SDG utama",
-  "courses.live": "Data kursus Microsoft Learn dan freeCodeCamp dikemas kini setiap enam jam. Tempoh hanya dipaparkan jika diterbitkan penyedia. Pautan SDG menerangkan tema pembelajaran, bukan impak yang diperakui.",
+  "courses.live": "Katalog penyedia live disemak setiap enam jam; OpenLearn ialah pilihan disemak, bukan feed live. Tempoh hanya dipaparkan jika diterbitkan penyedia. Pautan SDG menerangkan tema pembelajaran, bukan impak yang diperakui.",
   "courses.durationUnknown": "Tempoh tidak diterbitkan",
   "courses.stale": "Semakan terakhir {d} · penyedia tidak tersedia",
   "level.self-paced": "Belajar mengikut kadar sendiri",

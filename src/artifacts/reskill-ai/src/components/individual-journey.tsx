@@ -1,5 +1,6 @@
 import {
   SdgChoice,
+  SdgExplanation,
   SdgContribution,
   CatalogueGuard,
   SdgReason,
@@ -863,6 +864,7 @@ export function IndividualPathway({ p, base }: { p: Profile; base: string }) {
                         />
                       ))}
                   </div>
+                  <SdgExplanation goals={item.sdgTargets.map(t=>t.code)} subject={item.title} skills={item.skills} kind="course"/>
                 </li>
               );
             })}

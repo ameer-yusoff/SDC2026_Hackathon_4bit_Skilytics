@@ -1,5 +1,5 @@
-import {SdgChoice} from "@/components/sdg-choice";
-import {byGoal} from "@/lib/sdg-choice";
+import { SdgChoice, SdgExplanation, SdgReason } from "@/components/sdg-choice";
+import { byGoal } from "@/lib/sdg-choice";
 import { useMemo, useState } from "react";
 import { Link, useParams, useSearch } from "wouter";
 import { ArrowLeft, Award, ExternalLink } from "lucide-react";
@@ -61,9 +61,11 @@ export function Roles() {
     () => Array.from(new Set((q.data ?? []).map((r) => r.sector))).sort(),
     [q.data],
   );
-  const [goal,setGoal]=useState("all");
-  const goals=[...new Set((q.data??[]).flatMap(roleGoals))].sort((a,b)=>Number(a)-Number(b));
-  const list = byGoal(q.data??[],goal,r=>r).filter(
+  const [goal, setGoal] = useState("all");
+  const goals = [...new Set((q.data ?? []).flatMap(roleGoals))].sort(
+    (a, b) => Number(a) - Number(b),
+  );
+  const list = byGoal(q.data ?? [], goal, (r) => r).filter(
     (r) =>
       (sector === "all" || r.sector === sector) &&
       `${r.title} ${roleTitle(r, lang)} ${r.socCode} ${r.skills.map((s) => skillLabel(s.name, lang)).join(" ")}`
@@ -105,7 +107,9 @@ export function Roles() {
           </Select>
         }
       />
-      <div className="mb-4"><SdgChoice goals={goals} value={goal} onChange={setGoal}/></div>
+      <div className="mb-4">
+        <SdgChoice goals={goals} value={goal} onChange={setGoal} />
+      </div>
       <p className="mb-4 text-xs text-muted-foreground">{guides[lang].scope}</p>
       <div className="mb-4 space-y-2">
         <Input
@@ -133,7 +137,10 @@ export function Roles() {
             ? "kerjaya dengan rujukan sumber"
             : lang === "zh"
               ? "个职业，附来源"
-              : "careers with source references"}{latest ? ` · ${f.date(latest)}` : ""}
+              : list.length === 1
+                ? "career with source references"
+                : "careers with source references"}
+          {latest ? ` · ${f.date(latest)}` : ""}
         </p>
       </div>
       {q.isLoading ? (
@@ -143,7 +150,7 @@ export function Roles() {
       ) : !list.length ? (
         <Empty title={t("roles.empty")} />
       ) : (
-        <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 items-start gap-3 md:grid-cols-2 lg:grid-cols-3">
           {list.map((r, i) => {
             const Icon = catIcon(
               [...r.skills].sort((a, b) => b.importance - a.importance)[0]
@@ -151,9 +158,8 @@ export function Roles() {
             );
             const title = roleTitle(r, lang);
             return (
-              <Link
+              <article
                 key={r.id}
-                href={`/roles/${r.id}`}
                 style={{ animationDelay: `${Math.min(i, 12) * 30}ms` }}
                 data-testid={`card-role-${r.id}`}
                 className="rise flex min-w-0 flex-col rounded-2xl border border-card-border bg-card p-4 shadow-xs transition-colors hover:border-primary"
@@ -163,9 +169,13 @@ export function Roles() {
                     <Icon className="h-5 w-5" />
                   </span>
                   <div className="min-w-0">
-                    <div title={title} className="font-semibold leading-snug">
+                    <Link
+                      href={`/roles/${r.id}`}
+                      title={title}
+                      className="inline-flex min-h-11 items-center font-semibold leading-snug"
+                    >
                       {title}
-                    </div>
+                    </Link>
                     <div className="mt-1 text-xs text-muted-foreground">
                       {tk("sector", r.sector)}
                     </div>
@@ -200,16 +210,20 @@ export function Roles() {
                       </span>
                     ))}
                   </div>
-                  <span className="text-xs font-semibold text-primary">
+                  <Link
+                    href={`/roles/${r.id}`}
+                    className="inline-flex min-h-11 items-center text-xs font-semibold text-primary"
+                  >
                     {lang === "ms"
                       ? "Lihat kemahiran"
                       : lang === "zh"
                         ? "查看技能"
                         : "View skills"}{" "}
                     →
-                  </span>
+                  </Link>
                 </div>
-              </Link>
+                <SdgReason role={r} />
+              </article>
             );
           })}
         </div>
@@ -381,6 +395,7 @@ export function RoleDetail() {
                 </dl>
                 <div className="mt-3">
                   <RoleGoals role={r} />
+                  <SdgReason role={r} />
                 </div>
                 <ExplainNote>{t("roles.mycolExplain")}</ExplainNote>
               </Panel>
@@ -392,14 +407,22 @@ export function RoleDetail() {
   );
 }
 
-export function Courses({ hr, hideHeader=false }: { hr?: boolean;hideHeader?: boolean }) {
+export function Courses({
+  hr,
+  hideHeader = false,
+}: {
+  hr?: boolean;
+  hideHeader?: boolean;
+}) {
   const { t, tk, lang } = useT();
   const f = useFmt();
   const [provider, setProvider] = useState("all");
   const [hrdc, setHrdc] = useState(false);
-  const [courseGoal,setCourseGoal]=useState("all");
-  const urlSearch=useSearch();
-  const [courseSearch,setCourseSearch]=useState(()=>new URLSearchParams(urlSearch).get("search")??"");
+  const [courseGoal, setCourseGoal] = useState("all");
+  const urlSearch = useSearch();
+  const [courseSearch, setCourseSearch] = useState(
+    () => new URLSearchParams(urlSearch).get("search") ?? "",
+  );
   const params = { ...(hr && hrdc ? { hrdcOnly: true } : {}) };
   const q = useListCourses(params, {
     query: {
@@ -408,28 +431,71 @@ export function Courses({ hr, hideHeader=false }: { hr?: boolean;hideHeader?: bo
     },
   });
   const providers = [...new Set((q.data ?? []).map((c) => c.provider))].sort();
-  const courseGoals=[...new Set((q.data??[]).flatMap(c=>(c.sdgCodes??[]).map(s=>s.split(".")[0])))].sort((a,b)=>Number(a)-Number(b));
+  const courseGoals = [
+    ...new Set(
+      (q.data ?? []).flatMap((c) =>
+        (c.sdgCodes ?? []).map((s) => s.split(".")[0]),
+      ),
+    ),
+  ].sort((a, b) => Number(a) - Number(b));
   const list = (q.data ?? [])
-    .filter(c=>courseGoal==="all"||(c.sdgCodes??[]).some(s=>s.split(".")[0]===courseGoal))
-    .filter((c) => (provider === "all" || c.provider === provider) && `${c.title} ${c.provider} ${c.skills.map(s=>s.name+" "+skillLabel(s.name,lang)).join(" ")}`.toLowerCase().includes(courseSearch.toLowerCase()))
+    .filter(
+      (c) =>
+        courseGoal === "all" ||
+        (c.sdgCodes ?? []).some((s) => s.split(".")[0] === courseGoal),
+    )
+    .filter(
+      (c) =>
+        (provider === "all" || c.provider === provider) &&
+        `${c.title} ${c.provider} ${c.skills.map((s) => s.name + " " + skillLabel(s.name, lang)).join(" ")}`
+          .toLowerCase()
+          .includes(courseSearch.toLowerCase()),
+    )
     .sort(
       (a, b) =>
         a.provider.localeCompare(b.provider) || a.title.localeCompare(b.title),
     );
   return (
     <>
-      {!hideHeader && <PageHeader
-        help={
-          <PageGuide
-            title={guides[lang].title}
-            steps={guideSteps(guides[lang].courses)}
-          />
+      {!hideHeader && (
+        <PageHeader
+          help={
+            <PageGuide
+              title={guides[lang].title}
+              steps={guideSteps(guides[lang].courses)}
+            />
+          }
+          title={hr ? t("courses.hrTitle") : t("courses.title")}
+          sub={t("courses.sub")}
+        />
+      )}
+      <div className="mb-4">
+        <SdgChoice
+          learning
+          goals={courseGoals}
+          value={courseGoal}
+          onChange={setCourseGoal}
+        />
+      </div>
+      <Input
+        className="mb-3 min-h-11"
+        value={courseSearch}
+        onChange={(e) => setCourseSearch(e.target.value)}
+        aria-label={
+          lang === "ms"
+            ? "Cari kursus atau kemahiran"
+            : lang === "zh"
+              ? "搜索课程或技能"
+              : "Search courses or skills"
         }
-        title={hr ? t("courses.hrTitle") : t("courses.title")}
-        sub={t("courses.sub")}
-      />}
-      <div className="mb-4"><SdgChoice learning goals={courseGoals} value={courseGoal} onChange={setCourseGoal}/></div>
-      <Input className="mb-3 min-h-11" value={courseSearch} onChange={e=>setCourseSearch(e.target.value)} aria-label={lang==="ms"?"Cari kursus atau kemahiran":lang==="zh"?"搜索课程或技能":"Search courses or skills"} placeholder={lang==="ms"?"Cari kursus atau kemahiran":lang==="zh"?"搜索课程或技能":"Search courses or skills"}/>
+        placeholder={
+          lang === "ms"
+            ? "Cari kursus atau kemahiran"
+            : lang === "zh"
+              ? "搜索课程或技能"
+              : "Search courses or skills"
+        }
+      />
       <div className="mb-4 flex flex-wrap items-center gap-3">
         <Select value={provider} onValueChange={setProvider}>
           <SelectTrigger
@@ -459,7 +525,9 @@ export function Courses({ hr, hideHeader=false }: { hr?: boolean;hideHeader?: bo
           </label>
         )}
         <span className="tnum text-xs text-muted-foreground">
-          {t("courses.count", { n: list.length })}
+          {list.length === 1 && lang === "en"
+            ? "1 course"
+            : t("courses.count", { n: list.length })}
         </span>
       </div>
       {q.isLoading ? (
@@ -469,7 +537,7 @@ export function Courses({ hr, hideHeader=false }: { hr?: boolean;hideHeader?: bo
       ) : !list.length ? (
         <Empty title={t("courses.empty")}>{t("courses.emptyBody")}</Empty>
       ) : (
-        <div className="grid gap-3 md:grid-cols-2">
+        <div className="grid items-start gap-3 md:grid-cols-2">
           {list.map((c, i) => (
             <article
               key={c.id}
@@ -520,9 +588,19 @@ export function Courses({ hr, hideHeader=false }: { hr?: boolean;hideHeader?: bo
                     />
                   ))}
               </div>
+              <SdgExplanation
+                goals={c.sdgCodes ?? []}
+                subject={c.title}
+                skills={c.skills.map((s) => s.name)}
+                kind="course"
+              />
               <div className="mt-2 flex flex-wrap gap-1.5">
                 {c.skills.map((s) => (
-                  <SkillBadge key={s.id} name={skillLabel(s.name,lang)} category={s.category} />
+                  <SkillBadge
+                    key={s.id}
+                    name={skillLabel(s.name, lang)}
+                    category={s.category}
+                  />
                 ))}
               </div>
               <div className="mt-3 flex flex-wrap items-center justify-between gap-2">

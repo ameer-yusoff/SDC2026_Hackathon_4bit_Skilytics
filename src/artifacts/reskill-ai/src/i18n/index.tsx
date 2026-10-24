@@ -57,6 +57,8 @@ export function LangProvider({ children }: { children: ReactNode }) {
   return <LangCtx.Provider value={value}>{children}</LangCtx.Provider>;
 }
 
+export function useOptionalT() { return useContext(LangCtx); }
+
 export function useT() {
   const c = useContext(LangCtx);
   if (!c) throw new Error("useT outside LangProvider");

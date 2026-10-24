@@ -1,5 +1,5 @@
 {
-  "reviewedAt": "2026-10-23T22:53:34.278Z",
+  "reviewedAt": "2026-10-24T07:20:29.882Z",
   "method": "Code inventory + official publisher documentation + unauthenticated public URL probe. HTTP result describes the checked URL only, not every API operation or a legal certification. Service probes check public documentation only.",
   "candidates": {
     "directory": "https://github.com/public-apis/public-apis#jobs",
@@ -23,7 +23,7 @@
       },
       "licence": "Himalayas API terms: original applicationLink, attribution, remove expired jobs; no onward syndication",
       "documentation": "https://himalayas.app/api",
-      "checkedAt": "2026-10-23T22:53:18.402Z",
+      "checkedAt": "2026-10-24T07:20:13.929Z",
       "probe": {
         "status": 200,
         "finalUrl": "https://himalayas.app/api",
@@ -42,7 +42,7 @@
       },
       "licence": "Remotive API terms: attribution and original link; 24h delay; no onward syndication; cache daily",
       "documentation": "https://github.com/remotive-com/remote-jobs-api",
-      "checkedAt": "2026-10-23T22:53:19.038Z",
+      "checkedAt": "2026-10-24T07:20:14.489Z",
       "probe": {
         "status": 200,
         "finalUrl": "https://github.com/remotive-com/remote-jobs-api",
@@ -61,7 +61,7 @@
       },
       "licence": "RemoteOK API notice: follow link and attribution; no logo without permission",
       "documentation": "https://remoteok.com/api",
-      "checkedAt": "2026-10-23T22:53:20.154Z",
+      "checkedAt": "2026-10-24T07:20:15.188Z",
       "probe": {
         "status": 200,
         "finalUrl": "https://remoteok.com/api",
@@ -80,7 +80,7 @@
       },
       "licence": "Publisher terms apply; public availability alone does not establish an open-content licence",
       "documentation": "https://www.dosm.gov.my/uploads/release-content/file_20260525094010.pdf",
-      "checkedAt": "2026-10-23T22:53:20.328Z",
+      "checkedAt": "2026-10-24T07:20:15.419Z",
       "probe": {
         "status": 200,
         "finalUrl": "https://www.dosm.gov.my/uploads/release-content/file_20260525094010.pdf",
@@ -99,7 +99,7 @@
       },
       "licence": "O*NET Tools Developer License · adapted items, not validated Mini-IP",
       "documentation": "https://www.onetcenter.org/dl_files/Mini-IP.pdf",
-      "checkedAt": "2026-10-23T22:53:21.865Z",
+      "checkedAt": "2026-10-24T07:20:16.737Z",
       "probe": {
         "status": 200,
         "finalUrl": "https://www.onetcenter.org/dl_files/Mini-IP.pdf",
@@ -118,7 +118,7 @@
       },
       "licence": "O*NET attribution; app reference subset",
       "documentation": "https://www.onetcenter.org/content.html",
-      "checkedAt": "2026-10-23T22:53:23.077Z",
+      "checkedAt": "2026-10-24T07:20:17.681Z",
       "probe": {
         "status": 200,
         "finalUrl": "https://www.onetcenter.org/content.html",
@@ -137,7 +137,7 @@
       },
       "licence": "OpenLearn content-specific licence; only selected metadata ingested",
       "documentation": "https://www.open.edu/openlearn/",
-      "checkedAt": "2026-10-23T22:53:23.206Z",
+      "checkedAt": "2026-10-24T07:20:17.754Z",
       "probe": {
         "status": 403,
         "finalUrl": "https://www.open.edu/openlearn/",
@@ -156,7 +156,7 @@
       },
       "licence": "Publisher terms apply; public availability alone does not establish an open-content licence",
       "documentation": "https://sdgs.un.org/goals",
-      "checkedAt": "2026-10-23T22:53:23.562Z",
+      "checkedAt": "2026-10-24T07:20:18.111Z",
       "probe": {
         "status": 200,
         "finalUrl": "https://sdgs.un.org/goals",
@@ -175,7 +175,7 @@
       },
       "licence": "Publisher terms apply; public availability alone does not establish an open-content licence",
       "documentation": "https://academy.hubspot.com/courses",
-      "checkedAt": "2026-10-23T22:53:23.921Z",
+      "checkedAt": "2026-10-24T07:20:18.504Z",
       "probe": {
         "status": 200,
         "finalUrl": "https://academy.hubspot.com/courses",
@@ -188,16 +188,16 @@
       "category": "dataset",
       "access": "news",
       "note": {
-        "en": "Public keyless headline metadata: separate Malaysia/global career, enterprise technology and AI searches. Original publisher rights apply; this is not an official forecast API or open article content.",
-        "ms": "Metadata tajuk berita awam tanpa kunci: carian kerjaya, teknologi perusahaan dan AI Malaysia/global berasingan. Hak penerbit kekal; bukan API ramalan rasmi atau kandungan artikel terbuka.",
-        "zh": "无需密钥的公开标题元数据：分别搜索马来西亚与全球职业、企业技术和AI。保留发布者权利；不是官方预测API或开放文章内容。"
+        "en": "Public news metadata only, not full articles. Publisher copyright still applies; a rate-limit or timeout does not imply authentication is required.",
+        "ms": "Metadata berita awam sahaja, bukan artikel penuh. Hak cipta penerbit kekal; had kadar atau timeout tidak bermakna auth diperlukan.",
+        "zh": "仅使用公开新闻元数据，不包含全文。发布者版权仍适用；限流或超时不表示必须认证。"
       },
       "licence": "Publisher terms apply; public availability alone does not establish an open-content licence",
-      "documentation": "https://news.google.com/rss/search?q=%28upskilling+OR+reskilling+OR+%22workforce+skills%22+OR+%22AI+workplace%22+OR+%22hiring+demand%22%29+Malaysia+when%3A30d&hl=en-MY&gl=MY&ceid=MY%3Aen",
-      "checkedAt": "2026-10-23T22:53:24.672Z",
+      "documentation": "https://news.google.com/rss/search?q=%28upskilling+OR+reskilling+OR+%22workforce+skills%22+OR+%22hiring+demand%22+OR+%22future+of+work%22%29+Malaysia+when%3A30d&hl=en-MY&gl=MY&ceid=MY%3Aen",
+      "checkedAt": "2026-10-24T07:20:18.999Z",
       "probe": {
         "status": 200,
-        "finalUrl": "https://news.google.com/rss/search?q=%28upskilling+OR+reskilling+OR+%22workforce+skills%22+OR+%22AI+workplace%22+OR+%22hiring+demand%22%29+Malaysia+when%3A30d&hl=en-MY&gl=MY&ceid=MY%3Aen",
+        "finalUrl": "https://news.google.com/rss/search?q=%28upskilling+OR+reskilling+OR+%22workforce+skills%22+OR+%22hiring+demand%22+OR+%22future+of+work%22%29+Malaysia+when%3A30d&hl=en-MY&gl=MY&ceid=MY%3Aen",
         "error": null
       }
     },
@@ -213,7 +213,7 @@
       },
       "licence": "US BLS public data; reviewed US snapshot",
       "documentation": "https://www.bls.gov/emp/tables/occupational-projections-and-characteristics.htm",
-      "checkedAt": "2026-10-23T22:53:25.095Z",
+      "checkedAt": "2026-10-24T07:20:19.349Z",
       "probe": {
         "status": 200,
         "finalUrl": "https://www.bls.gov/emp/tables/occupational-projections-and-characteristics.htm",
@@ -232,7 +232,7 @@
       },
       "licence": "O*NET Database · CC BY 4.0",
       "documentation": "https://www.onetcenter.org/database.html",
-      "checkedAt": "2026-10-23T22:53:28.159Z",
+      "checkedAt": "2026-10-24T07:20:22.481Z",
       "probe": {
         "status": 200,
         "finalUrl": "https://www.onetcenter.org/database.html",
@@ -251,7 +251,7 @@
       },
       "licence": "data.gov.my publisher licence and attribution",
       "documentation": "https://data.gov.my/data-catalogue/lfs_month",
-      "checkedAt": "2026-10-23T22:53:28.534Z",
+      "checkedAt": "2026-10-24T07:20:22.981Z",
       "probe": {
         "status": 200,
         "finalUrl": "https://data.gov.my/data-catalogue/lfs_month",
@@ -270,7 +270,7 @@
       },
       "licence": "Hugging Face dataset card/release licence (currently MIT); retain attribution",
       "documentation": "https://huggingface.co/datasets/Anthropic/EconomicIndex",
-      "checkedAt": "2026-10-23T22:53:28.889Z",
+      "checkedAt": "2026-10-24T07:20:23.366Z",
       "probe": {
         "status": 200,
         "finalUrl": "https://huggingface.co/datasets/Anthropic/EconomicIndex",
@@ -289,7 +289,7 @@
       },
       "licence": "Hugging Face dataset card/release licence (currently MIT); retain attribution",
       "documentation": "https://huggingface.co/datasets/Anthropic/EconomicIndex/tree/main/labor_market_impacts",
-      "checkedAt": "2026-10-23T22:53:29.459Z",
+      "checkedAt": "2026-10-24T07:20:23.899Z",
       "probe": {
         "status": 200,
         "finalUrl": "https://huggingface.co/datasets/Anthropic/EconomicIndex/tree/main/labor_market_impacts",
@@ -308,7 +308,7 @@
       },
       "licence": "Microsoft API/content terms; legacy public catalogue distinct from authenticated Learn Platform API",
       "documentation": "https://learn.microsoft.com/api/catalog/?locale=en-us&type=learningPaths",
-      "checkedAt": "2026-10-23T22:53:29.648Z",
+      "checkedAt": "2026-10-24T07:20:24.992Z",
       "probe": {
         "status": 200,
         "finalUrl": "https://learn.microsoft.com/api/catalog/?locale=en-us&type=learningPaths",
@@ -327,7 +327,7 @@
       },
       "licence": "Repository licence applies to metadata; curriculum has separate content terms",
       "documentation": "https://github.com/freeCodeCamp/freeCodeCamp/blob/main/curriculum/structure/curriculum.json",
-      "checkedAt": "2026-10-23T22:53:30.227Z",
+      "checkedAt": "2026-10-24T07:20:25.546Z",
       "probe": {
         "status": 200,
         "finalUrl": "https://github.com/freeCodeCamp/freeCodeCamp/blob/main/curriculum/structure/curriculum.json",
@@ -346,7 +346,7 @@
       },
       "licence": "Each exercise repository's own licence",
       "documentation": "https://api.github.com/orgs/skills/repos?per_page=100&type=public",
-      "checkedAt": "2026-10-23T22:53:31.177Z",
+      "checkedAt": "2026-10-24T07:20:26.555Z",
       "probe": {
         "status": 200,
         "finalUrl": "https://api.github.com/orgs/skills/repos?per_page=100&type=public",
@@ -365,7 +365,7 @@
       },
       "licence": "Publisher terms apply; public availability alone does not establish an open-content licence",
       "documentation": "https://huggingface.co/learn",
-      "checkedAt": "2026-10-23T22:53:31.487Z",
+      "checkedAt": "2026-10-24T07:20:26.869Z",
       "probe": {
         "status": 200,
         "finalUrl": "https://huggingface.co/learn",
@@ -384,7 +384,7 @@
       },
       "licence": "Publisher terms apply; public availability alone does not establish an open-content licence",
       "documentation": "https://ai.google.dev/gemini-api/docs/models",
-      "checkedAt": "2026-10-23T22:53:32.581Z",
+      "checkedAt": "2026-10-24T07:20:28.129Z",
       "probe": {
         "status": 200,
         "finalUrl": "https://ai.google.dev/gemini-api/docs/models",
@@ -403,7 +403,7 @@
       },
       "licence": "Publisher terms apply; public availability alone does not establish an open-content licence",
       "documentation": "https://www.runpod.io/console/serverless",
-      "checkedAt": "2026-10-23T22:53:33.590Z",
+      "checkedAt": "2026-10-24T07:20:28.913Z",
       "probe": {
         "status": 200,
         "finalUrl": "https://console.runpod.io/serverless",
@@ -422,7 +422,7 @@
       },
       "licence": "Publisher terms apply; public availability alone does not establish an open-content licence",
       "documentation": "https://www.runpod.io/console/serverless",
-      "checkedAt": "2026-10-23T22:53:34.278Z",
+      "checkedAt": "2026-10-24T07:20:29.882Z",
       "probe": {
         "status": 200,
         "finalUrl": "https://console.runpod.io/serverless",

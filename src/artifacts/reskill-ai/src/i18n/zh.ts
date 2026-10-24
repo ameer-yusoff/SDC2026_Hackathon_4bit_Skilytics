@@ -17,7 +17,7 @@ export const zh: Record<DictKey, string> = {
   "level.beginner": "初级",
   "sdg.related": "相关 SDG",
   "sdg.main": "主要 SDG",
-  "courses.live": "Microsoft Learn 与 freeCodeCamp 课程数据每六小时更新。只有机构公布时才显示时长。SDG 关联表示学习主题，并非经认证的影响。",
+  "courses.live": "实时机构目录每六小时检查；OpenLearn为人工审核选集，并非实时数据源。只有机构公布时才显示时长。SDG 关联表示学习主题，并非经认证的影响。",
   "courses.durationUnknown": "机构未公布时长",
   "courses.stale": "上次检查于 {d} · 机构暂不可用",
   "level.self-paced": "自主进度",

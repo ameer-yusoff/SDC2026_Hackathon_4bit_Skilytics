@@ -1,4 +1,4 @@
-import { SdgChoice } from "@/components/sdg-choice";
+import { SdgChoice,SdgExplanation } from "@/components/sdg-choice";
 import { byGoal } from "@/lib/sdg-choice";
 import { useState } from "react";
 import { useParams, Link } from "wouter";
@@ -161,6 +161,7 @@ export default function Jobs() {
           ),
         )}
       </div>
+      <SdgExplanation goals={roleGoals(j.exposureRole??{title:j.title,sector:""})} subject={j.exposureRole?.title??j.title} skills={[...j.matched,...j.missing]} kind="vacancy"/>
       <div className="mt-auto flex flex-wrap items-center justify-between gap-3 border-t pt-4">
         <a
           href={j.sourceUrl ?? j.url}
