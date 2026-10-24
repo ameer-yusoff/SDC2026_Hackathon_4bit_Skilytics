@@ -1,6 +1,6 @@
 import express, { type Express, type ErrorRequestHandler } from "express";
 import { ZodError } from "zod";
-import cors from "cors";
+import { apiCors } from "./lib/api-cors";
 import pinoHttp from "pino-http";
 import router from "./routes";
 import { logger } from "./lib/logger";
@@ -27,14 +27,7 @@ app.use(
     },
   }),
 );
-app.use(
-  cors({
-    origin: true,
-    credentials: true,
-    allowedHeaders: ["Content-Type", "Authorization", "X-Guest-Token", "x-guest-token", "X-Idempotency-Key", "X-Claim-Profile-Id"],
-    exposedHeaders: ["X-RateLimit-Limit", "X-RateLimit-Remaining", "Retry-After"],
-  }),
-);
+app.use(apiCors);
 app.use(express.json({ limit: "12mb" }));
 app.use(express.urlencoded({ extended: true }));
 
