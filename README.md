@@ -206,15 +206,17 @@ curl -X POST https://api.runpod.ai/v2/3pvoygmk4mn0ad/run \
 
 ## Challenges & Learnings
 
-- **1. Time Management & Teamwork**
-  - **Challenge:** Balancing university classes, assignments, and hackathon deadlines with limited technical expertise.
-  - **Learning:** Improved time management, task prioritisation, and teamwork under pressure.
-- **2. Technical & AI Development**
-  - **Challenge:** Learning to deploy AI models using RunPod Serverless GPUs and building a complex full-stack web application.
-  - **Learning:** Developed skills in AI deployment, prompt engineering, and LLM integration.
-- **3. Unfamiliar Development Workflows**
-  - **Challenge:** Adapting to unfamiliar development workflows and refining Skilytics within a tight deadline.
-  - **Learning:** Improved GitHub collaboration, Canva design skills, and the ability to apply mentor feedback to enhance the project.
+### Challenges We Faced
+- This was our team's very first time participating in a hackathon. Managing our schedule was a major challenge—our mornings through evenings were packed with university lectures at UTM, followed by replacement classes at night and ongoing university assignments that had to be completed alongside building Skilytics.
+- Our team had a limited number of experienced programming and technical specialists to build the complex full-stack web application together, requiring us to step outside our comfort zones and divide responsibilities strategically.
+- Because this was our first time working with RunPod Serverless GPU technology, it took dedicated time and troubleshooting to learn how to deploy, configure, and call AI models (`Qwen 3.5-27b` and `Qwen3.5-9b`) within their serverless environment.
+
+### What Our Team Learned
+-  Despite our packed academic schedules, we learned how to prioritize tasks, manage our time discipline, and collaborate effectively as a team under tight deadlines.
+-  We learned how to write structured, accurate prompts to guide LLMs into producing consistent career analytics, skill-gap mappings, and jargon-free ELI5 explanations.
+-  We explored new ways to use GitHub to manage a multi-package repository, track changes, and organize project documentation.
+-  We strengthened our design skills by learning how to design, edit, and polish project visuals and presentation assets using Canva.
+-  During our mentoring sessions, we gained invaluable experience and practical advice from professional panel mentor, whose feedback directly helped us refine and improve our web application.
 
 ## Future Improvements
 
