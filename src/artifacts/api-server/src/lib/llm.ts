@@ -28,7 +28,7 @@ function endpointId(raw: string | undefined): string | undefined {
   return m ? m[1] : v;
 }
 
-export type AiProvider = "runpod" | "gemini" | "groq" | "mock";
+export type AiProvider = "runpod" | "gemini" | "mock";
 
 function cfg(agent?: RoutedAgent) {
   const providerEnv = (agent ? agentRoute(agent).provider : undefined) ?? process.env["AI_PROVIDER"]?.toLowerCase().trim();
@@ -37,17 +37,12 @@ function cfg(agent?: RoutedAgent) {
     provider = "mock";
   } else if (providerEnv === "gemini" || (!providerEnv && process.env["GEMINI_API_KEY"]?.trim())) {
     provider = "gemini";
-  } else if (providerEnv === "groq" || (!providerEnv && process.env["GROQ_API_KEY"]?.trim())) {
-    provider = "groq";
   } else {
     provider = "runpod";
   }
 
   const geminiKey = process.env["GEMINI_API_KEY"]?.trim();
   let geminiModel = (agent === "cv" ? process.env.GEMINI_CV_MODEL?.trim() : undefined) || process.env["GEMINI_MODEL"]?.trim() || "gemini-3.1-flash-lite";
-
-  const groqKey = process.env["GROQ_API_KEY"]?.trim();
-  const groqModel = process.env["GROQ_MODEL"]?.trim() || "llama-3.3-70b-versatile";
 
   const apiKey = process.env["RUNPOD_API_KEY"]?.trim();
   const mainId = endpointId(process.env["RUNPOD_LLM_ENDPOINT_ID"]);
@@ -57,8 +52,6 @@ function cfg(agent?: RoutedAgent) {
     provider,
     geminiKey,
     geminiModel,
-    groqKey,
-    groqModel,
     apiKey,
     mainId,
     lightId,
@@ -112,29 +105,6 @@ export async function aiStatus() {
     };
   }
 
-  if (c.provider === "groq") {
-    const health = await endpointHealth("main");
-    const configured = !!c.groqKey;
-    return {
-      connected: health.status === "ok",
-      provider: "Groq (Free API)",
-      mainModel: c.groqModel,
-      lightModel: c.groqModel,
-      mainConfigured: configured,
-      lightConfigured: configured,
-      mainStatus: health.status,
-      mainDetail: health.detail,
-      mainError: health.error,
-      lightStatus: health.status,
-      lightDetail: health.detail,
-      lightError: health.error,
-      message: !configured
-        ? "Groq API not configured. Set GROQ_API_KEY in .env."
-        : health.status === "ok"
-          ? "Groq Free API connected and ready."
-          : `Groq API health check failed: ${health.error}`,
-    };
-  }
 
   // RunPod (default)
   const mainConfigured = !!(c.apiKey && c.mainId);
@@ -542,52 +512,6 @@ async function generateChat(tier: Tier, system: string, user: string, images?: C
     };
   }
 
-  // 3. Groq (Free API)
-  if (c.provider === "groq") {
-    if (!c.groqKey) throw new AiNotConnectedError("Groq API key not configured. Set GROQ_API_KEY.");
-    const requestStartedAt = performance.now();
-    let res: Response;
-    try {
-      res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${c.groqKey}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          model: c.groqModel,
-          temperature: 0.2,
-          max_tokens: 4096,
-          messages: [
-            { role: "system", content: system },
-            { role: "user", content: user },
-          ],
-        }),
-        signal: AbortSignal.timeout(30_000),
-      });
-    } catch (err) {
-      if (err instanceof Error && (err.name === "TimeoutError" || err.name === "AbortError")) {
-        throw new AiTimeoutError("Groq request timed out.");
-      }
-      throw err;
-    }
-    if (!res.ok) throw new Error(`Groq request failed with HTTP ${res.status}`);
-    const json = (await res.json()) as { choices?: { message?: { content?: string } }[] };
-    const content = (json.choices?.[0]?.message?.content ?? "").replace(/<think>[\s\S]*?<\/think>/g, "").trim();
-    const endpointRequestMs = Math.round(performance.now() - requestStartedAt);
-    return {
-      content,
-      model: c.groqModel,
-      timing: {
-        endpointTier: tier,
-        modelResolutionMs: 1,
-        endpointRequestMs,
-        endpointWarmBeforeRequest: true,
-        endpointStartupMs: 0,
-        readyToResponseMs: endpointRequestMs,
-      },
-    };
-  }
 
   // 4. RunPod Serverless (vLLM)
   if (!c.apiKey || !c.mainId) throw new AiNotConnectedError("AI engine not connected");
@@ -706,19 +630,6 @@ export async function endpointHealth(tier: Tier, provider?: AiProvider): Promise
     }
   }
 
-  if (c.provider === "groq") {
-    if (!c.groqKey) return { status: "not_configured", detail: null, error: null };
-    try {
-      const res = await fetch("https://api.groq.com/openai/v1/models", {
-        headers: { Authorization: `Bearer ${c.groqKey}` },
-        signal: AbortSignal.timeout(10_000),
-      });
-      if (!res.ok) return { status: "error", detail: null, error: `Groq API returned HTTP ${res.status}.` };
-      return { status: "ok", detail: `Groq Free API (model=${c.groqModel})`, error: null };
-    } catch {
-      return { status: "error", detail: null, error: "Groq API connection timed out or failed." };
-    }
-  }
 
   // RunPod
   const id = tier === "main" ? c.mainId : c.lightId;

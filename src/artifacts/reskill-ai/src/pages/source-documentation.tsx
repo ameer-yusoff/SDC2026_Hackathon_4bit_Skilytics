@@ -14,26 +14,7 @@ type Doc = { id: string; types: DocType[]; name: DictKey; sourceIds?: string[]; 
 
 const DOCS: Doc[] = [
   {id:"tvet_synthetic",types:["demo","static","derived"],name:"docs.tvet.synthetic",rows:[{label:"docs.f.files",ref:"src/synthetic-data/tvet/graduate-employment-2024-2026.json · synthetic data/"},{label:"docs.f.coverage",k:["docs.tvet.coverage"]},{label:"docs.f.method",k:["docs.tvet.method"]},{label:"docs.f.privacy",k:["docs.tvet.policy"]}]},
-  {id:"hubspot",types:["external","derived"],name:"src.hubspot_catalogue.name",sourceIds:["hubspot_catalogue"],rows:[
-    {label:"docs.f.publisher",ref:"HubSpot Academy"},
-    {label:"docs.f.dataset",url:"https://academy.hubspot.com/courses"},
-    {label:"docs.f.method",k:["docs.hubspot.method"]},
-  ]},
-  {id:"career_news",types:["external","derived"],name:"docs.news.name",sourceIds:["gdelt_career_news","career_news_rss"],rows:[
-    {label:"docs.f.publisher",ref:"The GDELT Project / Google News RSS / original news publishers"},
-    {label:"docs.f.api",url:"https://blog.gdeltproject.org/gdelt-doc-2-0-api-debuts/"},
-    {label:"docs.f.dataset",url:"https://news.google.com/rss/search?q=upskilling%20Malaysia%20when%3A30d&hl=en-MY&gl=MY&ceid=MY%3Aen"},
-    {label:"docs.f.coverage",k:["docs.news.coverage"]},
-    {label:"docs.f.method",k:["docs.news.method"]},
-    {label:"docs.f.license",k:["docs.news.license"],url:"https://www.gdeltproject.org/about.html#termsofuse"},
-    {label:"docs.f.failure",k:["docs.news.failure"]},
-  ]},
-  {id:"bls",types:["external","static","derived"],name:"src.bls_projections.name",sourceIds:["bls_projections"],rows:[
-    {label:"docs.f.publisher",ref:"U.S. Bureau of Labor Statistics"},
-    {label:"docs.f.dataset",url:"https://www.bls.gov/emp/tables/occupational-projections-and-characteristics.htm"},
-    {label:"docs.f.coverage",k:["docs.bls.coverage"]},
-    {label:"docs.f.method",k:["docs.bls.method"]},
-  ]},
+
   { id: "dosm", types: ["external"], name: "src.dosm_lfs_month.name", sourceIds: ["dosm_lfs_month"], rows: [
     { label: "docs.f.publisher", ref: "Department of Statistics Malaysia (DOSM) / OpenDOSM" },
     { label: "docs.f.dataset", url: "https://data.gov.my/data-catalogue/lfs_month" },
@@ -44,6 +25,30 @@ const DOCS: Doc[] = [
     { label: "docs.f.license", k: ["docs.dosm.license"], url: "https://data.gov.my/terms" },
     { label: "docs.f.cadence", k: ["docs.dosm.cadence"] },
     { label: "docs.f.failure", k: ["docs.dosm.failure"] },
+  ] },
+  { id: "dosm_jmi", types: ["external", "static", "derived"], name: "docs.jmi.name", sourceIds: ["dosm_jmi_skills"], rows: [
+    { label: "docs.f.publisher", ref: "Department of Statistics Malaysia (DOSM) · Job Market Insights" },
+    { label: "docs.f.dataset", url: "https://www.dosm.gov.my/uploads/release-content/file_20260525094010.pdf" },
+    { label: "docs.f.coverage", k: ["docs.jmi.coverage"] },
+    { label: "docs.f.method", k: ["docs.jmi.method"] },
+  ] },
+  { id: "himalayas", types: ["external"], name: "docs.himalayas.name", sourceIds: ["himalayas_jobs"], rows: [
+    { label: "docs.f.publisher", ref: "Himalayas" },
+    { label: "docs.f.api", url: "https://himalayas.app/api/jobs" },
+    { label: "docs.f.dataset", url: "https://himalayas.app/jobs" },
+    { label: "docs.f.method", k: ["docs.himalayas.method"] },
+  ] },
+  { id: "remotive", types: ["external"], name: "docs.remotive.name", sourceIds: ["remotive_jobs"], rows: [
+    { label: "docs.f.publisher", ref: "Remotive" },
+    { label: "docs.f.api", url: "https://remotive.com/api/remote-jobs" },
+    { label: "docs.f.dataset", url: "https://remotive.com" },
+    { label: "docs.f.method", k: ["docs.remotive.method"] },
+  ] },
+  { id: "remoteok", types: ["external"], name: "docs.remoteok.name", sourceIds: ["remoteok_jobs"], rows: [
+    { label: "docs.f.publisher", ref: "RemoteOK" },
+    { label: "docs.f.api", url: "https://remoteok.com/api" },
+    { label: "docs.f.dataset", url: "https://remoteok.com" },
+    { label: "docs.f.method", k: ["docs.remoteok.method"] },
   ] },
   { id: "aei_usage", types: ["external"], name: "src.aei_usage.name", sourceIds: ["aei_usage"], rows: [
     { label: "docs.f.publisher", ref: "Anthropic, EconomicIndex (Hugging Face)" },
@@ -62,6 +67,21 @@ const DOCS: Doc[] = [
     { label: "docs.f.limits", k: ["docs.aeie.limits"] },
     { label: "docs.f.license", k: ["docs.aeiu.license"] },
   ] },
+  {id:"career_news",types:["external","derived"],name:"docs.news.name",sourceIds:["gdelt_career_news","career_news_rss"],rows:[
+    {label:"docs.f.publisher",ref:"The GDELT Project / Google News RSS / original news publishers"},
+    {label:"docs.f.api",url:"https://blog.gdeltproject.org/gdelt-doc-2-0-api-debuts/"},
+    {label:"docs.f.dataset",url:"https://news.google.com/rss/search?q=upskilling%20Malaysia%20when%3A30d&hl=en-MY&gl=MY&ceid=MY%3Aen"},
+    {label:"docs.f.coverage",k:["docs.news.coverage"]},
+    {label:"docs.f.method",k:["docs.news.method"]},
+    {label:"docs.f.license",k:["docs.news.license"],url:"https://www.gdeltproject.org/about.html#termsofuse"},
+    {label:"docs.f.failure",k:["docs.news.failure"]},
+  ]},
+  {id:"bls",types:["external","static","derived"],name:"src.bls_projections.name",sourceIds:["bls_projections"],rows:[
+    {label:"docs.f.publisher",ref:"U.S. Bureau of Labor Statistics"},
+    {label:"docs.f.dataset",url:"https://www.bls.gov/emp/tables/occupational-projections-and-characteristics.htm"},
+    {label:"docs.f.coverage",k:["docs.bls.coverage"]},
+    {label:"docs.f.method",k:["docs.bls.method"]},
+  ]},
   { id: "onet", types: ["external"], name: "src.onet.name", sourceIds: ["onet"], rows: [
     { label: "docs.f.publisher", ref: "U.S. Department of Labor, Employment and Training Administration (USDOL/ETA); National Center for O*NET Development" },
     { label: "docs.f.dataset", url: "https://www.onetcenter.org/database.html" },
@@ -73,6 +93,20 @@ const DOCS: Doc[] = [
     { label: "docs.f.license", k: ["docs.onet.license"], url: "https://www.onetcenter.org/license_db.html" },
     { label: "docs.f.cadence", k: ["docs.onet.cadence"] },
   ] },
+  { id: "riasec", types: ["external", "static", "derived", "user"], name: "docs.name.riasec", sourceIds:["onet_interest_profiler"], rows: [
+    { label: "docs.f.publisher", ref: "USDOL/ETA — O*NET Interest Profiler; contextual adaptation by Skilytics" },
+    { label: "docs.f.dataset", url: "https://www.onetcenter.org/dl_files/Mini-IP.pdf" },
+    { label: "docs.f.license", url: "https://www.onetcenter.org/license_tools.html" },
+    { label: "docs.f.method", k: ["docs.riasec.items", "docs.riasec.scoring"] },
+    { label: "docs.f.limits", k: ["docs.riasec.limits"] },
+  ] },
+  {id:"skill_reference",types:["external","static","derived"],name:"src.onet_content_model.name",sourceIds:["onet_content_model"],rows:[
+    {label:"docs.f.publisher",ref:"USDOL/ETA, National Center for O*NET Development; app dictionary by Skilytics"},
+    {label:"docs.f.dataset",url:"https://www.onetcenter.org/content.html"},
+    {label:"docs.f.files",ref:"cv-retrieval.ts (SKILL_REFERENCES), data/skills.ts, occupational-skills.ts"},
+    {label:"docs.f.method",k:["docs.skills.method"]},
+    {label:"docs.f.license",url:"https://www.onetcenter.org/license_db.html"},
+  ]},
   { id: "courses", types: ["external"], name: "src.course_catalogue.name", sourceIds: ["course_catalogue"], rows: [
     { label: "docs.f.publisher", ref: "Microsoft Learn" },
     { label: "docs.f.api", url: "https://learn.microsoft.com/api/catalog/?locale=en-us&type=learningPaths" },
@@ -81,6 +115,23 @@ const DOCS: Doc[] = [
     { label: "docs.f.limits", k: ["docs.course.limits"] },
     { label: "docs.f.license", k: ["docs.course.license"] },
   ] },
+  { id: "hrdcorp", types: ["external", "static", "derived"], name: "docs.hrdcorp.name", sourceIds: ["hrdcorp_elatih"], rows: [
+    { label: "docs.f.publisher", ref: "Human Resource Development Corporation (HRD Corp) & e-LATiH Malaysia" },
+    { label: "docs.f.dataset", url: "https://e-latih.hrdcorp.gov.my/" },
+    { label: "docs.f.files", ref: "src/artifacts/api-server/src/data/courses.ts" },
+    { label: "docs.f.method", k: ["docs.hrdcorp.method"] },
+  ] },
+  { id: "seda_niosh", types: ["external", "static", "derived"], name: "docs.seda_niosh.name", rows: [
+    { label: "docs.f.publisher", ref: "SEDA Malaysia (Solar PV) & NIOSH Malaysia (OSH)" },
+    { label: "docs.f.dataset", url: "https://www.seda.gov.my/" },
+    { label: "docs.f.api", url: "https://www.niosh.com.my/" },
+    { label: "docs.f.method", k: ["docs.seda_niosh.method"] },
+  ] },
+  {id:"hubspot",types:["external","derived"],name:"src.hubspot_catalogue.name",sourceIds:["hubspot_catalogue"],rows:[
+    {label:"docs.f.publisher",ref:"HubSpot Academy"},
+    {label:"docs.f.dataset",url:"https://academy.hubspot.com/courses"},
+    {label:"docs.f.method",k:["docs.hubspot.method"]},
+  ]},
   { id: "freecodecamp", types: ["external"], name: "src.freecodecamp_catalogue.name", sourceIds: ["freecodecamp_catalogue"], rows: [
     { label: "docs.f.publisher", ref: "freeCodeCamp" },
     { label: "docs.f.dataset", url: "https://github.com/freeCodeCamp/freeCodeCamp/blob/main/curriculum/structure/curriculum.json" },
@@ -108,37 +159,6 @@ const DOCS: Doc[] = [
     {label: "docs.f.files", ref: "src/artifacts/api-server/src/data/openlearn.ts"},
     {label: "docs.f.method", k: ["docs.openlearn.method"]},
   ]},
-  { id: "learningRecords", types: ["user", "derived"], name: "docs.learning.name", rows: [
-    {label:"docs.f.method",k:["docs.learning.method", "docs.learning.ai"]},
-    {label:"docs.f.dataset",url:"https://support.google.com/calendar/answer/37118"},
-    {label:"docs.f.dataset",url:"https://support.apple.com/guide/calendar/icl1023/mac"},
-  ]},
-  { id: "runpod", types: ["service", "user"], name: "sources.aiTitle", sourceIds: ["gemini", "runpod_main", "runpod_light"], ai: true, rows: [
-    { label: "docs.f.publisher", ref: "Google Gemini API + RunPod Serverless (vLLM, OpenAI-compatible)" },
-    { label: "docs.f.api", url: "https://ai.google.dev/gemini-api/docs/models" },
-    { label: "docs.f.api", url: "https://docs.runpod.io/serverless/vllm/openai-compatibility" },
-    { label: "docs.f.method", k: ["docs.ai.checks", "docs.ai.cold", "docs.ai.configured"] },
-    { label: "docs.f.limits", k: ["docs.ai.ids", "docs.ai.retrieval"] },
-    { label: "docs.f.privacy", k: ["docs.ai.privacy"] },
-  ] },
-  { id: "riasec", types: ["external", "static", "derived", "user"], name: "docs.name.riasec", sourceIds:["onet_interest_profiler"], rows: [
-    { label: "docs.f.publisher", ref: "USDOL/ETA — O*NET Interest Profiler; contextual adaptation by Skilytics" },
-    { label: "docs.f.dataset", url: "https://www.onetcenter.org/dl_files/Mini-IP.pdf" },
-    { label: "docs.f.license", url: "https://www.onetcenter.org/license_tools.html" },
-    { label: "docs.f.method", k: ["docs.riasec.items", "docs.riasec.scoring"] },
-    { label: "docs.f.limits", k: ["docs.riasec.limits"] },
-  ] },
-  {id:"skill_reference",types:["external","static","derived"],name:"src.onet_content_model.name",sourceIds:["onet_content_model"],rows:[
-    {label:"docs.f.publisher",ref:"USDOL/ETA, National Center for O*NET Development; app dictionary by Skilytics"},
-    {label:"docs.f.dataset",url:"https://www.onetcenter.org/content.html"},
-    {label:"docs.f.files",ref:"cv-retrieval.ts (SKILL_REFERENCES), data/skills.ts, occupational-skills.ts"},
-    {label:"docs.f.method",k:["docs.skills.method"]},
-    {label:"docs.f.license",url:"https://www.onetcenter.org/license_db.html"},
-  ]},
-  { id: "match", types: ["derived"], name: "docs.name.match", rows: [
-    { label: "docs.f.method", k: ["docs.match.weights"] },
-    { label: "docs.f.limits", k: ["docs.match.demand", "docs.match.feasibility"] },
-  ] },
   { id: "sdg", types: ["external", "static", "derived"], name: "docs.name.sdg", sourceIds:["sdg_framework"], rows: [
     { label: "docs.f.publisher", ref: "United Nations, Sustainable Development Goals" },
     { label: "docs.f.dataset", url: "https://sdgs.un.org/goals" },
@@ -146,6 +166,14 @@ const DOCS: Doc[] = [
     { label: "docs.f.license", url: "/sdg/NOTICE.md" },
     { label: "docs.f.method", k: ["docs.sdg.method"] },
     { label: "docs.f.limits", k: ["docs.sdg.limits"] },
+  ] },
+  { id: "runpod", types: ["service", "user"], name: "sources.aiTitle", sourceIds: ["gemini", "runpod_main", "runpod_light"], ai: true, rows: [
+    { label: "docs.f.publisher", ref: "Google Gemini API + RunPod Serverless (vLLM, OpenAI-compatible)" },
+    { label: "docs.f.api", url: "https://ai.google.dev/gemini-api/docs/models" },
+    { label: "docs.f.api", url: "https://docs.runpod.io/serverless/vllm/openai-compatibility" },
+    { label: "docs.f.method", k: ["docs.ai.checks", "docs.ai.cold", "docs.ai.configured"] },
+    { label: "docs.f.limits", k: ["docs.ai.ids", "docs.ai.retrieval"] },
+    { label: "docs.f.privacy", k: ["docs.ai.privacy"] },
   ] },
   { id: "demo", types: ["demo", "user"], name: "docs.name.demo", rows: [
     { label: "docs.f.method", k: ["docs.demo.org", "docs.demo.individual", "docs.demo.cv", "docs.account.profile"] },
@@ -155,11 +183,12 @@ const DOCS: Doc[] = [
 
 const TYPES: DocType[] = ["external", "static", "derived", "service", "demo", "user"];
 const CATEGORIES = [
-  { key: "market", ids: ["dosm", "aei_usage", "aei_exposure", "bls", "career_news"] },
-  { key: "career", ids: ["riasec", "onet", "skill_reference", "match"] },
-  { key: "learning", ids: ["hubspot", "courses", "freecodecamp", "githubskills", "huggingface", "openlearn", "sdg"] },
+  { key: "market", ids: ["dosm", "dosm_jmi", "aei_usage", "aei_exposure", "bls", "career_news"] },
+  { key: "jobs", ids: ["himalayas", "remotive", "remoteok"] },
+  { key: "career", ids: ["riasec", "onet", "skill_reference"] },
+  { key: "learning", ids: ["courses", "hrdcorp", "seda_niosh", "hubspot", "freecodecamp", "githubskills", "huggingface", "openlearn", "sdg"] },
   { key: "aiService", ids: ["runpod"] },
-  { key: "privacy", ids: ["tvet_synthetic", "demo", "learningRecords"] },
+  { key: "privacy", ids: ["tvet_synthetic", "demo"] },
 ] as const;
 const TYPE_TONE: Record<DocType, string> = {
   external: "bg-[hsl(var(--maroon-soft))] text-primary",

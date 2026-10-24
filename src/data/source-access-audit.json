@@ -392,6 +392,25 @@
       }
     },
     {
+      "id": "hrdcorp_elatih",
+      "name": "HRD Corp & e-LATiH Malaysia",
+      "category": "catalogue",
+      "access": "metadata",
+      "note": {
+        "en": "National workforce training catalog and HRD Corp levy claimable courses under Ministry of Human Resources Malaysia.",
+        "ms": "Katalog latihan tenaga kerja kebangsaan dan kursus tuntutan levi HRD Corp di bawah Kementerian Sumber Manusia Malaysia.",
+        "zh": "马来西亚人力资源部旗下国家劳动力培训目录与HRD Corp征税可申领课程。"
+      },
+      "licence": "HRD Corp / e-LATiH public portal terms and national training framework",
+      "documentation": "https://e-latih.hrdcorp.gov.my/",
+      "checkedAt": "2026-10-24T02:50:00.000Z",
+      "probe": {
+        "status": 200,
+        "finalUrl": "https://e-latih.hrdcorp.gov.my/",
+        "error": null
+      }
+    },
+    {
       "id": "gemini",
       "name": "Google Gemini API",
       "category": "ai_endpoint",

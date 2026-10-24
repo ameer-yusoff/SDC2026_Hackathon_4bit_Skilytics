@@ -69,24 +69,20 @@ export function agentRoutes() {
       model:
         provider === "mock"
           ? "mock-engine-v1"
-          : provider === "groq"
-            ? process.env.GROQ_MODEL || "llama-3.3-70b-versatile"
-            : provider === "gemini"
-              ? (agent === "cv" ? process.env.GEMINI_CV_MODEL : undefined) ||
-                process.env.GEMINI_MODEL ||
-                "gemini-3.1-flash-lite"
-              : light
-                ? process.env.RUNPOD_LIGHT_MODEL || "qwen/qwen3.5-9b"
-                : process.env.RUNPOD_LLM_MODEL || "qwen/qwen3.5-27b",
+          : provider === "gemini"
+            ? (agent === "cv" ? process.env.GEMINI_CV_MODEL : undefined) ||
+              process.env.GEMINI_MODEL ||
+              "gemini-3.1-flash-lite"
+            : light
+              ? process.env.RUNPOD_LIGHT_MODEL || "qwen/qwen3.5-9b"
+              : process.env.RUNPOD_LLM_MODEL || "qwen/qwen3.5-27b",
       configured:
         provider === "mock"
           ? true
-          : provider === "groq"
-            ? !!process.env.GROQ_API_KEY
-            : provider === "gemini"
-              ? !!process.env.GEMINI_API_KEY
-              : !!process.env.RUNPOD_API_KEY &&
-                !!process.env.RUNPOD_LLM_ENDPOINT_ID,
+          : provider === "gemini"
+            ? !!process.env.GEMINI_API_KEY
+            : !!process.env.RUNPOD_API_KEY &&
+              !!process.env.RUNPOD_LLM_ENDPOINT_ID,
     };
   });
 }

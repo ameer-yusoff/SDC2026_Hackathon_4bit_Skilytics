@@ -18,6 +18,7 @@ import {
 } from "recharts";
 import {
   AlertTriangle,
+  Briefcase,
   CheckCircle2,
   CircleDashed,
   Cpu,
@@ -495,8 +496,16 @@ function LegacyTvetMarket() {
   );
 }
 
-const KINDS: MarketSourceKind[] = ["dataset", "catalogue", "ai_endpoint"];
-const KIND_ICON = { dataset: Database, catalogue: Library, ai_endpoint: Cpu };
+const SECTIONS: {
+  key: "dataset" | "jobs" | "learning" | "ai_endpoint";
+  filter: (s: MarketSource) => boolean;
+  icon: typeof Database;
+}[] = [
+  { key: "dataset", filter: (s) => s.kind === "dataset", icon: Database },
+  { key: "jobs", filter: (s) => s.kind === "catalogue" && s.id.endsWith("_jobs"), icon: Briefcase },
+  { key: "learning", filter: (s) => s.kind === "catalogue" && !s.id.endsWith("_jobs"), icon: Library },
+  { key: "ai_endpoint", filter: (s) => s.kind === "ai_endpoint", icon: Cpu },
+];
 
 function StatusPill({ s }: { s: MarketSource["status"] }) {
   const { tk } = useT();
@@ -716,20 +725,20 @@ export function Sources() {
         <Empty title={t("sources.empty")} />
       ) : (
         <div className="space-y-6">
-          {KINDS.map((k) => {
-            const items = src.data!.filter((s) => s.kind === k);
-            if (!items.length && k !== "catalogue") return null;
-            const Icon = KIND_ICON[k];
+          {SECTIONS.map((sec) => {
+            const items = src.data!.filter(sec.filter);
+            if (!items.length) return null;
+            const Icon = sec.icon;
             return (
-              <section key={k}>
+              <section key={sec.key}>
                 <h2 className="mb-2 flex items-center gap-2 text-sm font-bold">
                   <Icon className="h-4 w-4 text-accent" />
-                  {tk("srcKind", k)}
+                  {tk("srcKind", sec.key)}
                   <span className="text-xs font-normal text-muted-foreground">
                     ({items.length})
                   </span>
                 </h2>
-                {k === "ai_endpoint" && <AiRoutingPanel/>}
+                {sec.key === "ai_endpoint" && <AiRoutingPanel/>}
                 <div className="grid gap-3 lg:grid-cols-2">
                   {items.map((s) => {
                     const name = tk("src", `${s.id}.name`);

@@ -101,6 +101,15 @@ export const SOURCES: SourceDef[] = [
     description: "Public AI course index with direct links; unknown duration and no certificate claim.",
     refreshCadence: "links_6h", consumers: ["pathway", "agent_planner", "agent_sdg", "cohort", "agent_company_advisor"] },
   {
+    id: "hrdcorp_elatih",
+    name: "HRD Corp & e-LATiH Malaysia",
+    kind: "catalogue",
+    url: "https://e-latih.hrdcorp.gov.my/",
+    description: "Katalog latihan tenaga kerja kebangsaan dan kursus tuntutan levi HRD Corp di bawah Kementerian Sumber Manusia Malaysia.",
+    refreshCadence: "reviewed_snapshot",
+    consumers: ["pathway", "cohort", "agent_planner", "role_matcher"],
+  },
+  {
     id: "gemini",
     name: "Google Gemini API",
     kind: "ai_endpoint",
@@ -109,6 +118,7 @@ export const SOURCES: SourceDef[] = [
     refreshCadence: "on_refresh",
     consumers: ["agent_cv", "agent_holland", "agent_profiler", "agent_fitter", "agent_planner", "agent_sdg", "predictions", "agent_company_advisor"],
   },
+
   {
     id: "runpod_main",
     name: "RunPod main model endpoint",
@@ -317,6 +327,7 @@ async function checkGemini(): Promise<void> {
   await setSource("gemini", { status: h.status, lastFetchedAt: new Date(), detail: h.detail, error: h.error, recordCount: 0 });
 }
 
+
 let running: Promise<void> | null = null;
 
 export function refreshAll(force = false): Promise<void> {
@@ -356,6 +367,7 @@ const staticSources: Record<string,{version:string;lastFetchedAt:Date;status:"ok
   ["onet_content_model","content-model-reference-2026-10","2026-10",SKILL_REFERENCES.length,"O*NET Content Model definitions, locally attributed retrieval reference. Separate from the occupation database and the Interest Profiler."],
   ["openlearn_catalogue","reviewed-2026-10-23","2026-10-23",OPENLEARN.length,"Reviewed selection, not a live endpoint. Metadata reviewed 23 October 2026."],
   ["sdg_framework","sdg-editorial-target-map-v1","2026-10-23",SDG_TARGETS.length,"Curated target references and 17 official goal icons. Associations are thematic, not measured outcomes."],
+  ["hrdcorp_elatih","reviewed-2026-10-24","2026-10-24",12,"Katalog latihan tenaga kerja kebangsaan dan kursus tuntutan levi HRD Corp / KESUMA."],
 ].map(([id,version,dataDate,recordCount,detail])=>[id,{version:String(version),lastFetchedAt:new Date(id === "bls_projections"?blsSnapshot.reviewedAt+"T00:00:00Z":OPENLEARN_REVIEWED_AT),status:"ok" as const,detail:String(detail),dataDate:String(dataDate),recordCount:Number(recordCount),error:null}]));
 
 export async function listSources() {

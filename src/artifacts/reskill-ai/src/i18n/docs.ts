@@ -5,6 +5,7 @@ export const docsEn = {
   "docs.tvet.coverage": "Fictional aggregate outcomes for 2024–2026, nine programme/year rows. This reference template is shown for demonstration, not as the signed-in institution’s actual employment performance. Real student learning records remain separate.",
   "docs.tvet.method": "Employment = employed within six months / all graduates. Further study is excluded from employment; unknown outcomes remain in the denominator. The 1–10-year scenario adds an assumed 2 percentage points each year, capped at 100%. The original src JSON is copied unchanged to the public download and root synthetic data folder, alongside the three fictional demo CVs.",
   "docs.tvet.policy": "Institution-required courses are saved within the TVET organisation. New and rebuilt pathways include compulsory and personalised learning. Added requirements extend unfinished timelines while preserving check-ins and dates; completed pathways retain their awards. Unknown duration courses cannot be required. Costs remain in each student’s budget; there is no HRD feature in TVET. The Analyst and Advisor routes are reused for Grads Future, with synthetic inputs explicitly identified.",
+
   "docs.live.staticNote": "Bundled reference reviewed by the app. Refresh does not download a new version.",
   "docs.live.staticTitle": "Reference snapshot",
   "docs.live.checked": "Last checked",
@@ -48,6 +49,7 @@ export const docsEn = {
   "docs.openlearn.name": "OpenLearn · reviewed public courses",
   "docs.openlearn.method": "Seven public Open University course pages reviewed on 23 October 2026. This is a manually maintained metadata selection, not a live API. Subject links are application-authored from course descriptions/outcomes and restricted to relevant role titles. Unknown duration stays unknown. These resources do not establish full skill mastery, professional registration or qualifications. Check current details with the provider.",
   "docs.category.market": "Labour market and AI research",
+  "docs.category.jobs": "Job vacancies and market hiring signals",
   "docs.category.career": "Career and interest assessment",
   "docs.category.learning": "Learning catalogue and SDG references",
   "docs.category.aiService": "AI services",
@@ -131,6 +133,19 @@ export const docsEn = {
 
   "docs.name.riasec": "Holland · O*NET Interest Profiler (RIASEC)", "docs.name.match": "Role match score", "docs.name.sdg": "SDG associations", "docs.name.demo": "Demo and personal data",
   "src.onet.name": "O*NET occupation references", "src.onet.desc": "Official US occupation, skill and interest reference data, linked through an explicit SOC crosswalk. Not Malaysian vacancies.",
+  "docs.jmi.name": "DOSM JMI · Job Market Insights snapshot",
+  "docs.jmi.coverage": "DOSM Job Market Insights Q4 2025 occupation counts and hiring trends for priority occupations in Malaysia.",
+  "docs.jmi.method": "Curated national labour market snapshot matching high-demand occupations with O*NET skills and vacancies. Refreshed with official releases.",
+  "docs.himalayas.name": "Himalayas · public remote job API",
+  "docs.himalayas.method": "Public keyless API returning live remote jobs open to Malaysia and worldwide. Displays direct application URLs, employer info, and salary ranges where published.",
+  "docs.remotive.name": "Remotive · remote job catalogue API",
+  "docs.remotive.method": "Public remote job repository API for software, product, and digital roles. Listings include full job descriptions and direct candidate application links.",
+  "docs.remoteok.name": "RemoteOK · public remote job API",
+  "docs.remoteok.method": "Live public API feed of remote technology, design, and operations roles. Links open the original RemoteOK listing with application attribution.",
+  "docs.hrdcorp.name": "HRD Corp & e-LATiH · national training catalogue",
+  "docs.hrdcorp.method": "National workforce upskilling catalogue under the Ministry of Human Resources Malaysia. Highlights HRD Corp levy-claimable courses and digital micro-credentials with official URLs.",
+  "docs.seda_niosh.name": "SEDA & NIOSH Malaysia · accredited technical bodies",
+  "docs.seda_niosh.method": "Accredited national regulatory frameworks for Green Economy (SEDA Grid-Connected Solar PV) and Occupational Safety (NIOSH OSH Coordinator). Links directly to official certification syllabi.",
 } as const;
 
 export type DocsKey = keyof typeof docsEn;
@@ -140,6 +155,7 @@ export const docsMs: Record<DocsKey, string> = {
   "docs.tvet.coverage": "Hasil agregat rekaan 2024–2026, sembilan baris program/tahun. Templat rujukan ini untuk demo, bukan prestasi pekerjaan sebenar institusi yang log masuk. Rekod pembelajaran pelajar sebenar kekal berasingan.",
   "docs.tvet.method": "Pekerjaan = bekerja dalam enam bulan / semua graduan. Pengajian lanjut tidak dikira bekerja; hasil tidak diketahui kekal dalam pembahagi. Senario 1–10 tahun menambah andaian 2 mata peratus setahun, sehingga 100%. JSON asal src disalin tanpa perubahan ke muat turun awam dan folder synthetic data di root bersama tiga demo CV rekaan.",
   "docs.tvet.policy": "Kursus wajib disimpan dalam organisasi TVET. Pathway baharu dan dibina semula merangkumi pembelajaran wajib dan peribadi. Keperluan tambahan memanjangkan timeline belum lengkap sambil mengekalkan kemajuan dan tarikh; pathway lengkap mengekalkan sijil. Kursus tanpa tempoh diterbitkan tidak boleh diwajibkan. Kos termasuk dalam bajet pelajar; tiada HRD dalam TVET. Laluan Analyst dan Advisor digunakan semula untuk Grads Future dengan input sintetik berlabel.",
+
   "docs.live.staticNote": "Rujukan disertakan dan disemak aplikasi. Refresh tidak memuat turun versi baharu.",
   "docs.live.staticTitle": "Snapshot rujukan",
   "docs.live.checked": "Semakan terakhir",
@@ -183,6 +199,7 @@ export const docsMs: Record<DocsKey, string> = {
   "docs.openlearn.name": "OpenLearn · kursus awam disemak",
   "docs.openlearn.method": "Tujuh halaman kursus awam Open University disemak pada 23 Oktober 2026. Pilihan metadata ini diselenggara secara manual, bukan API live. Kaitan bidang dipetakan oleh aplikasi berdasarkan penerangan/hasil pembelajaran kursus dan dihadkan kepada peranan berkaitan. Tempoh tidak diketahui tidak direka. Kursus ini tidak membuktikan penguasaan kemahiran penuh, pendaftaran profesional atau kelayakan. Semak maklumat terkini dengan penyedia.",
   "docs.category.market": "Pasaran buruh dan penyelidikan AI",
+  "docs.category.jobs": "Kekosongan jawatan dan isyarat pasaran kerja",
   "docs.category.career": "Kerjaya dan penilaian minat",
   "docs.category.learning": "Katalog pembelajaran dan rujukan SDG",
   "docs.category.aiService": "Perkhidmatan AI",
@@ -266,6 +283,19 @@ export const docsMs: Record<DocsKey, string> = {
 
   "docs.name.riasec": "Holland · O*NET Interest Profiler (RIASEC)", "docs.name.match": "Skor padanan peranan", "docs.name.sdg": "Kaitan SDG", "docs.name.demo": "Data demo dan peribadi",
   "src.onet.name": "Rujukan pekerjaan O*NET", "src.onet.desc": "Data rujukan rasmi AS bagi pekerjaan, kemahiran dan minat, dipautkan melalui padanan SOC yang jelas. Bukan kekosongan jawatan di Malaysia.",
+  "docs.jmi.name": "DOSM JMI · Snapshot Wawasan Pasaran Buruh",
+  "docs.jmi.coverage": "Kiraan pekerjaan dan trend pengambilan DOSM Job Market Insights Q4 2025 bagi pekerjaan utama di Malaysia.",
+  "docs.jmi.method": "Snapshot pasaran buruh kebangsaan yang memadankan pekerjaan permintaan tinggi dengan kemahiran O*NET dan kekosongan jawatan rasmi.",
+  "docs.himalayas.name": "Himalayas · API jawatan remote awam",
+  "docs.himalayas.method": "API awam tanpa kunci yang memaparkan kekosongan jawatan remote untuk calon Malaysia dan global. Menunjukkan pautan permohonan terus, majikan, dan julat gaji jika dinyatakan.",
+  "docs.remotive.name": "Remotive · API katalog jawatan remote",
+  "docs.remotive.method": "API repositori jawatan remote awam bagi bidang perisian, produk, dan digital. Menyenaraikan huraian kerja lengkap dan pautan terus permohonan calon.",
+  "docs.remoteok.name": "RemoteOK · API jawatan remote awam",
+  "docs.remoteok.method": "Feed API awam langsung untuk jawatan teknologi, reka bentuk, dan operasi secara remote. Pautan terus ke laman RemoteOK asal bersama atribusi.",
+  "docs.hrdcorp.name": "HRD Corp & e-LATiH · katalog latihan kebangsaan",
+  "docs.hrdcorp.method": "Katalog peningkatan kemahiran tenaga kerja kebangsaan di bawah Kementerian Sumber Manusia Malaysia. Menandakan kursus boleh tuntut levi HRD Corp dan mikrokredensial digital bersama URL rasmi.",
+  "docs.seda_niosh.name": "SEDA & NIOSH Malaysia · badan teknikal bertauliah",
+  "docs.seda_niosh.method": "Rangka kerja kawal selia kebangsaan bertauliah untuk Ekonomi Hijau (SEDA Solar PV Bersambung Grid) dan Keselamatan Pekerjaan (NIOSH OSH Coordinator). Pautan terus ke sukatan peperiksaan rasmi.",
 };
 
 export const docsZh: Record<DocsKey, string> = {
@@ -273,6 +303,7 @@ export const docsZh: Record<DocsKey, string> = {
   "docs.tvet.coverage": "2024–2026年的虚构汇总结果，共九条专业/年份记录。此参考模板用于演示，并非登录机构的实际就业表现。真实学生学习记录保持独立。",
   "docs.tvet.method": "就业率为六个月内就业人数除以全部毕业生。继续升学不计入就业，未知结果仍计入分母。1–10年情景假设每年增加2个百分点，最高100%。src原JSON不变地复制至公开下载和根目录synthetic data文件夹，并附三份虚构演示简历。",
   "docs.tvet.policy": "必修课程按TVET机构保存。新建或重建路径包括必修与个性化学习。新增要求延长未完成的时间线，保留进度与日期；已完成路径保留证书。未公布时长的课程不能设为必修，费用计入学生预算。TVET没有HRD功能。毕业生未来复用Analyst和Advisor路线，明确标注合成输入。",
+
   "docs.live.staticNote": "应用内置并审核的参考资料，刷新不会下载新版本。",
   "docs.live.staticTitle": "参考快照",
   "docs.live.checked": "最近检查",
@@ -316,6 +347,7 @@ export const docsZh: Record<DocsKey, string> = {
   "docs.openlearn.name": "OpenLearn · 已审核公开课程",
   "docs.openlearn.method": "七个 Open University 公开课程页面于 2026 年 10 月 23 日审核。此为人工维护的元数据选集，并非实时 API。主题关联由应用根据课程介绍及学习成果编制，并限定至相关职位。未知时长保留为未知。这些课程不代表全面掌握技能、专业注册或取得执业资格。最新详情请向机构确认。",
   "docs.category.market": "劳动力市场与 AI 研究",
+  "docs.category.jobs": "职位空缺与招聘市场信号",
   "docs.category.career": "职业与兴趣评估",
   "docs.category.learning": "学习目录与 SDG 参考",
   "docs.category.aiService": "AI 服务",
@@ -399,4 +431,17 @@ export const docsZh: Record<DocsKey, string> = {
 
   "docs.name.riasec": "Holland · O*NET 兴趣测评（RIASEC）", "docs.name.match": "职位匹配分数", "docs.name.sdg": "SDG 关联", "docs.name.demo": "演示与个人数据",
   "src.onet.name": "O*NET 职业参考", "src.onet.desc": "美国官方职业、技能与兴趣参考数据，通过明确的 SOC 对照表关联。并非马来西亚职位空缺。",
+  "docs.jmi.name": "DOSM JMI · 就业市场洞察快照",
+  "docs.jmi.coverage": "DOSM 就业市场洞察 2025 年第四季度针对马来西亚重点职业的统计与招聘趋势。",
+  "docs.jmi.method": "国家劳动力市场精选快照，将高需求职业与 O*NET 技能及官方空缺进行匹配。",
+  "docs.himalayas.name": "Himalayas · 公开远程职位 API",
+  "docs.himalayas.method": "免密钥公开 API，返回面向马来西亚及全球候选人的实时远程职位。提供直接申请链接、雇主信息以及已公布的薪资范围。",
+  "docs.remotive.name": "Remotive · 远程职位目录 API",
+  "docs.remotive.method": "针对软件、产品及数字化职位的公开远程职位仓库 API。包含完整职位描述与直接申请链接。",
+  "docs.remoteok.name": "RemoteOK · 公开远程职位 API",
+  "docs.remoteok.method": "技术、设计与运营类远程职位的实时公开 API 数据源。链接直接打开发布方页面并附带署名。",
+  "docs.hrdcorp.name": "HRD Corp 与 e-LATiH · 国家培训目录",
+  "docs.hrdcorp.method": "马来西亚人力资源部旗下的国家劳动力技能提升目录。标明支持 HRD Corp 征费报销（Levy-claimable）的课程及官方微证书链接。",
+  "docs.seda_niosh.name": "SEDA 与 NIOSH 马来西亚 · 国家认证技术机构",
+  "docs.seda_niosh.method": "绿色经济（SEDA 并网太阳能光伏）与职业安全（NIOSH 职业安全协调员）国家认证监管标准。直接链接至官方认证课程大纲。",
 };

@@ -8,7 +8,7 @@ const words = {
     check: "Unauthenticated check",
     docs: "Publisher documentation",
     summary:
-      "23 external sources reviewed: 20 data/reference sources and 3 AI service entries. Public access does not mean unrestricted reuse. AI services require private credentials and are not public datasets.",
+      "24 external sources reviewed: 21 data/reference sources and 3 AI service entries (including Google Gemini and RunPod). Public access does not mean unrestricted reuse. AI services require private credentials and are not public datasets.",
     privacy:
       "CVs, employee records, accounts, progress and saved AI replies are private user data, not public datasets. Demo CVs are fictional. Matches, SDG associations and future scenarios are derived application outputs.",
     probe:
@@ -25,7 +25,7 @@ const words = {
     check: "Semakan tanpa auth",
     docs: "Dokumentasi penerbit",
     summary:
-      "23 sumber luaran disemak: 20 sumber data/rujukan dan 3 entri perkhidmatan AI. Akses awam bukan izin penggunaan semula tanpa had. Perkhidmatan AI memerlukan kelayakan peribadi dan bukan dataset awam.",
+      "24 sumber luaran disemak: 21 sumber data/rujukan dan 3 entri perkhidmatan AI (termasuk Google Gemini dan RunPod). Akses awam bukan izin penggunaan semula tanpa had. Perkhidmatan AI memerlukan kelayakan peribadi dan bukan dataset awam.",
     privacy:
       "CV, rekod pekerja, akaun, kemajuan dan jawapan AI tersimpan ialah data pengguna peribadi, bukan dataset awam. CV demo ialah rekaan. Padanan, kaitan SDG dan senario masa depan ialah hasil terbitan aplikasi.",
     probe:
@@ -42,7 +42,7 @@ const words = {
     check: "无认证检查",
     docs: "发布者文档",
     summary:
-      "已审核23个外部来源：20个数据/参考来源及3个AI服务条目。公开访问不代表无限制再利用。AI服务需要私有凭证，并非公开数据集。",
+      "已审核24个外部来源：21个数据/参考来源及3个AI服务条目（包括Google Gemini与RunPod）。公开访问不代表无限制再利用。AI服务需要私有凭证，并非公开数据集。",
     privacy:
       "简历、员工记录、账号、进度及保存的AI回答属于私有用户数据，并非公开数据集。演示简历为虚构资料。匹配、SDG关联及未来情景是应用派生结果。",
     probe:
