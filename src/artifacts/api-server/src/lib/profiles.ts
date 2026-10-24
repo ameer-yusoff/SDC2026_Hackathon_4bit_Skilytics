@@ -73,10 +73,11 @@ export async function planToApi(p: PlanRow) {
     roleTitle: p.roleTitle,
     totalWeeks: verified && valid.every((i) => i.durationWeeks !== null) ? p.totalWeeks : null,
     totalCostMyr: verified ? p.totalCostMyr : null,
+    sdgGoal: p.items[0]?.sdgGoal ?? null,
     verificationStatus: verified ? "verified" as const : "unverified" as const,
     // Historical plans are retained, but unverified prices/durations are withheld.
     uncoveredSkills: [...new Set([...p.uncoveredSkills, ...p.items.filter((i) => !valid.includes(i)).flatMap((i) => i.skills)])],
-    items: valid.map(({ sdgCodes, ...i }) => ({
+    items: valid.map(({ sdgCodes, sdgGoal: _preference, ...i }) => ({
       ...i,
       sdgTargets: sdgCodes.map((c) => sdgByCode.get(c)).filter((t): t is SdgTarget => !!t),
     })),

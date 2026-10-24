@@ -75,7 +75,7 @@ export function LearningDashboard({ p, employer=false, portal="hr" }: { p: Profi
         </Button>
       </div>
       <p className="mt-3 text-xs text-muted-foreground">{w.calendarNote}</p>
-      <SdgContribution/>
+      <SdgContribution goals={j.items.flatMap(i=>i.sdgCodes)}/>
       <div className="my-5">
         <p className="mb-2 flex justify-between text-sm font-semibold">
           <span>{w.progress}</span>

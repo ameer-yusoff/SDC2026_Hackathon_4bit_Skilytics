@@ -978,6 +978,7 @@ components:
       type: object
       required: [id, profileId, roleId, roleTitle, totalWeeks, totalCostMyr, uncoveredSkills, items, createdAt]
       properties:
+        sdgGoal: { type: ["string", "null"] }
         verificationStatus: { type: string, enum: [unverified, verified] }
         id: { type: integer }
         profileId: { type: integer }
@@ -999,6 +1000,7 @@ components:
       required: [roleId]
       properties:
         roleId: { type: integer }
+        sdgGoal: { type: string, pattern: "^([1-9]|1[0-7])$" }
 
     SourceRef:
       type: object

@@ -196,7 +196,7 @@ router.get("/profiles/:id/journey/certificate",async(req,res)=>{
   const [plan]=state.planId ? await db.select().from(plansTable).where(and(eq(plansTable.id,state.planId),eq(plansTable.profileId,p.id))) : [];
   if(!plan || !state.finishedAt || !allComplete(plan.items,state.completed)) {res.status(409).json({error:"pathway_incomplete"});return;}
   res.setHeader("Cache-Control","no-store");
-  res.json({id:`SK-${p.id}-${plan.id}`,name:p.name,roleTitle:plan.roleTitle,roleTitleMs:ROLES.find(r=>r.title===plan.roleTitle)?.titleMs??plan.roleTitle,roleTitleZh:ROLE_TITLE_ZH[plan.roleTitle]??plan.roleTitle,finishedAt:state.finishedAt,courseCount:plan.items.length});
+  res.json({id:`SK-${p.id}-${plan.id}`,name:p.name,roleTitle:plan.roleTitle,roleTitleMs:ROLES.find(r=>r.title===plan.roleTitle)?.titleMs??plan.roleTitle,roleTitleZh:ROLE_TITLE_ZH[plan.roleTitle]??plan.roleTitle,finishedAt:state.finishedAt,courseCount:plan.items.length,sdgCodes:[...new Set(plan.items.flatMap(i=>i.sdgCodes))]});
 });
 
 router.patch("/profiles/:id", async (req, res) => {
@@ -473,7 +473,7 @@ router.get("/profiles/:id/plan", async (req, res) => {
 
 router.post("/profiles/:id/plan", async (req, res) => {
   const { id } = GetProfileParams.parse(req.params);
-  const { roleId } = CreateProfilePlanBody.parse(req.body);
+  const { roleId,sdgGoal } = CreateProfilePlanBody.parse(req.body);
   const p = await requireProfile(id, req, res);
   if (!p) return;
   const journey = (!req.user || req.user.role === "individual" || req.user.role === "hr" || req.user.role === "tvet") ? await learningState(p.id) : null;
@@ -491,7 +491,7 @@ router.post("/profiles/:id/plan", async (req, res) => {
   const compulsoryCourses = requiredIds.map(id=>courses.find(c=>c.id===id));
   if(compulsoryCourses.some(c=>!c || c.durationHours===null)){res.status(409).json({error:"compulsory_catalogue_changed"});return;}
   if(compulsoryCourses.reduce((n,c)=>n+(c?.costMyr??0),0)>p.budgetMyr){res.status(409).json({error:"compulsory_budget_exceeded"});return;}
-  const plan = buildPlan({ compulsoryCourses: compulsoryCourses.filter((c):c is NonNullable<typeof c>=>!!c), gaps: gapSkills, courses, budgetMyr: p.budgetMyr, weeklyHours: p.weeklyHours, hrdcEligible: req.user?.role === "hr" && p.hrdcEligible, roleTitle: role.title, aiAdvancement: !req.user || req.user.role === "individual" || req.user.role === "hr" || req.user.role === "tvet" });
+  const plan = buildPlan({ sdgGoal, compulsoryCourses: compulsoryCourses.filter((c):c is NonNullable<typeof c>=>!!c), gaps: gapSkills, courses, budgetMyr: p.budgetMyr, weeklyHours: p.weeklyHours, hrdcEligible: req.user?.role === "hr" && p.hrdcEligible, roleTitle: role.title, aiAdvancement: !req.user || req.user.role === "individual" || req.user.role === "hr" || req.user.role === "tvet" });
   const [row] = await db
     .insert(plansTable)
     .values({ profileId: id, roleId, roleTitle: role.title, ...plan })

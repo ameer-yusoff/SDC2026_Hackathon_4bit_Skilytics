@@ -402,6 +402,8 @@ export const PlanVerificationStatus = {
 } as const;
 
 export interface Plan {
+  /** @nullable */
+  sdgGoal?: string | null;
   verificationStatus?: PlanVerificationStatus;
   id: number;
   profileId: number;
@@ -418,6 +420,8 @@ export interface Plan {
 
 export interface PlanInput {
   roleId: number;
+  /** @pattern ^([1-9]|1[0-7])$ */
+  sdgGoal?: string;
 }
 
 export interface SourceRef {

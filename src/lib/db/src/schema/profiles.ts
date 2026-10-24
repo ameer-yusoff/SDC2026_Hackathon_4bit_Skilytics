@@ -56,6 +56,7 @@ export const profilesTable = pgTable("profiles", {
 ]);
 
 export type PlanItemStored = {
+  sdgGoal?: string;
   compulsory?: boolean;
   courseId: number;
   title: string;

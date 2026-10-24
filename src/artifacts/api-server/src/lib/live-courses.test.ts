@@ -2,6 +2,13 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { mapLearnPaths, mapFccCourses, mapGitHubSkills, mapHuggingFaceLearn, courseSdg, liveCourses } from "./live-courses";
 import { buildPlan } from "./planner";
+import {SDG_TARGETS} from "../data/courses";
+
+test("all 17 SDG themes are available while new subject mappings require relevant content",()=>{
+ for(let goal=1;goal<=17;goal++)assert.ok(SDG_TARGETS.some(t=>t.code===String(goal)));
+ for(const [topic,goal] of [["Poverty reduction and social protection","1"],["Sustainable agriculture and food security","2"],["Gender equality and women's empowerment","5"],["Clean water and sanitation","6"],["Urban planning for sustainable cities","11"],["Ocean conservation and marine ecosystems","14"],["Biodiversity and wildlife conservation","15"],["Human rights and public governance","16"],["International cooperation and global partnerships","17"]])assert.ok(courseSdg(topic).includes(goal),topic);
+ assert.ok(!courseSdg("Cloud data productivity").includes("14"));
+});
 import { hasCurrentRiasec, scoreRiasec } from "./riasec-scoring";
 import { RIASEC_QUESTIONS } from "../data/riasec";
 

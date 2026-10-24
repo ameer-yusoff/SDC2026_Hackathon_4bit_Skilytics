@@ -9,6 +9,8 @@ import type { PlanItem } from './planItem';
 import type { PlanVerificationStatus } from './planVerificationStatus';
 
 export interface Plan {
+  /** @nullable */
+  sdgGoal?: string | null;
   verificationStatus?: PlanVerificationStatus;
   id: number;
   profileId: number;

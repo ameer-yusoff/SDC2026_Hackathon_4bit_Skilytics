@@ -74,6 +74,8 @@ export const COURSES: CourseSeed[] = [
 ];
 
 export const SDG_TARGETS: { code: string; title: string; description: string }[] = [
+  // Goal-level links support all 17 themes without inventing a specific UN target.
+  ...["No poverty","Zero hunger","Good health and well-being","Quality education","Gender equality","Clean water and sanitation","Affordable and clean energy","Decent work and economic growth","Industry, innovation and infrastructure","Reduced inequalities","Sustainable cities and communities","Responsible consumption and production","Climate action","Life below water","Life on land","Peace, justice and strong institutions","Partnerships for the goals"].map((title,i)=>({code:String(i+1),title,description:`Thematic learning association with UN SDG ${i+1}: ${title}. Not measured impact or UN endorsement.`})),
   { code: "10.2", title: "Social and economic inclusion", description: "Promote social, economic and political inclusion irrespective of age, sex, disability, race, ethnicity, origin, religion or economic or other status." },
   { code: "3.c", title: "Health workforce", description: "Substantially increase health financing and the recruitment, development, training and retention of the health workforce." },
   { code: "4.3", title: "Equal access to TVET and tertiary education", description: "Ensure equal access for all to affordable and quality technical, vocational and tertiary education." },

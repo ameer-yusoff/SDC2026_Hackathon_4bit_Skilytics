@@ -81,6 +81,7 @@ type Certificate = {
   roleTitleZh: string;
   finishedAt: string;
   courseCount: number;
+  sdgCodes?:string[];
 };
 
 export default function CertificatePage() {
@@ -242,7 +243,7 @@ export default function CertificatePage() {
                 <CheckCircle2 className="h-4 w-4" />
                 {w.ready}
               </p>
-              <div className="certificate-controls"><SdgContribution/></div>
+              <div className="certificate-controls"><SdgContribution goals={c.sdgCodes??[]}/></div>
               <div
                 ref={frame}
                 className="certificate-stage w-full overflow-hidden rounded-xl border shadow-sm"

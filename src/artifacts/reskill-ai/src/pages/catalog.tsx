@@ -397,6 +397,7 @@ export function Courses({ hr, hideHeader=false }: { hr?: boolean;hideHeader?: bo
   const f = useFmt();
   const [provider, setProvider] = useState("all");
   const [hrdc, setHrdc] = useState(false);
+  const [courseGoal,setCourseGoal]=useState("all");
   const urlSearch=useSearch();
   const [courseSearch,setCourseSearch]=useState(()=>new URLSearchParams(urlSearch).get("search")??"");
   const params = { ...(hr && hrdc ? { hrdcOnly: true } : {}) };
@@ -407,7 +408,9 @@ export function Courses({ hr, hideHeader=false }: { hr?: boolean;hideHeader?: bo
     },
   });
   const providers = [...new Set((q.data ?? []).map((c) => c.provider))].sort();
+  const courseGoals=[...new Set((q.data??[]).flatMap(c=>(c.sdgCodes??[]).map(s=>s.split(".")[0])))].sort((a,b)=>Number(a)-Number(b));
   const list = (q.data ?? [])
+    .filter(c=>courseGoal==="all"||(c.sdgCodes??[]).some(s=>s.split(".")[0]===courseGoal))
     .filter((c) => (provider === "all" || c.provider === provider) && `${c.title} ${c.provider} ${c.skills.map(s=>s.name+" "+skillLabel(s.name,lang)).join(" ")}`.toLowerCase().includes(courseSearch.toLowerCase()))
     .sort(
       (a, b) =>
@@ -425,6 +428,7 @@ export function Courses({ hr, hideHeader=false }: { hr?: boolean;hideHeader?: bo
         title={hr ? t("courses.hrTitle") : t("courses.title")}
         sub={t("courses.sub")}
       />}
+      <div className="mb-4"><SdgChoice learning goals={courseGoals} value={courseGoal} onChange={setCourseGoal}/></div>
       <Input className="mb-3 min-h-11" value={courseSearch} onChange={e=>setCourseSearch(e.target.value)} aria-label={lang==="ms"?"Cari kursus atau kemahiran":lang==="zh"?"搜索课程或技能":"Search courses or skills"} placeholder={lang==="ms"?"Cari kursus atau kemahiran":lang==="zh"?"搜索课程或技能":"Search courses or skills"}/>
       <div className="mb-4 flex flex-wrap items-center gap-3">
         <Select value={provider} onValueChange={setProvider}>

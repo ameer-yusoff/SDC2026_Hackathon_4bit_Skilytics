@@ -3,6 +3,83 @@ import assert from "node:assert/strict";
 import { profileSkills } from "./profile-skills";
 import { buildPlan } from "./planner";
 import type { CourseView } from "./catalog";
+import { CreateProfilePlanBody } from "@workspace/api-zod";
+
+test("SDG preference changes an eligible course choice without waiving budget or skill coverage", () => {
+  const course: CourseView = {
+    id: 800,
+    title: "SQL practice",
+    provider: "Test",
+    url: "https://example.invalid/sql",
+    costMyr: 10,
+    costType: "low_cost",
+    hrdcStatus: "not_claimable",
+    durationHours: 4,
+    level: "beginner",
+    language: "en",
+    certificate: false,
+    skills: [{ id: 1, name: "SQL", category: "Digital" }],
+    lastVerified: "2026-10-24",
+    sdgCodes: ["8.2"],
+  };
+  const education = {
+    ...course,
+    id: 801,
+    url: "https://example.invalid/sql-education",
+    sdgCodes: ["4.4"],
+  };
+  const options = {
+    courses: [course, education],
+    gaps: [{ skillId: 1, name: "SQL", category: "Digital", importance: 3 }],
+    budgetMyr: 10,
+    weeklyHours: 2,
+    hrdcEligible: false,
+  };
+  assert.equal(buildPlan(options).items[0].courseId, 800);
+  const selected = buildPlan({ ...options, sdgGoal: "4" });
+  assert.equal(selected.items[0].courseId, 801);
+  assert.equal(selected.items[0].sdgGoal, "4");
+  assert.deepEqual(selected.uncoveredSkills, []);
+  assert.equal(selected.totalCostMyr, 10);
+  assert.equal(selected.totalWeeks, 2);
+  assert.equal(
+    buildPlan({
+      ...options,
+      sdgGoal: "4",
+      courses: [course, { ...education, costMyr: 50 }],
+    }).items[0].courseId,
+    800,
+  );
+  assert.equal(
+    buildPlan({
+      ...options,
+      sdgGoal: "4",
+      courses: [
+        course,
+        {
+          ...education,
+          skills: [{ id: 9, name: "Other skill", category: "Digital" }],
+        },
+      ],
+    }).items[0].courseId,
+    800,
+  );
+  const required = buildPlan({
+    ...options,
+    budgetMyr: 20,
+    sdgGoal: "4",
+    compulsoryCourses: [course],
+  });
+  assert.equal(required.items[0].courseId, 800);
+  assert.equal(required.items[0].compulsory, true);
+  assert.equal(
+    CreateProfilePlanBody.parse({ roleId: 1, sdgGoal: "17" }).sdgGoal,
+    "17",
+  );
+  assert.throws(() =>
+    CreateProfilePlanBody.parse({ roleId: 1, sdgGoal: "18" }),
+  );
+});
 
 test("education and experience suggest skills without replacing confirmed evidence", () => {
   const catalogue = [

@@ -25,6 +25,19 @@ export function courseSdg(text: string, mappedSkills: { name: string }[] = []): 
   const t = text.toLowerCase();
   const skillNames = new Set(mappedSkills.map((s) => (typeof s === "string" ? s : s.name)));
 
+  // Goal-level themes require explicit subject evidence; never attach all goals.
+  const broader:[RegExp,string][]=[
+    [/poverty reduction|social protection/,"1"],
+    [/sustainable agricultur|food security|nutrition|sustainable farming/,"2"],
+    [/gender equality|women.?s empowerment/,"5"],
+    [/clean water|water treatment|sanitation|wastewater/,"6"],
+    [/urban planning|sustainable cit|housing policy/,"11"],
+    [/ocean conservation|marine ecosystem|fisheries|coral reef/,"14"],
+    [/biodiversity|forestry|wildlife conservation|terrestrial ecosystem/,"15"],
+    [/anti.corruption|human rights|public governance|rule of law/,"16"],
+    [/international cooperation|global partnership|development partnership/,"17"]
+  ];
+  for(const [pattern,goal] of broader)if(pattern.test(t))primary.push(goal);
   // Environmental, climate, clean energy and health (thematic focus prioritized)
   if (/climate|carbon|global warming/i.test(t)) primary.push("13.3");
   if (/renewable|solar|photovoltaic|clean energy/i.test(t) || skillNames.has("Solar PV Systems")) primary.push("7.2");

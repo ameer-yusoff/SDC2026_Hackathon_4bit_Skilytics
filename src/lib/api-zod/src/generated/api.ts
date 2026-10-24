@@ -625,6 +625,7 @@ export const GetProfilePlanParams = zod.object({
 })
 
 export const GetProfilePlanResponse = zod.union([zod.object({
+  "sdgGoal": zod.string().nullish(),
   "verificationStatus": zod.enum(['unverified', 'verified']).optional(),
   "id": zod.number().int(),
   "profileId": zod.number().int(),
@@ -658,11 +659,16 @@ export const CreateProfilePlanParams = zod.object({
   "id": zod.coerce.number().int()
 })
 
+export const createProfilePlanBodySdgGoalRegExp = new RegExp('^([1-9]|1[0-7])$');
+
+
 export const CreateProfilePlanBody = zod.object({
-  "roleId": zod.number().int()
+  "roleId": zod.number().int(),
+  "sdgGoal": zod.string().regex(createProfilePlanBodySdgGoalRegExp).optional()
 })
 
 export const CreateProfilePlanResponse = zod.object({
+  "sdgGoal": zod.string().nullish(),
   "verificationStatus": zod.enum(['unverified', 'verified']).optional(),
   "id": zod.number().int(),
   "profileId": zod.number().int(),

@@ -22,6 +22,7 @@ import {
   useCreateProfilePlan,
   useUpdateProfile,
   useListRoles,
+  useListCourses,
   runProfileAgent,
   getGetProfileQueryKey,
   getGetProfileMatchesQueryKey,
@@ -190,7 +191,7 @@ export function IndividualMatcher({ p, base }: { p: Profile; base: string }) {
       qc.setQueryData(getGetProfileQueryKey(p.id), profile);
       const plan = await createPlan.mutateAsync({
         id: p.id,
-        data: { roleId: id },
+        data: { roleId: id, ...(goal !== "all" ? { sdgGoal: goal } : {}) },
       });
       qc.setQueryData(getGetProfilePlanQueryKey(p.id), plan);
       await qc.invalidateQueries({ queryKey: ["learning", p.id] });
@@ -461,6 +462,8 @@ export function IndividualPathway({ p, base }: { p: Profile; base: string }) {
   const lw = learningWords[lang];
   const sw = studyWords[lang];
   const roleList = useListRoles();
+  const courses = useListCourses();
+  const [sdgGoal, setSdgGoal] = useState("all");
   const [selectedCourse, setSelectedCourse] = useState<number | null>(null);
   const [, navigate] = useLocation();
   const activate = useLearningAction(p.id);
@@ -473,6 +476,9 @@ export function IndividualPathway({ p, base }: { p: Profile; base: string }) {
   const plan = useGetProfilePlan(p.id, {
     query: { queryKey: getGetProfilePlanQueryKey(p.id), retry: false },
   });
+  useEffect(() => {
+    if (plan.data?.id) setSdgGoal(plan.data.sdgGoal ?? "all");
+  }, [plan.data?.id]);
   const create = useCreateProfilePlan();
   const update = useUpdateProfile();
   const [hours, setHours] = useState(String(p.weeklyHours));
@@ -511,7 +517,10 @@ export function IndividualPathway({ p, base }: { p: Profile; base: string }) {
       qc.setQueryData(getGetProfileQueryKey(p.id), profile);
       const result = await create.mutateAsync({
         id: p.id,
-        data: { roleId: p.targetRoleId },
+        data: {
+          roleId: p.targetRoleId,
+          ...(sdgGoal !== "all" ? { sdgGoal } : {}),
+        },
       });
       qc.setQueryData(getGetProfilePlanQueryKey(p.id), result);
       qc.invalidateQueries({ queryKey: getGetProfileMatchesQueryKey(p.id) });
@@ -557,6 +566,13 @@ export function IndividualPathway({ p, base }: { p: Profile; base: string }) {
   const busy = create.isPending || update.isPending;
   const items = pl && pl.roleId === p.targetRoleId ? pl.items : [];
   const dated = datedLearning(items, start, estimates);
+  const goalOptions = [
+    ...new Set(
+      (courses.data ?? []).flatMap((c) =>
+        (c.sdgCodes ?? []).map((s) => s.split(".")[0]),
+      ),
+    ),
+  ].sort((a, b) => Number(a) - Number(b));
   return (
     <div className="space-y-5">
       <form
@@ -566,6 +582,21 @@ export function IndividualPathway({ p, base }: { p: Profile; base: string }) {
           void rebuild();
         }}
       >
+        <div className="sm:col-span-3">
+          <SdgChoice
+            learning
+            goals={goalOptions}
+            value={sdgGoal}
+            onChange={setSdgGoal}
+            note={
+              lang === "ms"
+                ? "Pilih tema, kemudian kemas kini garis masa. Kursus sepadan diutamakan jika sesuai dengan kemahiran, bajet dan masa anda. Kursus wajib dikekalkan."
+                : lang === "zh"
+                  ? "选择主题后更新学习时间线。在满足技能、预算与时间要求时优先选择相应课程，必修课程保留。"
+                  : "Choose a theme, then update your timeline. Matching courses are preferred within your skills, budget and time needs. Required courses stay."
+            }
+          />
+        </div>
         <label className="text-sm">
           {w.hours}
           <Input
@@ -628,7 +659,24 @@ export function IndividualPathway({ p, base }: { p: Profile; base: string }) {
             <p className="mt-1 text-sm">{sw.aiNote}</p>
             <p className="mt-1 text-xs text-muted-foreground">{sw.tools}</p>
           </div>
-          <SdgContribution />
+          {pl.sdgGoal && (
+            <p className="rounded-xl bg-primary/5 p-3 text-sm font-semibold">
+              {
+                items.filter((i) =>
+                  i.sdgTargets.some((t) => t.code.split(".")[0] === pl.sdgGoal),
+                ).length
+              }{" "}
+              / {items.length} ·{" "}
+              {lang === "ms"
+                ? "kursus sepadan tema dipilih"
+                : lang === "zh"
+                  ? "门课程符合所选主题"
+                  : "courses match your selected theme"}
+            </p>
+          )}
+          <SdgContribution
+            goals={items.flatMap((i) => i.sdgTargets.map((t) => t.code))}
+          />
           <CatalogueGuard />
           <StudyCalendar
             courses={dated}

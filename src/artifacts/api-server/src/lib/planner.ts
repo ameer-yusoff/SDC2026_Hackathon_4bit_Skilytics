@@ -15,6 +15,7 @@ export function buildPlan(opts: {
   maxCourses?: number;
   roleTitle?: string;
   aiAdvancement?: boolean;
+  sdgGoal?: string;
   compulsoryCourses?: CourseView[];
 }) {
   const { courses, weeklyHours, hrdcEligible } = opts;
@@ -63,8 +64,11 @@ export function buildPlan(opts: {
           remaining.has(s.id) ? courseSkillFit(c, s) : 0,
         ),
       );
+      // User-selected theme is a modest preference among already eligible courses.
+      // It cannot waive role relevance, budget, skill coverage or required courses.
+      const themePreference=opts.sdgGoal && c.sdgCodes.some(code=>code.split(".")[0]===opts.sdgGoal)?1.15:1;
       const value =
-        (gain * (1 + topicFit / 10)) /
+        (gain * (1 + topicFit / 10) * themePreference) /
         (1 + c.costMyr / 300 + (c.durationHours ?? 0) / 40);
       if (!best || value > best.value) best = { c, value };
     }
@@ -136,6 +140,7 @@ export function buildPlan(opts: {
     };
   });
 
+  for(const item of items) if(opts.sdgGoal) item.sdgGoal=opts.sdgGoal;
   const totalWeeks = items.reduce(
     (a, i) =>
       i.startWeek !== null && i.durationWeeks !== null
