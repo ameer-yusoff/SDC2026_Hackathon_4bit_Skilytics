@@ -19,7 +19,7 @@ const TTL = 6 * 3600000;
 const QUESTION = "PUBLIC_CAREER_NEWS_V1";
 export const NEWS_TOPICS = {
  career: '(upskilling OR reskilling OR "workforce skills" OR "hiring demand" OR "future of work")',
- technology: '("enterprise technology" OR "digital transformation" OR "automation productivity" OR "cloud skills" OR "cybersecurity workforce")',
+ technology: '("digital transformation" OR cloud OR cybersecurity OR robotics OR automation) (enterprise OR productivity OR workforce OR business)',
  ai: '("AI adoption" OR "AI workplace" OR "AI productivity" OR "AI agents" OR "artificial intelligence skills")',
 };
 export function newsUrl(provider: "rss" = "rss", region: "my" | "global" = "my", topic: keyof typeof NEWS_TOPICS = "career") {
@@ -97,7 +97,7 @@ function cleanArticle(a: CareerArticle, now: number): CareerArticle | null {
     return null;
   return {
     ...a,
-    topic: newsTopic(a.title),
+    topic: a.topic && ["career","technology","ai"].includes(a.topic) ? a.topic : newsTopic(a.title),
     title: a.title.replace(/[\u0000-\u001f<>]/g, "").slice(0, 240),
     url: u.href,
     seenAt: new Date(date).toISOString(),
@@ -122,6 +122,7 @@ export function parseCareerRss(
   xml: string,
   region: "my" | "global",
   now = Date.now(),
+  topic?:keyof typeof NEWS_TOPICS,
 ): CareerArticle[] {
   if (xml.length > 2000000 || /<!DOCTYPE|<!ENTITY/i.test(xml))
     throw new Error("unsupported_news_xml");
@@ -144,6 +145,7 @@ export function parseCareerRss(
           domain: source?.hostname.replace(/^www\./, "") ?? "",
           seenAt: tag(body, "pubDate"),
           region,
+          topic,
         },
         now,
       );
@@ -208,20 +210,20 @@ export async function fetchCareerFeed(
   }
   if (body.length > 2000000) throw new NewsFeedError("news_response_too_large");
   try {
-    return parseCareerRss(body, region);
+    return parseCareerRss(body, region, Date.now(), topic);
   } catch {
     throw new NewsFeedError("news_invalid_response");
   }
 }
 export function balancedNews(articles: CareerArticle[], limit = 24) {
   const buckets = (["career", "technology", "ai"] as const).flatMap(topic =>
-    (["my", "global"] as const).map(region => articles.filter(a => newsTopic(a.title) === topic && a.region === region).sort((a,b) => Date.parse(b.seenAt)-Date.parse(a.seenAt))));
+    (["my", "global"] as const).map(region => articles.filter(a => (a.topic ?? newsTopic(a.title)) === topic && a.region === region).sort((a,b) => Date.parse(b.seenAt)-Date.parse(a.seenAt))));
   const selected: CareerArticle[] = [];
   for(let n=0; selected.length<limit && buckets.some(b=>n<b.length); n++)
     for(const bucket of buckets)if(bucket[n] && selected.length<limit)selected.push(bucket[n]);
   return selected;
 }
-const NEWS_VERSION = "career-tech-ai-news-v4-balanced";
+const NEWS_VERSION = "career-tech-ai-news-v5-search-topics";
 let memory: CareerNews | undefined,
   nextCheck = 0,
   running: Promise<CareerNews> | undefined;

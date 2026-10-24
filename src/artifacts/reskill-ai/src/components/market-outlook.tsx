@@ -355,7 +355,7 @@ export function MarketOutlook({
           {mode === "ai" ? w.aiAssumption : w.demandAssumption}
         </p>
       </section>
-      <ScenarioReason mode={mode} years={horizon}/>
+      <ScenarioReason mode={mode} years={horizon} ids={top.map(r=>r.roleId)} evidenceKey={JSON.stringify(top.map(r=>[r.roleId,r.aiExposure,r.projection?.growthPct]))}/>
       {!selectedMode && (
         <div
           className="flex w-fit max-w-full rounded-xl bg-muted p-1"

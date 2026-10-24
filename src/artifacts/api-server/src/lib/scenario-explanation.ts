@@ -2,6 +2,7 @@ import { z } from "zod";
 export const explanationInput = z.object({
   mode: z.enum(["ai", "demand", "skills"]),
   years: z.coerce.number().int().min(1).max(10),
+  ids:z.preprocess(v=>typeof v === "string" ? v.split(",").filter(Boolean).map(Number):v,z.array(z.number().int()).max(3).refine(ids=>new Set(ids).size===ids.length).optional()),
 });
 const tri = z.object({
   en: z.string().min(1).max(1000),

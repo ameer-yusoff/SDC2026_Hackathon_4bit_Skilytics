@@ -231,10 +231,14 @@ router.post("/market/outlook", async (req, res) => {
   }
 });
 
-async function explanationContext(mode:"ai"|"demand"|"skills",years:number){
+async function explanationContext(mode:"ai"|"demand"|"skills",years:number,ids?:number[]){
  const c=await contextFor(10),ranked=payload(c,await cached(c.hash));
- const raw=mode==="skills"?(await skillDemand()).skills.slice(0,3).map(s=>({name:s.name,baseline:s.count})):
-  ranked[mode].slice(0,3).map(r=>({name:r.title!,nameMs:r.titleMs,nameZh:r.titleZh,baseline:mode==="ai"?r.aiExposure!:r.projection?.growthPct??null}));
+ const allSkills=mode==="skills"?(await skillDemand()).skills:[];
+ const selectedSkills=ids?.length?ids.map(id=>allSkills.find(s=>s.id===id)):allSkills.slice(0,3);
+ const selectedRoles=ids?.length?ids.map(id=>c.candidates.find(r=>r.roleId===id)):ranked[mode === "skills"?"ai":mode].slice(0,3);
+ if((mode==="skills"?selectedSkills:selectedRoles).some(r=>!r))throw new z.ZodError([{code:"custom",path:["ids"],message:"Unknown displayed item"}]);
+ const raw=mode==="skills"?selectedSkills.map(s=>({name:s!.name,baseline:s!.count})):
+  selectedRoles.map(r=>({name:r!.title!,nameMs:r!.titleMs,nameZh:r!.titleZh,baseline:mode==="ai"?r!.aiExposure!:r!.projection?.growthPct??null}));
  const rows=raw.map(r=>({...r,previous:scenarioValue(mode,r.baseline,years-1),selected:scenarioValue(mode,r.baseline,years)}));
  const references=[...c.references,...c.context.news.articles.slice(0,12).map(a=>({label:`${a.region === "my"?"Malaysia-related":"Global"} · ${a.domain}: ${a.title}`,url:a.url,dataDate:a.seenAt.slice(0,10)}))];
  const context={mode,baseYear:c.context.baseYear,previousYear:c.context.baseYear+years-1,selectedYear:c.context.baseYear+years,years,rows,
@@ -247,9 +251,9 @@ function explanationResponse(c:Awaited<ReturnType<typeof explanationContext>>,ro
  const saved=row?parseScenarioExplanation(row.content,c.references.length):null;
  return {mode:c.context.mode,years:c.context.years,baseYear:c.context.baseYear,rows:c.context.rows,generated:!!saved,translations:saved?.translations??null,sources:saved?saved.referenceIds.map(id=>c.references[id]):c.references.slice(0,4),generatedAt:row?.createdAt??null,newsStale:c.context.newsStale};
 }
-router.get("/market/scenario-explanation",async(req,res)=>{const input=explanationInput.parse(req.query),c=await explanationContext(input.mode,input.years);res.setHeader("Cache-Control","no-store");res.json(explanationResponse(c,await savedExplanation(c.hash)));});
+router.get("/market/scenario-explanation",async(req,res)=>{const input=explanationInput.parse(req.query),c=await explanationContext(input.mode,input.years,input.ids);res.setHeader("Cache-Control","no-store");res.json(explanationResponse(c,await savedExplanation(c.hash)));});
 router.post("/market/scenario-explanation",async(req,res)=>{
- const input=explanationInput.parse(req.body),c=await explanationContext(input.mode,input.years),existing=await savedExplanation(c.hash);
+ const input=explanationInput.parse(req.body),c=await explanationContext(input.mode,input.years,input.ids),existing=await savedExplanation(c.hash);
  if(existing){res.json(explanationResponse(c,existing));return;}
  const rate=consumeAiRequest(req.user?"user":"guest",String(req.user?.id??req.guestToken??req.ip));if(!rate.allowed){res.status(429).json({error:"ai_rate_limited"});return;}
  let job=running.get(c.hash);

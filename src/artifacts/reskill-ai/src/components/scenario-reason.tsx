@@ -121,7 +121,7 @@ export function ScenarioMath({
     </div>
   );
 }
-export function ScenarioReason({ mode, years }: { mode: Mode; years: number }) {
+export function ScenarioReason({mode,years,ids=[],evidenceKey=""}:{mode:Mode;years:number;ids?:number[];evidenceKey?:string}) {
   const { lang } = useT(),
     w = copy[lang],
     qc = useQueryClient();
@@ -130,28 +130,21 @@ export function ScenarioReason({ mode, years }: { mode: Mode; years: number }) {
     const id = setTimeout(() => setSettled(years), 300);
     return () => clearTimeout(id);
   }, [years]);
-  const key = (at: number) => ["scenario-explanation", mode, at];
+  const selectedIds=ids.join(",");
+  const key = (at: number) => ["scenario-explanation", mode, at, selectedIds,evidenceKey];
   const q = useQuery({
     queryKey: key(settled),
     queryFn: ({ signal }) =>
       customFetch<Reply>(
-        `/api/market/scenario-explanation?mode=${mode}&years=${settled}`,
+        `/api/market/scenario-explanation?mode=${mode}&years=${settled}&ids=${selectedIds}`,
         { signal },
       ),
     staleTime: 300000,
     retry: false,
   });
   const ai = useMutation({
-    mutationFn: async ({ at, forMode }: { at: number; forMode: Mode }) => ({
-      at,
-      data: await customFetch<Reply>("/api/market/scenario-explanation", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ mode: forMode, years: at }),
-      }),
-    }),
-    onSuccess: ({ at, data }) =>
-      qc.setQueryData(["scenario-explanation", data.mode, at], data),
+    mutationFn: async ({at,forMode,forIds,cacheKey}:{at:number;forMode:Mode;forIds:number[];cacheKey:(string|number)[]})=>({cacheKey,data:await customFetch<Reply>("/api/market/scenario-explanation",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({mode:forMode,years:at,ids:forIds})})}),
+    onSuccess:({cacheKey,data})=>qc.setQueryData(cacheKey,data),
   });
   const data = q.data?.years === years ? q.data : undefined;
   return (
@@ -167,7 +160,7 @@ export function ScenarioReason({ mode, years }: { mode: Mode; years: number }) {
         <Button
           variant="outline"
           disabled={!data || ai.isPending}
-          onClick={() => ai.mutate({ at: years, forMode: mode })}
+          onClick={() => ai.mutate({at:years,forMode:mode,forIds:ids,cacheKey:key(years)})}
         >
           {ai.isPending
             ? w.loading
@@ -186,7 +179,7 @@ export function ScenarioReason({ mode, years }: { mode: Mode; years: number }) {
       {q.isError && <ErrorBox error={q.error} retry={() => q.refetch()} />}{" "}
       {ai.isError &&
         ai.variables?.at === years &&
-        ai.variables?.forMode === mode && <ErrorBox error={ai.error} />}{" "}
+        ai.variables?.forMode === mode && ai.variables?.forIds.join(",") === selectedIds && <ErrorBox error={ai.error} />}{" "}
       {data?.newsStale && (
         <p className="mt-3 text-xs text-muted-foreground">{w.stale}</p>
       )}

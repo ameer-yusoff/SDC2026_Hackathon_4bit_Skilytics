@@ -112,7 +112,7 @@ export function MarketSkills({
         label={w.years}
       />
       <p className="mb-4 text-xs text-muted-foreground">{w.scenario}</p>
-      <div className="mb-4"><ScenarioReason mode="skills" years={years}/></div>
+      <div className="mb-4"><ScenarioReason mode="skills" years={years} ids={q.data?.skills.slice(0,3).map(s=>s.id)} evidenceKey={JSON.stringify(q.data?.skills.slice(0,3))}/></div>
       {q.isLoading ? (
         <Rows n={3} />
       ) : q.isError ? (

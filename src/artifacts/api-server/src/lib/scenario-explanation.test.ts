@@ -7,7 +7,7 @@ import {
   explanationInput,
   assertScenarioNumbers,
 } from "./scenario-explanation";
-import { careerRelevant, newsTopic, newsUrl, balancedNews } from "./career-news";
+import { careerRelevant, newsTopic, newsUrl, balancedNews, parseCareerRss } from "./career-news";
 const { scenarioPercent } = await import(
   new URL("../../../reskill-ai/src/lib/market-scenario.ts", import.meta.url)
     .href
@@ -115,4 +115,17 @@ test('limited news context preserves career, technology and AI across Malaysia a
  const first=balancedNews(news,6);
  assert.equal(first.length,6);
  for(const topic of ['career','technology','ai'])for(const region of ['my','global'])assert.ok(first.some(a=>newsTopic(a.title)===topic&&a.region===region));
+});
+
+test('a technology search retains its provenance even when a relevant headline mentions AI',()=>{
+ const xml='<rss><channel><item><title>AI enterprise productivity research</title><link>https://www.bernama.com/example</link><source url="https://www.bernama.com">Bernama</source><pubDate>Fri, 23 Oct 2026 10:00:00 GMT</pubDate></item></channel></rss>';
+ const rows=parseCareerRss(xml,'my',Date.parse('2026-10-24T10:00:00Z'),'technology');
+ assert.equal(rows[0].topic,'technology');
+ assert.equal(balancedNews(rows,1)[0].topic,'technology');
+});
+
+test('displayed role or skill IDs are bounded and unique in year explanations',()=>{
+ assert.deepEqual(explanationInput.parse({mode:'ai',years:3,ids:'17,9,22'}).ids,[17,9,22]);
+ assert.throws(()=>explanationInput.parse({mode:'ai',years:3,ids:[17,17]}));
+ assert.throws(()=>explanationInput.parse({mode:'skills',years:3,ids:[1,2,3,4]}));
 });
