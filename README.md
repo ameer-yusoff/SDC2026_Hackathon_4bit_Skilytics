@@ -415,7 +415,7 @@ curl -X POST https://api.runpod.ai/v2/bs50a57qmoqrpp/run \
   }'
 ```
 
-📄 Proof of use: [`submission/SDC2026_4bit_Runpod_POU.pdf`](submission/4.%20SDC2026_4bit_Runpod_POU.pdf)
+📄 Proof of use: [`submission/SDC2026_4bit_Runpod_POU.pdf`](submission/4.%20SDC2026_4bit_RunPod_POU.pdf)
 
 ---
 
