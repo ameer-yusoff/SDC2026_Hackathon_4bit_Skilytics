@@ -212,7 +212,7 @@ curl -X POST https://api.runpod.ai/v2/3pvoygmk4mn0ad/run \
   -d '{"input": {"prompt": "Evaluate skill gaps and generate reskilling roadmap"}}'
 ```
 
-📄 Proof of use: [`submission/4. SDC2026_4bit_RunPod_POU.pdf`](submission/4.%20SDC2026_4bit_RunPod_POU.pdf) (see also screenshots in `src/artifacts/reskill-ai/public/proof/`)
+📄 Proof of use: [`submission/4. SDC2026_4bit_RunPod_POU.pdf`](submission/4.%20SDC2026_4bit_RunPod_POU.pdf)
 
 ---
 
