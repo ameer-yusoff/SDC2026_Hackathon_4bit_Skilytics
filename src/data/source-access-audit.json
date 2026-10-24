@@ -184,13 +184,13 @@
     },
     {
       "id": "career_news_rss",
-      "name": "Google News · public career RSS",
+      "name": "Google News · career, technology & AI RSS",
       "category": "dataset",
       "access": "news",
       "note": {
-        "en": "Public news metadata only, not full articles. Publisher copyright still applies; a rate-limit or timeout does not imply authentication is required.",
-        "ms": "Metadata berita awam sahaja, bukan artikel penuh. Hak cipta penerbit kekal; had kadar atau timeout tidak bermakna auth diperlukan.",
-        "zh": "仅使用公开新闻元数据，不包含全文。发布者版权仍适用；限流或超时不表示必须认证。"
+        "en": "Public keyless headline metadata: separate Malaysia/global career, enterprise technology and AI searches. Original publisher rights apply; this is not an official forecast API or open article content.",
+        "ms": "Metadata tajuk berita awam tanpa kunci: carian kerjaya, teknologi perusahaan dan AI Malaysia/global berasingan. Hak penerbit kekal; bukan API ramalan rasmi atau kandungan artikel terbuka.",
+        "zh": "无需密钥的公开标题元数据：分别搜索马来西亚与全球职业、企业技术和AI。保留发布者权利；不是官方预测API或开放文章内容。"
       },
       "licence": "Publisher terms apply; public availability alone does not establish an open-content licence",
       "documentation": "https://news.google.com/rss/search?q=%28upskilling+OR+reskilling+OR+%22workforce+skills%22+OR+%22AI+workplace%22+OR+%22hiring+demand%22%29+Malaysia+when%3A30d&hl=en-MY&gl=MY&ceid=MY%3Aen",
@@ -223,7 +223,7 @@
     {
       "id": "onet",
       "name": "O*NET occupation references",
-      "category": "catalogue",
+      "category": "dataset",
       "access": "open",
       "note": {
         "en": "Public downloadable data; no API key. Keep attribution and the publisher's release licence.",
@@ -369,25 +369,6 @@
       "probe": {
         "status": 200,
         "finalUrl": "https://huggingface.co/learn",
-        "error": null
-      }
-    },
-    {
-      "id": "hrdcorp_elatih",
-      "name": "HRD Corp & e-LATiH Malaysia",
-      "category": "catalogue",
-      "access": "metadata",
-      "note": {
-        "en": "National workforce training catalog and HRD Corp levy claimable courses under Ministry of Human Resources Malaysia.",
-        "ms": "Katalog latihan tenaga kerja kebangsaan dan kursus tuntutan levi HRD Corp di bawah Kementerian Sumber Manusia Malaysia.",
-        "zh": "马来西亚人力资源部旗下国家劳动力培训目录与HRD Corp征税可申领课程。"
-      },
-      "licence": "HRD Corp / e-LATiH public portal terms and national training framework",
-      "documentation": "https://e-latih.hrdcorp.gov.my/",
-      "checkedAt": "2026-10-24T02:50:00.000Z",
-      "probe": {
-        "status": 200,
-        "finalUrl": "https://e-latih.hrdcorp.gov.my/",
         "error": null
       }
     },

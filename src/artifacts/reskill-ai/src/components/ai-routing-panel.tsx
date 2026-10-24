@@ -58,7 +58,7 @@ const tasks: Record<string, Record<string, string>> = {
       "Explains the supplied course timeline; code creates the schedule.",
     sdg: "Explains supplied SDG themes.",
     analyst:
-      "Market outlook, outlook questions and saved Company Future analysis.",
+      "Market outlook, selected-year evidence explanations, and saved company/institution analysis.",
     company_advisor:
       "Employer/institution follow-up chat using company data, saved analysis, recent turns and retrieved course references.",
   },
@@ -71,7 +71,7 @@ const tasks: Record<string, Record<string, string>> = {
     planner: "Menerangkan timeline kursus; kod membina jadual.",
     sdg: "Menerangkan tema SDG yang dibekalkan.",
     analyst:
-      "Prospek pasaran, soalan outlook dan analisis Company Future disimpan.",
+      "Prospek pasaran, penerangan bukti tahun dipilih dan analisis syarikat/institusi tersimpan.",
     company_advisor:
       "Chat susulan majikan/institusi menggunakan data syarikat, analisis disimpan, perbualan terkini dan rujukan kursus.",
   },
@@ -82,7 +82,7 @@ const tasks: Record<string, Record<string, string>> = {
     fitter: "解释职业匹配排名与技能差距。",
     planner: "解释提供的课程时间线；排期由代码生成。",
     sdg: "解释提供的SDG主题。",
-    analyst: "市场展望、展望问答及已保存的公司未来分析。",
+    analyst: "市场展望、所选年份依据解释，以及已保存的公司/机构分析。",
     company_advisor:
       "雇主/机构的后续对话，参考公司数据、已保存分析、近期对话和检索的课程资料。",
   },

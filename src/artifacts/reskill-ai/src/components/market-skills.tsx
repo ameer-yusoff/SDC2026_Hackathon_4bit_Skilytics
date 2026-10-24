@@ -1,3 +1,5 @@
+import { ScenarioReason } from "./scenario-reason";
+import { MarketGuide } from "./portal-guides";
 import { ChangingValue, HorizonSlider } from "./projection-feedback";
 import { useCompany } from "@/lib/enterprise";
 import { enterpriseWords } from "@/i18n/enterprise";
@@ -110,6 +112,7 @@ export function MarketSkills({
         label={w.years}
       />
       <p className="mb-4 text-xs text-muted-foreground">{w.scenario}</p>
+      <div className="mb-4"><ScenarioReason mode="skills" years={years}/></div>
       {q.isLoading ? (
         <Rows n={3} />
       ) : q.isError ? (
@@ -216,14 +219,7 @@ export function MarketExplore() {
         title={tab === "skills" ? w.title : m.title}
         sub={tab === "skills" ? w.note : m.sub}
         help={
-          <PageGuide
-            title={m.guide}
-            steps={[
-              { title: m.title, body: m.sub },
-              { title: w.tab, body: w.note },
-              { title: w.years, body: w.scenario },
-            ]}
-          />
+          <MarketGuide/>
         }
       />
       <div>

@@ -43,9 +43,9 @@ export const SOURCES: SourceDef[] = [
   {id:"openlearn_catalogue",name:"OpenLearn · reviewed public courses",kind:"catalogue",url:"https://www.open.edu/openlearn/",description:"Manually reviewed public course metadata selection; not a live catalogue API. Course bodies are not ingested.",refreshCadence:"reviewed_snapshot",consumers:["pathway","role_matcher","agent_company_advisor"]},
   {id:"sdg_framework",name:"United Nations · Sustainable Development Goals",kind:"dataset",url:"https://sdgs.un.org/goals",description:"Official SDG goals and target references; role and course associations are app thematic mappings, not measured impact or UN endorsement.",refreshCadence:"reviewed_snapshot",consumers:["pathway","role_matcher","agent_sdg"]},
   {id:"hubspot_catalogue",name:"HubSpot Academy · public course catalogue",kind:"catalogue",url:"https://academy.hubspot.com/courses",description:"Unauthenticated public website catalogue search, paginated full English courses only. Refreshed every six hours; free Academy account required for learning. Public metadata is not an open-content licence or a documented developer API.",refreshCadence:"links_6h",consumers:["pathway","role_matcher","agent_company_advisor"]},
-  { id: "career_news_rss", name: "Google News · public career RSS", kind: "dataset", url: newsUrl("rss", "my"), description: "Public RSS metadata fallback for Malaysia and global career news. No private API key; original publisher rights still apply.", refreshCadence: "news_6h", consumers: ["market", "predictions"] },
+  { id: "career_news_rss", name: "Google News · career, technology & AI RSS", kind: "dataset", url: newsUrl("rss", "my"), description: "Public RSS headline metadata for Malaysia and global career, technology, workplace AI and future-of-work signals. No private API key; original publisher rights still apply.", refreshCadence: "news_6h", consumers: ["market", "predictions", "agent_company_advisor"] },
   {id:"bls_projections",name:"BLS occupational projections · reviewed public snapshot",kind:"dataset",url:blsSnapshot.url,description:"US 2025–2035 employment growth and annual openings matched by SOC. Reviewed 23 October 2026; not a live feed or Malaysian demand forecast.",refreshCadence:"reviewed_snapshot",consumers:["market","predictions"]},
-  { id: "onet", name: "O*NET occupation references", kind: "catalogue", url: "https://www.onetcenter.org/database.html", description: "Official US occupation, skill and interest reference data; explicit SOC .00 crosswalk, not Malaysian vacancies.", refreshCadence: "release_6h", consumers: ["role_matcher", "agent_cv", "agent_holland", "agent_company_advisor"] },
+  { id: "onet", name: "O*NET occupation references", kind: "dataset", url: "https://www.onetcenter.org/database.html", description: "Official US occupation, skill and interest reference data; explicit SOC .00 crosswalk, not Malaysian vacancies.", refreshCadence: "release_6h", consumers: ["role_matcher", "agent_cv", "agent_holland", "agent_company_advisor"] },
   {
     id: "dosm_lfs_month",
     name: "DOSM Labour Force Survey (monthly)",
@@ -99,15 +99,6 @@ export const SOURCES: SourceDef[] = [
     url: "https://huggingface.co/learn",
     description: "Public AI course index with direct links; unknown duration and no certificate claim.",
     refreshCadence: "links_6h", consumers: ["pathway", "agent_planner", "agent_sdg", "cohort", "agent_company_advisor"] },
-  {
-    id: "hrdcorp_elatih",
-    name: "HRD Corp & e-LATiH Malaysia",
-    kind: "catalogue",
-    url: "https://e-latih.hrdcorp.gov.my/",
-    description: "Katalog latihan tenaga kerja kebangsaan dan kursus tuntutan levi HRD Corp di bawah Kementerian Sumber Manusia Malaysia.",
-    refreshCadence: "reviewed_snapshot",
-    consumers: ["pathway", "cohort", "agent_planner", "role_matcher"],
-  },
   {
     id: "gemini",
     name: "Google Gemini API",
@@ -366,7 +357,6 @@ const staticSources: Record<string,{version:string;lastFetchedAt:Date;status:"ok
   ["onet_content_model","content-model-reference-2026-10","2026-10",SKILL_REFERENCES.length,"O*NET Content Model definitions, locally attributed retrieval reference. Separate from the occupation database and the Interest Profiler."],
   ["openlearn_catalogue","reviewed-2026-10-23","2026-10-23",OPENLEARN.length,"Reviewed selection, not a live endpoint. Metadata reviewed 23 October 2026."],
   ["sdg_framework","sdg-editorial-target-map-v1","2026-10-23",SDG_TARGETS.length,"Curated target references and 17 official goal icons. Associations are thematic, not measured outcomes."],
-  ["hrdcorp_elatih","reviewed-2026-10-24","2026-10-24",12,"Katalog latihan tenaga kerja kebangsaan dan kursus tuntutan levi HRD Corp / KESUMA."],
 ].map(([id,version,dataDate,recordCount,detail])=>[id,{version:String(version),lastFetchedAt:new Date(id === "bls_projections"?blsSnapshot.reviewedAt+"T00:00:00Z":OPENLEARN_REVIEWED_AT),status:"ok" as const,detail:String(detail),dataDate:String(dataDate),recordCount:Number(recordCount),error:null}]));
 
 export async function listSources() {

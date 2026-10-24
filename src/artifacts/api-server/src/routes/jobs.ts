@@ -1,3 +1,4 @@
+import {skillDemand} from "../lib/skill-demand";
 import {
   additionalVacancies,
   vacancyFetchedAt,
@@ -31,61 +32,7 @@ export function eligibleLocation(s: string) {
   return malaysiaLocation(s) || /^(anywhere|worldwide|global)$/i.test(s.trim());
 }
 export const publicJobs = additionalVacancies;
-router.get("/market/skill-demand", async (_req, res) => {
-  try {
-    const skills = await loadSkills();
-    const jobs: Job[] = []; // Remote country eligibility is not evidence of domestic vacancy demand.
-    const local = jobs.filter((j) => malaysiaLocation(j.jobGeo));
-    const counts = new Map<number, number>();
-    for (const j of local)
-      for (const s of extractSkills(
-        j.jobTitle + " " + j.jobDescription.replace(/<[^>]*>/g, " "),
-        skills,
-      ))
-        counts.set(s.skillId, (counts.get(s.skillId) ?? 0) + 1);
-    if (!local.length) {
-      const [roles, courses] = await Promise.all([loadRoles(), loadCourses()]);
-      const reviewed = [
-        { title: "Administrative Assistant", count: 5179 },
-        { title: "Digital Marketing Specialist", count: 4642 },
-        { title: "Sales Representative", count: 4557 },
-        { title: "Data Analyst", count: 3455 },
-        { title: "Graphic Designer", count: 2644 },
-      ];
-      const weights = new Map<number, number>();
-      for (const reference of reviewed) {
-        const role = roles.find((r) => r.title === reference.title);
-        if (!role) continue;
-        for (const skill of role.skills.filter(
-          (s) =>
-            s.category !== "Human" &&
-            courses.some((c) => c.skills.some((k) => k.id === s.skillId)),
-        ))
-          weights.set(
-            skill.skillId,
-            (weights.get(skill.skillId) ?? 0) +
-              reference.count * skill.importance,
-          );
-      }
-      const max = Math.max(1, ...weights.values());
-      res.json({
-        sample: reviewed.length,
-        checkedAt: "2026-05-25",
-        source: "DOSM JMI Q4 2025 · O*NET · editorial occupation crosswalk",
-        skills: [...weights]
-          .map(([id, n]) => ({
-            id,
-            name: skills.find((s) => s.id === id)!.name,
-            count: Math.round((n / max) * 100),
-          }))
-          .sort((a, b) => b.count - a.count),
-      });
-      return;
-    }
-  } catch {
-    res.status(503).json({ error: "jobs_unavailable" });
-  }
-});
+router.get("/market/skill-demand",async(_req,res)=>{try{res.json(await skillDemand());}catch{res.status(503).json({error:"jobs_unavailable"});}});
 router.get("/profiles/:id/jobs", async (req, res) => {
   const p = await getProfileRow(
     z.coerce.number().int().positive().parse(req.params.id),

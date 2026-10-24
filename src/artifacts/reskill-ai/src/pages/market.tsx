@@ -590,7 +590,7 @@ export function Sources() {
         help={
           <PageGuide
             title={guides[lang].title}
-            steps={guideSteps(guides[lang].sources)}
+            steps={[...guideSteps(guides[lang].sources),{title:t("docs.category.synthetic"),body:t("docs.synthetic.limits")}] }
           />
         }
         title={t("sources.title")}

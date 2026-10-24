@@ -1,3 +1,5 @@
+import { AnalysisEvidence, ScenarioMath } from "./scenario-reason";
+import { MarketGuide, usePortalGuide } from "./portal-guides";
 import { useEffect, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Link } from "wouter";
@@ -46,18 +48,14 @@ const annual = [2024, 2025, 2026].map((year) => {
     employed = rows.reduce((n, r) => n + r.employedWithinSixMonths, 0);
   return { year, graduates, employed, rate: (employed / graduates) * 100 };
 });
-function Guide({ body, title }: { body: string; title: string }) {
-  const { lang } = useT(),
-    w = institutionWords[lang];
-  return (
-    <PageGuide
-      title={w.guide}
-      steps={[
-        { title, body },
-        { title: title === w.courses ? w.students : w.compulsory, body: title === w.courses ? w.guideStudents : w.guideCourses },
-      ]}
-    />
-  );
+function Guide({body,title}:{body:string;title:string}) {
+ const {lang}=useT(),w=institutionWords[lang],guide=usePortalGuide();
+ return <PageGuide title={w.guide} steps={[
+  {title,body},
+  {title:w.students,body:guide.intakeBody},
+  {title:w.compulsory,body:guide.requiredBody},
+  ...(title===w.dashboard?[{title:w.future,body:guide.gradsBody}]:[])
+ ]}/>;
 }
 function OutcomeChart({ years = 0 }: { years?: number }) {
   const { lang } = useT(),
@@ -223,7 +221,7 @@ export function InstitutionFuture() {
               ? jobWords[lang].note
               : m.sub
         }
-        help={<Guide title={w.future} body={w.guideFuture} />}
+        help={<MarketGuide role="tvet"/>}
       />
       <div
         role="tablist"
@@ -319,6 +317,7 @@ function GraduateProjection() {
           label={w.years}
         />
         <OutcomeChart years={years} />
+        <div className="mt-4"><ScenarioMath mode="graduate" years={years} baseYear={2026} rows={[{name:w.future,previous:Math.min(100,latest.rate+2*(years-1)),selected:scenario}]}/></div>
       </Panel>
       <Panel title={w.advice} meta={w.synthetic}>
         <Button
@@ -331,6 +330,7 @@ function GraduateProjection() {
         {result && (
           <div className="mt-4 text-sm">
             <Markdown>{result.translations[lang]}</Markdown>
+            <AnalysisEvidence sources={result.sources} model={result.model}/>
             {result.id > 0 && (
               <CompanyAdvisor
                 key={result.id}

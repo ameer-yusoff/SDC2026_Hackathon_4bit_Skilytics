@@ -39,7 +39,7 @@ export type SavedAnalysis = {
   generatedAt: string;
   cached: boolean;
 };
-export type CompanyAnalysis = SavedAnalysis & { id: number };
+export type CompanyAnalysis = SavedAnalysis & { id: number;model?:string;sources?:{label:string;url:string;dataDate?:string|null}[] };
 export function useCompany(enabled=true) {
   return useQuery({
     enabled,

@@ -1,3 +1,4 @@
+import { ScenarioReason } from "./scenario-reason";
 import { ChangingValue, HorizonSlider } from "./projection-feedback";
 import { GuideButton } from "./page-guide";
 import { useEffect, useRef, useState } from "react";
@@ -354,6 +355,7 @@ export function MarketOutlook({
           {mode === "ai" ? w.aiAssumption : w.demandAssumption}
         </p>
       </section>
+      <ScenarioReason mode={mode} years={horizon}/>
       {!selectedMode && (
         <div
           className="flex w-fit max-w-full rounded-xl bg-muted p-1"
@@ -498,10 +500,10 @@ export function MarketOutlook({
             <section className="rounded-2xl border bg-card p-4">
               <h2 className="font-bold">
                 {lang === "en"
-                  ? "Career news behind the outlook"
+                  ? "Career, technology & AI signals"
                   : lang === "ms"
-                    ? "Berita kerjaya di sebalik jangkaan"
-                    : "展望参考的职业新闻"}
+                    ? "Isyarat kerjaya, teknologi & AI"
+                    : "职业、技术与AI信号"}
               </h2>
               <p className="mt-1 text-xs text-muted-foreground">
                 {data.news.providers

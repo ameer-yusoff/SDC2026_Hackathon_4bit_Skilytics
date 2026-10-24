@@ -62,8 +62,6 @@ const licences: Record<string, string> = {
     "Remotive API terms: attribution and original link; 24h delay; no onward syndication; cache daily",
   remoteok_jobs:
     "RemoteOK API notice: follow link and attribution; no logo without permission",
-  hrdcorp_elatih:
-    "HRD Corp / e-LATiH public portal terms and national training framework",
 };
 const rows = [];
 for (const source of SOURCES) {

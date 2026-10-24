@@ -1,3 +1,4 @@
+import {usePortalGuide} from "./portal-guides";
 import { PageHeader } from "./kit";
 import { institutionWords } from "@/i18n/institution";
 import { useState } from "react";
@@ -47,6 +48,7 @@ export function EnterpriseEmployee({
           }
         : {}),
     };
+  const guideCopy=usePortalGuide();
   const base = institution ? "/tvet/students" : "/hr/members";
   const j = useLearning(p.id);
   if (j.isLoading) return <Rows n={3} />;
@@ -69,7 +71,7 @@ export function EnterpriseEmployee({
           <PageGuide
             title={w.guide}
             steps={[
-              { title: active ? w.progress : w.profile, body: w.guideEmployee },
+              { title: active ? w.progress : w.profile, body: active ? guideCopy.progressBody : guideCopy.intakeBody },
               { title: w.gaps, body: w.reported },
             ]}
           />

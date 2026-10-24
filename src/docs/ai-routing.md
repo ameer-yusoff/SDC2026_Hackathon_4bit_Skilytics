@@ -62,3 +62,11 @@ Global `AI_PROVIDER` overrides routing and `AI_TEST_MODE` can select the test en
 ## TVET reuse
 
 TVET reuses Holland for student summaries, Analyst for Grads Future, and Company Advisor for institution follow-up chat; the inventory remains eight routed roles. Institution history is the explicitly fictional 2024–2026 reference in `src/synthetic-data/tvet/`. It never represents the signed-in institution's actual employment performance. The scenario adds an assumed two percentage points per year to the synthetic 2026 baseline. Current learning and skill gaps come from organisation-scoped student records. Required-course settings and scheduling are deterministic and do not call AI. See `tvet-portal.md`.
+
+## Selected-year evidence explanations (24 October 2026)
+
+`GET/POST /api/market/scenario-explanation` reuses Analyst for public AI-at-work, growth and skill-priority scenarios. GET calculates exact previous/current values and reads saved analysis. POST is explicitly requested, returns EN/BM/ZH together, validates reference IDs and displayed percentages, and uses a 24-hour shared cache keyed by mode, year, evidence and inputs. Database advisory locks deduplicate generation. Slider changes debounce cached reads; they do not call generation. The UI scopes pending results by mode/year and language switches reuse translations.
+
+News now runs six keyless Google News RSS searches: career/future-of-work, enterprise technology and workplace AI, each Malaysia/global. Only bounded, dated headline metadata from listed publishers is used. It is selective, unverified context, not a numeric rate estimator. Company/institution analysis and chat retrieve the same news plus scoped learning data; their cache fingerprint includes this evidence. News changes require reanalysis before chat. References link to supplied originals. Deterministic fallback explanations are labelled and missing exposure is not filled with an invented percentage.
+
+The formulas remain assumptions, not a backtested forecast: AI covers 5% of remaining tasks/year, skill priority compounds 5%/year, and BLS US ten-year growth is smoothly interpolated. The synthetic graduate example adds two percentage points/year. Headlines cannot verify these rates or make the TVET example real employment data. No increase in validated forecast accuracy is claimed.

@@ -1,7 +1,7 @@
 import { docsEn } from "./docs";
 import { obEn } from "./ob";
 export const en = {
-  "err.analysis_outdated": "Your company data or selected year has changed. Run the company analysis again before chatting.",
+  "err.analysis_outdated": "The organisation data, selected year or news evidence changed. Run the analysis again before chatting.",
   "err.analysis_not_found": "Generate the company analysis first.",
   "err.chat_not_found": "This conversation is unavailable. Run a new company analysis.",
   "err.compulsory_duration_required": "Choose required courses with published study hours.",
@@ -169,7 +169,7 @@ export const en = {
   "landing.stepPathway": "Pathway",
   "landing.stepMatcherDesc": "Our AI engine maps your capabilities against O*NET standards, DOSM labor statistics, and AI impact metrics.",
   "landing.stepMatcher": "Matcher",
-  "landing.stepIntakeDesc": "Upload your CV (PDF or image) or take the 12-question RIASEC assessment to capture your verified skill profile.",
+  "landing.stepIntakeDesc": "Review your CV details, then answer 30 interest questions to explore the work you enjoy.",
   "landing.stepIntake": "Intake",
   "landing.marketSub": "A cohesive bridge between talent aspirations, enterprise requirements, and curriculum design.",
   "landing.marketTitle": "Tailored for Malaysia's Talent Ecosystem",

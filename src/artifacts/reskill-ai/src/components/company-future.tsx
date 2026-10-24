@@ -1,3 +1,5 @@
+import { AnalysisEvidence, ScenarioMath } from "./scenario-reason";
+import { MarketGuide, usePortalGuide } from "./portal-guides";
 import type { ReactNode } from "react";
 import { CompanyAdvisor } from "./company-advisor";
 import { ChangingValue, HorizonSlider } from "./projection-feedback";
@@ -40,21 +42,14 @@ import {
 import { Button } from "./ui/button";
 import { MarketOutlook } from "./market-outlook";
 
-function TeamGuide({ future = false }: { future?: boolean }) {
-  const { lang } = useT(),
-    w = enterpriseWords[lang];
-  return (
-    <PageGuide
-      title={w.guide}
-      steps={[
-        {
-          title: future ? w.company : w.dashboard,
-          body: future ? w.guideFuture : w.guideDashboard,
-        },
-        { title: w.employees, body: w.guideEmployee },
-      ]}
-    />
-  );
+function TeamGuide() {
+ const {lang}=useT(),w=enterpriseWords[lang],guide=usePortalGuide();
+ return <PageGuide title={w.guide} steps={[
+  {title:w.dashboard,body:w.guideDashboard},
+  {title:w.due,body:guide.progressBody},
+  {title:w.employees,body:guide.intakeBody},
+  {title:w.company,body:guide.companyBody}
+ ]}/>;
 }
 export function EnterpriseDashboard() {
   const { lang } = useT(),
@@ -175,7 +170,7 @@ export function EnterpriseDashboard() {
                     <p className="text-4xl font-extrabold tracking-tight text-primary sm:text-5xl lg:text-6xl xl:text-7xl">
                       {c.avgExposure == null
                         ? "—"
-                        : `${Math.round(c.avgExposure * 100)}%`}
+                        : `${(c.avgExposure * 100).toFixed(1)}%`}
                     </p>
                     <div className="flex flex-wrap items-center gap-2">
                       <span className="inline-flex items-center rounded-lg bg-[hsl(var(--maroon-soft))] px-2.5 py-1 text-xs font-semibold text-primary lg:text-sm">
@@ -224,7 +219,7 @@ export function CompanyFuture() {
               ? jobWords[lang].note
               : marketWords[lang].sub
         }
-        help={<TeamGuide future />}
+        help={<MarketGuide role="hr"/>}
       />
       <div className="mb-5">
         <div
@@ -327,7 +322,7 @@ function CompanyProjection() {
         <ProjectionMetric
           label={`${w.now} · ${new Date().getFullYear()}`}
           value={
-            c.avgExposure == null ? "—" : `${Math.round(c.avgExposure * 100)}%`
+            c.avgExposure == null ? "—" : `${(c.avgExposure * 100).toFixed(1)}%`
           }
         />
         <div className="rounded-2xl border border-primary/30 bg-primary/5 p-4">
@@ -338,7 +333,7 @@ function CompanyProjection() {
             value={
               projected(c.avgExposure, years) == null
                 ? "—"
-                : `${Math.round(projected(c.avgExposure, years)!)}%`
+                : `${projected(c.avgExposure, years)!.toFixed(1)}%`
             }
             className="mt-2 text-3xl font-extrabold text-primary"
           />
@@ -358,7 +353,7 @@ function CompanyProjection() {
           <div
             className="h-64 w-full"
             role="img"
-            aria-label={`${w.scenario}: ${Math.round(projected(c.avgExposure, years)!)}%`}
+            aria-label={`${w.scenario}: ${projected(c.avgExposure, years)!.toFixed(1)}%`}
           >
             <ResponsiveContainer width="100%" height="100%">
               <LineChart
@@ -374,7 +369,7 @@ function CompanyProjection() {
                   tick={{ fontSize: 12 }}
                 />
                 <Tooltip
-                  formatter={(v: number) => [`${Math.round(v)}%`, w.scenario]}
+                  formatter={(v: number) => [`${v.toFixed(1)}%`, w.scenario]}
                 />
                 <Line
                   type="monotone"
@@ -392,6 +387,9 @@ function CompanyProjection() {
         <p className="mt-2 text-xs text-muted-foreground">
           {w.coverage}: {c.exposureCoverage} / {c.profileCount}
         </p>
+      </Panel>
+      <Panel title={lang === "ms"?"Kenapa nilai tahun ini berubah?":lang === "zh"?"为什么该年份的数值变化？":"Why does this year change?"}>
+        <ScenarioMath mode="ai" years={years} rows={[{name:w.company,previous:c.avgExposure==null?null:100*(1-(1-c.avgExposure)*.95**(years-1)),selected:c.avgExposure==null?null:100*(1-(1-c.avgExposure)*.95**years)}]}/>
       </Panel>
       <Panel title={w.analysis} meta={w.saved}>
         <div className="flex flex-wrap items-center gap-3">
@@ -425,6 +423,7 @@ function CompanyProjection() {
         {result && (
           <div className="mt-5 text-sm leading-relaxed rounded-2xl border border-primary/20 bg-card/60 p-4 sm:p-5 shadow-sm">
             <Markdown>{result.translations[lang]}</Markdown>
+            <AnalysisEvidence sources={result.sources} model={result.model}/>
             <CompanyAdvisor key={result.id} analysis={result} years={years} />
           </div>
         )}
@@ -464,9 +463,9 @@ function EmployeeProjection({ m, years }: { m: CompanyMember; years: number }) {
         <div className="text-xs">
           <span>
             {w.now}:{" "}
-            {m.exposure === null ? "—" : `${Math.round(m.exposure * 100)}%`} →{" "}
+            {m.exposure === null ? "—" : `${(m.exposure * 100).toFixed(1)}%`} →{" "}
             <ChangingValue
-              value={value === null ? "—" : `${Math.round(value)}%`}
+              value={value === null ? "—" : `${value.toFixed(1)}%`}
               className="text-lg font-extrabold text-primary"
             />
           </span>

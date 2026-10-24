@@ -13,6 +13,11 @@ type Row = { label: DictKey; k?: DictKey[]; ref?: string; url?: string };
 type Doc = { id: string; types: DocType[]; name: DictKey; sourceIds?: string[]; ai?: boolean; rows: Row[] };
 
 const DOCS: Doc[] = [
+  {id:"demo_fixtures",types:["demo","static"],name:"docs.synthetic.fixtures",rows:[{label:"docs.f.files",ref:"src/testing/demo-cv/ · src/artifacts/api-server/src/lib/demo.ts · synthetic data/"},{label:"docs.f.method",k:["docs.demo.org","docs.demo.cv"]},{label:"docs.f.limits",k:["docs.synthetic.limits"]}]},
+  {id:"legacy_examples",types:["demo","static"],name:"docs.synthetic.legacy",rows:[{label:"docs.f.files",ref:"src/artifacts/api-server/src/data/courses.ts"},{label:"docs.f.method",k:["docs.synthetic.legacyNote"]}]},
+  {id:"match",types:["derived"],name:"docs.name.match",rows:[{label:"docs.f.method",k:["docs.match.weights","docs.match.feasibility","docs.scenario.reason"]},{label:"docs.f.limits",k:["docs.match.demand"]}]},
+  {id:"learningRecords",types:["user","derived"],name:"docs.learning.name",rows:[{label:"docs.f.method",k:["docs.learning.method","docs.learning.ai"]},{label:"docs.f.privacy",k:["docs.demo.private"]}]},
+
   {id:"tvet_synthetic",types:["demo","static","derived"],name:"docs.tvet.synthetic",rows:[{label:"docs.f.files",ref:"src/synthetic-data/tvet/graduate-employment-2024-2026.json · synthetic data/"},{label:"docs.f.coverage",k:["docs.tvet.coverage"]},{label:"docs.f.method",k:["docs.tvet.method"]},{label:"docs.f.privacy",k:["docs.tvet.policy"]}]},
 
   { id: "dosm", types: ["external"], name: "src.dosm_lfs_month.name", sourceIds: ["dosm_lfs_month"], rows: [
@@ -69,9 +74,9 @@ const DOCS: Doc[] = [
   ] },
   {id:"career_news",types:["external","derived"],name:"docs.news.name",sourceIds:["career_news_rss"],rows:[
     {label:"docs.f.publisher",ref:"Google News RSS / original news publishers"},
-    {label:"docs.f.dataset",url:"https://news.google.com/rss/search?q=upskilling%20Malaysia%20when%3A30d&hl=en-MY&gl=MY&ceid=MY%3Aen"},
+    {label:"docs.f.dataset",url:"https://news.google.com/rss/search?q=%22AI%20workplace%22%20Malaysia%20when%3A30d&hl=en-MY&gl=MY&ceid=MY%3Aen"},
     {label:"docs.f.coverage",k:["docs.news.coverage"]},
-    {label:"docs.f.method",k:["docs.news.method"]},
+    {label:"docs.f.method",k:["docs.news.method","docs.scenario.reason"]},
     {label:"docs.f.license",k:["docs.news.license"],url:"https://news.google.com/"},
     {label:"docs.f.failure",k:["docs.news.failure"]},
   ]},
@@ -113,18 +118,6 @@ const DOCS: Doc[] = [
     { label: "docs.f.method", k: ["docs.course.status"] },
     { label: "docs.f.limits", k: ["docs.course.limits"] },
     { label: "docs.f.license", k: ["docs.course.license"] },
-  ] },
-  { id: "hrdcorp", types: ["external", "static", "derived"], name: "docs.hrdcorp.name", sourceIds: ["hrdcorp_elatih"], rows: [
-    { label: "docs.f.publisher", ref: "Human Resource Development Corporation (HRD Corp) & e-LATiH Malaysia" },
-    { label: "docs.f.dataset", url: "https://e-latih.hrdcorp.gov.my/" },
-    { label: "docs.f.files", ref: "src/artifacts/api-server/src/data/courses.ts" },
-    { label: "docs.f.method", k: ["docs.hrdcorp.method"] },
-  ] },
-  { id: "seda_niosh", types: ["external", "static", "derived"], name: "docs.seda_niosh.name", rows: [
-    { label: "docs.f.publisher", ref: "SEDA Malaysia (Solar PV) & NIOSH Malaysia (OSH)" },
-    { label: "docs.f.dataset", url: "https://www.seda.gov.my/" },
-    { label: "docs.f.api", url: "https://www.niosh.com.my/" },
-    { label: "docs.f.method", k: ["docs.seda_niosh.method"] },
   ] },
   {id:"hubspot",types:["external","derived"],name:"src.hubspot_catalogue.name",sourceIds:["hubspot_catalogue"],rows:[
     {label:"docs.f.publisher",ref:"HubSpot Academy"},
@@ -172,7 +165,7 @@ const DOCS: Doc[] = [
     { label: "docs.f.api", url: "https://docs.runpod.io/serverless/vllm/openai-compatibility" },
     { label: "docs.f.method", k: ["docs.ai.checks", "docs.ai.cold", "docs.ai.configured"] },
     { label: "docs.f.limits", k: ["docs.ai.ids", "docs.ai.retrieval"] },
-    { label: "docs.f.privacy", k: ["docs.ai.privacy"] },
+    { label: "docs.f.privacy", k: ["docs.ai.privacy", "docs.scenario.reason"] },
   ] },
   { id: "demo", types: ["demo", "user"], name: "docs.name.demo", rows: [
     { label: "docs.f.method", k: ["docs.demo.org", "docs.demo.individual", "docs.demo.cv", "docs.account.profile"] },
@@ -184,10 +177,11 @@ const TYPES: DocType[] = ["external", "static", "derived", "service", "demo", "u
 const CATEGORIES = [
   { key: "market", ids: ["dosm", "dosm_jmi", "aei_usage", "aei_exposure", "bls", "career_news"] },
   { key: "jobs", ids: ["himalayas", "remotive", "remoteok"] },
-  { key: "career", ids: ["riasec", "onet", "skill_reference"] },
-  { key: "learning", ids: ["courses", "hrdcorp", "seda_niosh", "hubspot", "freecodecamp", "githubskills", "huggingface", "openlearn", "sdg"] },
+  { key: "career", ids: ["riasec", "onet", "skill_reference", "match"] },
+  { key: "learning", ids: ["courses", "hubspot", "freecodecamp", "githubskills", "huggingface", "openlearn", "sdg"] },
   { key: "aiService", ids: ["runpod"] },
-  { key: "privacy", ids: ["tvet_synthetic", "demo"] },
+  { key: "synthetic", ids: ["tvet_synthetic", "demo_fixtures", "legacy_examples"] },
+  { key: "privacy", ids: ["demo", "learningRecords"] },
 ] as const;
 const TYPE_TONE: Record<DocType, string> = {
   external: "bg-[hsl(var(--maroon-soft))] text-primary",

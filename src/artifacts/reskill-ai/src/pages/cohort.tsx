@@ -1,3 +1,4 @@
+import { LearnerListGuide } from "@/components/portal-guides";
 import {useCompany} from "@/lib/enterprise";
 import { InstitutionDashboard, InstitutionCourses } from "@/components/institution-portal";
 import { EnterpriseDashboard } from "@/components/company-future";
@@ -141,7 +142,7 @@ export function Members({ kind }: { kind: "hr" | "tvet" }) {
   return (
     <>
       <PageHeader title={t(kind === "hr" ? "nav.members" : "nav.students")} sub={t(kind === "hr" ? "members.hrSub" : "members.tvetSub")}
-        help={<PageGuide title={ew.guide} steps={[{title:t(kind === "hr" ? "nav.members" : "nav.students"),body:ew.guideEmployee},{title:ew.progress,body:ew.reported}]}/>}
+        help={<LearnerListGuide institution={kind === "tvet"}/>}
         actions={<Button className="min-h-11" onClick={() => setOpen(true)} data-testid="button-add-member"><Plus className="mr-1.5 h-4 w-4" />{t(kind === "hr" ? "cohort.addMember" : "cohort.addStudent")}</Button>} />
       <div className="relative mb-4">
         <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />

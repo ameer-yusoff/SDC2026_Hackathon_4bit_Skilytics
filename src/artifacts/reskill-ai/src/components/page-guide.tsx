@@ -179,7 +179,7 @@ export const guides = {
     sources: [
       [
         "Know where it comes from",
-        "Datasets provide facts. Catalogues provide courses. AI services help explain the facts.",
+        "Datasets and news feeds provide references. Catalogues list courses or vacancies. AI services explain the supplied evidence; they are not datasets.",
       ],
       [
         "Check freshness",
@@ -250,7 +250,7 @@ export const guides = {
     sources: [
       [
         "Kenali sumbernya",
-        "Dataset memberi fakta. Katalog memberi kursus. Perkhidmatan AI membantu menerangkan fakta.",
+        "Dataset dan feed berita memberi rujukan. Katalog menyenaraikan kursus atau vacancy. Perkhidmatan AI menerangkan bukti dibekalkan; ia bukan dataset.",
       ],
       [
         "Semak tarikh",
@@ -312,7 +312,7 @@ export const guides = {
       ],
     ],
     sources: [
-      ["了解来源", "数据集提供事实，目录提供课程，AI 服务帮助解释事实。"],
+      ["了解来源", "数据集和新闻提供参考；目录列出课程或职位。AI服务解释提供的依据，本身不是数据集。"],
       [
         "核对日期",
         "查看数据时期和最近检查时间。错误可能表示正在显示上次保存的快照。",

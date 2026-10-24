@@ -1,3 +1,5 @@
+import {skillDemand} from "../lib/skill-demand";
+import {explanationInput,parseScenarioExplanation,scenarioValue,scenarioPrompt,assertScenarioNumbers} from "../lib/scenario-explanation";
 import { Router } from "express";
 import { z } from "zod";
 import {
@@ -86,7 +88,7 @@ async function contextFor(horizon: number) {
     },
   };
   const hash = hashInput(
-    "public-market-outlook-v3-news",
+    "public-market-outlook-v4-tech-ai-news",
     context.baseYear,
     horizon,
     candidates,
@@ -103,7 +105,7 @@ async function cached(hash: string, tx: Pick<typeof db, "select"> = db) {
     .where(
       and(
         eq(predictionsTable.inputHash, hash),
-        eq(predictionsTable.question, "PUBLIC_MARKET_OUTLOOK_V3"),
+        eq(predictionsTable.question, "PUBLIC_MARKET_OUTLOOK_V4"),
         gte(predictionsTable.createdAt, new Date(Date.now() - 86400000)),
       ),
     )
@@ -207,7 +209,7 @@ router.post("/market/outlook", async (req, res) => {
     const [row] = await tx
       .insert(predictionsTable)
       .values({
-        question: "PUBLIC_MARKET_OUTLOOK_V3",
+        question: "PUBLIC_MARKET_OUTLOOK_V4",
         horizonYears: horizon,
         lang: "en",
         inputHash: c.hash,
@@ -228,4 +230,40 @@ router.post("/market/outlook", async (req, res) => {
     running.delete(c.hash);
   }
 });
+
+async function explanationContext(mode:"ai"|"demand"|"skills",years:number){
+ const c=await contextFor(10),ranked=payload(c,await cached(c.hash));
+ const raw=mode==="skills"?(await skillDemand()).skills.slice(0,3).map(s=>({name:s.name,baseline:s.count})):
+  ranked[mode].slice(0,3).map(r=>({name:r.title!,nameMs:r.titleMs,nameZh:r.titleZh,baseline:mode==="ai"?r.aiExposure!:r.projection?.growthPct??null}));
+ const rows=raw.map(r=>({...r,previous:scenarioValue(mode,r.baseline,years-1),selected:scenarioValue(mode,r.baseline,years)}));
+ const references=[...c.references,...c.context.news.articles.slice(0,12).map(a=>({label:`${a.region === "my"?"Malaysia-related":"Global"} · ${a.domain}: ${a.title}`,url:a.url,dataDate:a.seenAt.slice(0,10)}))];
+ const context={mode,baseYear:c.context.baseYear,previousYear:c.context.baseYear+years-1,selectedYear:c.context.baseYear+years,years,rows,
+  formula:mode==="ai"?"100 * (1 - (1 - observed exposure) * 0.95^years); assumes 5% of remaining tasks each year":mode==="demand"?"100 * ((1 + supplied BLS ten-year growth / 100)^(years/10) - 1); smooth annual interpolation, not annual BLS forecasts":"baseline learning-priority index * 1.05^years; assumed 5% yearly increase, not employer percentage",
+  newsStale:c.context.news.stale,newsCheckedAt:c.context.news.fetchedAt,references:references.map((r,id)=>({id,...r}))};
+ return {context,references,hash:hashInput("scenario-explanation-v1",context)};
+}
+async function savedExplanation(hash:string,tx:Pick<typeof db,"select">=db){return (await tx.select().from(predictionsTable).where(and(eq(predictionsTable.inputHash,hash),eq(predictionsTable.question,"PUBLIC_SCENARIO_EXPLANATION_V1"),gte(predictionsTable.createdAt,new Date(Date.now()-86400000)))).orderBy(desc(predictionsTable.id)).limit(1))[0];}
+function explanationResponse(c:Awaited<ReturnType<typeof explanationContext>>,row?:typeof predictionsTable.$inferSelect){
+ const saved=row?parseScenarioExplanation(row.content,c.references.length):null;
+ return {mode:c.context.mode,years:c.context.years,baseYear:c.context.baseYear,rows:c.context.rows,generated:!!saved,translations:saved?.translations??null,sources:saved?saved.referenceIds.map(id=>c.references[id]):c.references.slice(0,4),generatedAt:row?.createdAt??null,newsStale:c.context.newsStale};
+}
+router.get("/market/scenario-explanation",async(req,res)=>{const input=explanationInput.parse(req.query),c=await explanationContext(input.mode,input.years);res.setHeader("Cache-Control","no-store");res.json(explanationResponse(c,await savedExplanation(c.hash)));});
+router.post("/market/scenario-explanation",async(req,res)=>{
+ const input=explanationInput.parse(req.body),c=await explanationContext(input.mode,input.years),existing=await savedExplanation(c.hash);
+ if(existing){res.json(explanationResponse(c,existing));return;}
+ const rate=consumeAiRequest(req.user?"user":"guest",String(req.user?.id??req.guestToken??req.ip));if(!rate.allowed){res.status(429).json({error:"ai_rate_limited"});return;}
+ let job=running.get(c.hash);
+ if(!job){job=db.transaction(async tx=>{
+  await tx.execute(sql`SELECT pg_advisory_xact_lock(hashtextextended(${c.hash},0))`);
+  const cached=await savedExplanation(c.hash,tx);if(cached)return explanationResponse(c,cached);
+  const prompt=scenarioPrompt(c.context),out=await chat("main",prompt.system,prompt.user,{agent:"analyst"});
+  const parsed=parseScenarioExplanation(out.content,c.references.length);
+  if(!parsed.referenceIds.length)throw new Error("scenario_references_required");
+  assertScenarioNumbers(parsed.translations,c.context.rows,input.mode);
+  const [row]=await tx.insert(predictionsTable).values({question:"PUBLIC_SCENARIO_EXPLANATION_V1",horizonYears:input.years,lang:"all",inputHash:c.hash,content:JSON.stringify(parsed),sources:parsed.referenceIds.map(id=>c.references[id]),model:out.model}).returning();
+  return explanationResponse(c,row);
+ });running.set(c.hash,job);}
+ try{res.json(await job);}catch(err){req.log.warn({err},"Scenario explanation failed");res.status(502).json({error:"ai_failed"});}finally{if(running.get(c.hash)===job)running.delete(c.hash);}
+});
+
 export default router;
