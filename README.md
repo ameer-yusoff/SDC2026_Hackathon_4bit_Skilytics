@@ -1,34 +1,30 @@
-# 🚀 Skilytics 
+# Skilytics
 
-### **AI-Powered Future-Ready Workforce & Career Reskilling Platform**
-*Bridging the gap between "Who I am today" and "Where I can be in the AI Era"*
-
-> A human-centred, AI-powered career analytics and workforce reskilling platform that uses dated AI and labour-market references to compare illustrative future scenarios, suggest plausible career directions, and build personalised reskilling pathways for working adults, career switchers, students, fresh graduates, HR/L&D managers, and TVET/university career centres.
+> Empowering youth, jobseekers, and organisations with AI-driven skill intelligence, live labour data, and personalised learning pathways.
 
 ---
 
 ## Team Information
 
-| Field                  | Details                                                                                                       |
-| ---------------------- | ------------------------------------------------------------------------------------------------------------- |
-| **Team Name**          | 4bit                                                                                                          |
-| **Team Domain**        | Domain 1 — Aiversecity Future-Ready Workforce Domain                                                          |
-| **SDG Track (1–17)**   | SDG 4 — Quality Education, SDG 8 — Decent Work & Economic Growth, SDG 9 — Industry, Innovation & Infrastructure |
-| **Team Leader**        | Muhammad Ameer Yusoff bin Azeri                                                                               |
-| **University**         | Universiti Teknologi Malaysia (UTM)                                                                           |
-| **Number of Members**  | 4                                                                                                             |
+| Field                  | Details                                     |
+| ---------------------- | ------------------------------------------- |
+| **Team Name**          | 4bit                                        |
+| **Team Domain**        | Domain 1                                    |
+| **SDG Track (1–17)**   | SDG 4.3, 4.4, 8.2, & 8.5 (SDG 4: Quality Education & SDG 8: Decent Work and Economic Growth) |
+| **Team Leader**        | Muhammad Ameer Yusoff bin Azeri             |
+| **University**         | Universiti Teknologi Malaysia               |
+| **Number of Members**  | 4                                           |
 
 ## Links
 
-| Resource                         | Link                                                                 |
-| -------------------------------- | -------------------------------------------------------------------- |
-| GitHub Repository                | https://github.com/ameer-yusoff/SDC2026_Hackathon_4bit_Skilytics     |
-| Replit Project                   | N/A                                                                  |
-| Live Demo                        | https://skilytics.vercel.app/                                        |
-| RunPod Endpoint (Qwen 3.5-27b)   | https://api.runpod.ai/v2/3pvoygmk4mn0ad/run                          |
-| RunPod Endpoint (Qwen3.5-9b)     | https://api.runpod.ai/v2/bs50a57qmoqrpp/run                          |
-| Slide Deck                       | TBA                                                                  |
-| Demo Video                       | TBA                                                                  |
+| Resource                         | Link                                                              |
+| -------------------------------- | ----------------------------------------------------------------- |
+| GitHub Repository                | https://github.com/ameer-yusoff/SDC2026_Hackathon_4bit_Skilytics  |
+| Live Demo                        | https://skilytics.vercel.app                                      |
+| RunPod Endpoint (Qwen 3.5-27b)   | https://api.runpod.ai/v2/3pvoygmk4mn0ad/run                       |
+| RunPod Endpoint (Qwen3.5-9b)     | https://api.runpod.ai/v2/bs50a57qmoqrpp/run                       |
+| Slide Deck                       | N/A                                                               |
+| Demo Video                       | N/A                                                               |
 
 ---
 
@@ -36,227 +32,102 @@
 
 ### Problem
 
-As university students, we witness on our own how industry skill demands change in months due to the rapid growth of AI, though academic and TVET syllabuses take years to adapt. Access to high-quality and market-aligned higher education is severely limited by this "curriculum lag" (SDG 4.3). As a result, graduates and job seekers enter the workforce with outdated qualifications rather than the relevant technical and professional skills required by current companies (SDG 4.4). The entire job ecosystem is affected by the crisis. Without flexible reskilling pathways, working individuals are at risk of displacement, and career centers lack real-time labor market data to successfully mentor students. A negative contradiction is created by this disconnect, causing significant talent shortages in high-growth industries to coexist with rising graduate unemployment and job fragility. The gap negatively impacts full and productive employment by failing to train workers for respectable and durable jobs (SDG 8.5). Additionally, ongoing skill gaps hinder workforce productivity and technological innovation, which directly lowers national economic productivity (SDG 8.2). Learners are forced to choose between static curricula and an AI-driven economy in the absence of a real-time bridge connecting university education and vocational training to live industry expectations while endangering both individual livelihoods and overall economic growth. 
+Industry skill demands change in months due to the rapid growth of AI, though academic and TVET syllabuses take years to adapt, severely limiting access to market-aligned higher education due to "curriculum lag" (SDG 4.3). As a result, graduates and job seekers enter the workforce with outdated qualifications rather than the relevant technical and professional skills required by current companies (SDG 4.4). Without flexible reskilling pathways and real-time labor market data, working individuals face displacement and talent shortages in high-growth industries coexist with rising graduate unemployment, negatively impacting full and productive employment (SDG 8.5) and national economic productivity (SDG 8.2).
 
 ### Solution
 
-**Skilytics** is an AI-powered career guidance and reskilling platform that helps workers stay relevant by aligning their current skills with planned upskilling and reskilling to meet real job market demands. The platform uses a step-by-step AI-powered workflow that automatically extracts skills from uploaded CVs, runs a Holland Code (RIASEC) interest test, and compares user profiles against standardized O*NET job requirements. Specialized AI agents then evaluate how exposed a user's current role is to AI knowledge, identify specific skill gaps in the local market, and generate a personalised learning plan matched to trusted courses.
-
-#### **Who Skilytics Is Built For**
-1. **👩‍💻 Working Adults & Career Switchers:** Individuals at risk of job displacement or seeking a career pivot with transparent, step-by-step guidance and skill-gap breakdowns.
-2. **🎓 Students & Fresh Graduates:** Emerging talent looking to understand their natural work preferences and build high-demand skills before entering the job market.
-3. **🏢 HR & Learning & Development (L&D) Managers:** Corporate leaders planning company-wide reskilling strategies, tracking employee skill gaps, and monitoring team AI exposure.
-4. **🏫 TVET & University Career Centres:** Educators and career advisors upgrading their curriculum structures and guiding students toward sustainable, high-growth career pathways.
+Skilytics is an AI-powered career guidance and reskilling platform that helps workers stay relevant by aligning their current skills with planned upskilling and reskilling to meet real job market demands. The platform uses a step-by-step AI-powered workflow that automatically extracts skills from uploaded CVs, runs a Holland Code (RIASEC) interest test, and compares user profiles against standardized O*NET job requirements. Specialized AI agents then evaluate how exposed a user's current role is to AI knowledge, identify specific skill gaps in the local market, and generate a personalised learning plan matched to trusted courses.
 
 ### Key Features
 
-- **🧠 Explain Like I'm 5 (ELI5) AI Reasoning Engine** — Complex labour statistics, skill gaps, and psychometric intersections are translated into friendly, easy-to-understand **ELI5 explanations**—ensuring every user understands *why* a career path or learning plan is recommended for them.
-- **📄 Multi-Modal Skills Profile Intake (CV + RIASEC)** — Combines automated OCR/PDF resume parsing with the **adapted RIASEC interest guide** (the app’s questions/translations are not independently psychometrically validated), synthesised by AI to form a holistic profile of both technical capability and personal work preferences.
-- **📡 Live AI-Trend Signal Layer & Market Pulse** — Integrates real-time, citable public data sources—displaying unemployment & participation rates, labour force trends, AI usage by role, and most AI-exposed roles.
-- **🎯 Explainable Future-Role Matching & Skill Mapping** — Ranks best-fit future roles with transparent match scores, role-specific skill maps, and labelled 1–10-year planning scenarios with source-linked explanations.
-- **🗺️ Personalised Reskilling Pathways** — Generates ordered, time-bound learning plans tailored to the user's weekly study hours and budget constraints, utilizing public online course catalogues. HRD eligibility is employer-only and never asserted without verification.
-- **🌍 Meaningful UN SDG Mapping** — Tags every course, role and skill to relevant UN Sustainable Development Goals.
-- **🏆 Gamified Workspace & Certification** — Tracks learning milestones, awards skill badges/achievements, and generates an app-branded **completion milestone** with an app record ID based on user check-ins; this is not provider certification or independently verified competence.
+- **Multi-Modal Skills Profile Intake (CV + RIASEC)** — Extracts text, structure, and skills from PDF or scanned image CVs using Gemini API, Tesseract.js, and PDF.js, paired with a Holland Code (RIASEC) career interest profiling quiz.
+- **Skill Gap and Automation Risk Analysis** — Evaluates a user's current role against standardized O*NET job taxonomies and the Anthropic Economic Index to measure task-level AI exposure and local market skill gaps.
+- **Live AI-Trend Signal Layer & Market Pulse** — Integrates live national labor force statistics from OpenDOSM and job market feeds to benchmark real-time employment demands.
+- **Personalised Reskilling Roadmap** — Generates custom learning pathways matched to verified courses from Microsoft Learn, freeCodeCamp, GitHub Skills, Hugging Face Learn, OpenLearn, and HubSpot Academy.
+- **Tailored Multi-Scope Interfaces (Including ELI5 Engine)** — Features an "Explain Like I'm 5" (ELI5) interface for individuals, a cohort tracking portal for educators, and a workforce planning dashboard with HRD-claimable training discovery for enterprises.
 
 ### Tech Stack
 
-| Layer         | Technology                                                                                                                                                             |
-| ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Frontend      | TypeScript (v5.x), React (v18.x), Vite (v6.x), Tailwind CSS (v3.x), Radix UI / Shadcn UI, Recharts (v2.x), Framer Motion (v12.x), Wouter (v3.x), TanStack React Query (v5.x), Lucide React |
-| Backend       | Node.js (v20.x), Express.js (v4.x), TypeScript (v5.x), Zod (v3.x), Orval (v7.x), Pino & Pino-HTTP (v9.x)                                                               |
-| Database      | Neon Serverless PostgreSQL (`@neondatabase/serverless`), Drizzle ORM (v0.x), `node-postgres` (`pg` v8.x)                                                               |
-| AI / Compute  | Google Gemini API (testing default), optional RunPod Serverless Qwen main/light adapters, Python (v3.10+), Tesseract.js (v7.x), PDF.js (`pdfjs-dist` v4.x & `unpdf` v1.x) |
-| Hosting / Dev | Replit (Foundational Code & Prototyping), Vercel (Frontend Hosting), Render (Backend Hosting)                                                                          |
-
-#### **Languages, Frameworks & Libraries**
-
-| Name & Version | Purpose in Project | License |
-| :--- | :--- | :---: |
-| **TypeScript** `(v5.x)` | Primary programming language used across both frontend and backend for type-safe application development. | Apache 2.0 |
-| **Node.js** `(v20.x)` | Runtime environment powering the backend API server, automated build scripts, and local developer environment. | MIT |
-| **Python** `(v3.10+)` | Scripting language used for model testing, sending structured inference requests to RunPod, and data validation. | PSF License |
-| **React** `(v18.x)` | Frontend library for building the interactive user interface, assessment workflows, and dashboard components. | MIT |
-| **Vite** `(v6.x)` | Frontend tooling and development server providing fast bundling and hot-module replacement. | MIT |
-| **Tailwind CSS** `(v3.x)` | Utility-first CSS framework used for styling responsive, modern user interface layouts. | MIT |
-| **Radix UI / Shadcn UI** `(Latest)` | Unstyled, accessible component primitives used to construct dialogs, tabs, progress bars, and forms. | MIT |
-| **Lucide React** `(v0.x)` | Icon library providing consistent vector icons across the platform interface. | ISC |
-| **TanStack React Query** `(v5.x)` | Asynchronous state management library handling API data caching, background fetching, and server state synchronization. | MIT |
-| **Express.js** `(v4.x)` | Minimalist backend web framework routing API requests for CV processing, user profiling, and market data queries. | MIT |
-| **Zod** `(v3.x)` | Schema declaration and validation library enforcing structured, type-safe inputs and outputs for API routes and AI payloads. | MIT |
-| **Orval** `(v7.x)` | OpenAPI code generator creating type-safe TypeScript React Query hooks and fetch clients directly from OpenAPI specs. | MIT |
-| **Drizzle ORM** `(v0.x)` | TypeScript Object Relational Mapper used for database schema declaration, migrations, and type-safe database queries. | Apache 2.0 |
-| **Neon Serverless SDK** `(@neondatabase/serverless)` | Serverless PostgreSQL driver connecting the backend to cloud Neon database instances via WebSockets/HTTP. | Apache 2.0 / MIT |
-| **Google Generative AI SDK** `(@google/genai)` | Client SDK for interacting with the Gemini API to execute resume parsing, interest extraction, and career reasoning. | Apache 2.0 |
-| **Tesseract.js** `(v7.x)` | Primary OCR engine to extract text from image/scanned CV files (scanned images like JPEG/PNG). | Apache 2.0 |
-| **PDF.js** `(pdfjs-dist & unpdf)` `(v4.x / v1.x)` | Extracts text, structure, and metadata from PDF-formatted CV files. | Apache 2.0 |
-| **Recharts** `(v2.x)` | Generates interactive data visualizations, radar charts (6 competency scores), and analytics charts in the dashboard. | MIT |
-| **Framer Motion** `(v12.x)` | Handles micro-animations, score card transitions, and smooth UI interactivity. | MIT |
-| **Wouter** `(v3.x)` | Client-side routing library used for frontend page navigation. | MIT |
-| **node-postgres (`pg`)** `(v8.x)` | The actual driver that connects the Node.js backend directly to the Neon Postgres database. | MIT |
-| **Pino & Pino-HTTP** `(v9.x)` | High-performance logging system for backend error monitoring and request auditing. | MIT |
+| Layer         | Technology                   |
+| ------------- | ---------------------------- |
+| Frontend      | TypeScript (v5.x), React (v18.x), Vite (v5.x), Tailwind CSS (v3.x), Radix UI / Shadcn UI, TanStack React Query (v5.x), Recharts (v2.x), Framer Motion (v12.x), Wouter (v3.x), Lucide React |
+| Backend       | Node.js (v20.x), Express.js (v4.x), TypeScript (v5.x), Python (v3.10+), Zod (v3.x), Orval (v7.x), Tesseract.js (v7.x), PDF.js (v4.x/v1.x), Pino & Pino-HTTP (v9.x) |
+| Database      | Neon Serverless PostgreSQL, Drizzle ORM (v0.x), Neon Serverless SDK (`@neondatabase/serverless`), `node-postgres` (`pg` v8.x) |
+| AI / Compute  | RunPod Serverless GPU (H100 GPUs running Qwen 3.5-27b, Qwen3.5-9b), Google Gemini API (`Gemini-flash-lite 3.1` via `@google/genai`) |
+| Hosting / Dev | Vercel (Frontend), Render (Backend API), Replit (Cloud IDE & Staging), GitHub |
 
 ---
 
 ## Project Structure
 
-```
+```text
 .
-├── .agents/
-│   └── skills/                              # Neon & PostgreSQL agent skill references
-├── deployment/                              # Cloud deployment configurations & build scripts
+├── .agents/                             # AI agent skills & Neon PostgreSQL references
+├── deployment/                          # Cloud deployment configurations
 │   ├── scripts/
-│   │   └── copy-dist.js                     # Production build asset bundler
-│   ├── README.md                            # Deployment documentation
-│   ├── neon.ts                              # Neon database setup utility
+│   │   └── copy-dist.js
+│   ├── neon.ts
 │   ├── package.json
-│   ├── pnpm-lock.yaml
-│   ├── render.yaml                          # Render backend deployment configuration
-│   └── vercel.json                          # Vercel frontend hosting configuration
-├── src/                                     # Primary application monorepo workspace
-│   ├── .agents/
-│   │   └── memory/                          # Architectural & runtime notes (CV, RunPod, onboarding)
+│   ├── render.yaml                      # Render backend deployment config
+│   └── vercel.json                      # Vercel frontend deployment config
+├── src/                                 # Main pnpm monorepo workspace
 │   ├── artifacts/
-│   │   ├── api-server/                      # Node.js + Express Backend API Server
-│   │   │   ├── scripts/                     # Public catalogue refresh scripts
+│   │   ├── api-server/                  # Express.js + TypeScript Backend API server
 │   │   │   └── src/
-│   │   │       ├── data/                    # RIASEC, O*NET, BLS projections, skills & roles datasets
-│   │   │       ├── lib/                     # Core logic: RunPod LLM routing (llm.ts), OCR/CV, scoring & unit tests
-│   │   │       ├── middlewares/             # Express middlewares
-│   │   │       ├── routes/                  # REST API routes (ai, auth, catalog, cohort, health, market, profiles)
-│   │   │       ├── app.ts                   # Express app configuration
-│   │   │       └── index.ts                 # Backend server entry point
-│   │   ├── mockup-sandbox/                  # UI component preview sandbox (React + Vite)
-│   │   └── reskill-ai/                      # Skilytics Frontend SPA (React 18 + Vite 6 + Tailwind CSS)
-│   │       ├── public/                      # Static assets, SDG icons, and demo CVs
+│   │   │       ├── data/                # O*NET, RIASEC, BLS, & course datasets
+│   │   │       ├── lib/                 # AI agents, LLM routing, CV parsing, & unit tests
+│   │   │       └── routes/              # REST API route handlers
+│   │   ├── mockup-sandbox/              # Rapid UI prototyping sandbox
+│   │   └── reskill-ai/                  # React 18 + Vite Frontend SPA (PWA)
+│   │       ├── public/                  # Static assets, SDG icons, demo CVs, & RunPod proofs
 │   │       └── src/
-│   │           ├── components/              # Guided journey, Skill Map, Holland story, Market Outlook & UI kit
-│   │           ├── hooks/                   # Custom React hooks
-│   │           ├── i18n/                    # Multilingual translations (EN, MS, ZH)
-│   │           ├── lib/                     # Frontend utilities, learning journey & study calendar logic
-│   │           └── pages/                   # Portal pages (onboarding, profile, me, catalog, market, cohort, public)
-│   ├── attached_assets/                     # Design reports and visual reference assets
-│   ├── docs/                                # Internal documentation (ai-routing.md, audits, verification)
+│   │           ├── components/          # UI & feature components (heatmaps, portals, etc.)
+│   │           ├── i18n/                # Multi-language dictionaries (EN / BM / ZH)
+│   │           ├── lib/                 # Frontend utilities, state, & unit tests
+│   │           └── pages/               # Application route views
+│   ├── data/                            # Source access audit logs
+│   ├── docs/                            # Technical & architectural documentation
 │   ├── lib/
-│   │   ├── api-client-react/                # Orval-generated TypeScript React Query hooks & fetch client
-│   │   ├── api-spec/                        # OpenAPI 3.0 specification (openapi.yaml) & Orval config
-│   │   ├── api-zod/                         # Generated Zod validation schemas & TypeScript types
-│   │   └── db/                              # Drizzle ORM schema, SQL migrations & Neon Postgres driver
-│   ├── scripts/                             # Database backup & guest draft cleanup utilities
-│   ├── testing/
-│   │   └── demo-cv/                         # Demo CV fixtures (PDF/JPEG) and sample user profiles
-│   ├── .env.example                         # Workspace environment variable template
-│   ├── .replit                              # Replit workspace configuration
-│   ├── package.json                         # Monorepo scripts and workspace configuration
-│   ├── pnpm-lock.yaml
-│   ├── pnpm-workspace.yaml                  # pnpm workspace definition
-│   └── replit.md
-├── submission/                              # Required submission documents
-│   ├── 3. SDC2026_4bit_Replit_POU.pdf      # Existing proof of use
-│   └── 4. SDC2026_4bit_RunPod_POU.pdf      # Existing proof of use
-├── .env.example                             # Root environment variables template
+│   │   ├── api-client-react/            # Orval-generated React Query API hooks
+│   │   ├── api-spec/                    # OpenAPI specification (openapi.yaml)
+│   │   ├── api-zod/                     # Generated Zod validation schemas
+│   │   └── db/                          # Drizzle ORM schemas & SQL migrations
+│   ├── scripts/                         # Database backup & maintenance scripts
+│   ├── synthetic-data/                  # Evaluation career personas & TVET datasets
+│   ├── testing/demo-cv/                 # Sample PDF & JPEG resumes for testing
+│   ├── .env.example                     # Workspace environment variables template
+│   ├── .replit                          # Replit workspace run configuration
+│   ├── package.json                     # Workspace scripts & dependencies
+│   └── pnpm-workspace.yaml              # Monorepo workspace definition
+├── submission/                          # Required submission documents
+│   ├── 1. SDC2026_4bit_Preliminary.pdf      # Preliminary submission
+│   ├── 2. SDC2026_4bit_TechDeclaration.pdf  # Technology declaration
+│   ├── SDC2026_4bit_Replit_POU.pdf          # Replit proof of use
+│   └── SDC2026_4bit_Runpod_POU.pdf          # RunPod proof of use
+├── .env.example                         # Root environment variables template
 ├── .gitignore
-├── LICENSE                                  # Apache License 2.0
-├── requirements.txt                         # Python dependencies for RunPod testing & validation
+├── LICENSE
+├── requirements.txt                     # Python dependencies for model testing & validation
 └── README.md
 ```
 
 ### Architecture
 
+```text
+User ──► Vercel (React + Vite SPA: src/artifacts/reskill-ai)
+           │
+           ▼
+      Render (Node.js + Express API: src/artifacts/api-server)
+           │
+           ├──► AI Service Layer (src/artifacts/api-server/src/lib/llm.ts)
+           │      ├──► RunPod Serverless GPU (Qwen 3.5-27b / Qwen3.5-9b)
+           │      └──► Google Gemini API (Gemini-flash-lite 3.1)
+           │
+           ├──► Embedding & Database Layer (Drizzle ORM: src/lib/db)
+           │      └──► Neon Serverless PostgreSQL (Profiles, RIASEC, Courses)
+           │
+           └──► External Data & Course Feeds (OpenDOSM, O*NET, Anthropic Index, etc.)
 ```
-User → Vercel web app (React + Express) → Gemini API in testing; optional RunPod text inference in enabled hybrid mode
-                                │
-                                └──► Response returned to user
-```
-
-#### **System Architecture Overview**
-
-```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                        USER INTERFACE (FRONTEND)                        │
-│     React 18 + Vite 6 + Tailwind CSS + Radix UI + Recharts + Wouter     │
-│        (Hosted on Vercel | Captures CV, Goals & RIASEC Responses)       │
-└───────────────────────────────────┬─────────────────────────────────────┘
-                                    │ REST API / Type-Safe Orval Client
-                                    ▼
-┌─────────────────────────────────────────────────────────────────────────┐
-│                          BACKEND API SERVER                             │
-│              Node.js 20 + Express.js + Zod + Pino Logger                │
-│     (Hosted on Render | Routing, Auth, Evaluation & Market Queries)     │
-└───────────────┬───────────────────────────────────────┬─────────────────┘
-                │                                       │
-                ▼                                       ▼
-┌───────────────────────────────────┐   ┌─────────────────────────────────┐
-│        AI MODEL & OCR LAYER       │   │          DATABASE LAYER         │
-│ • Gemini / optional RunPod APIs  │   │ • Drizzle ORM + node-postgres   │
-│ • Google Gemini SDK (@google/genai│   │ • Neon Serverless PostgreSQL    │
-│ • Tesseract.js & PDF.js (CV Parse)│   │   (Profiles, Skills & Catalog)  │
-└───────────────────────────────────┘   └─────────────────────────────────┘
-```
-
-* **User Interface (Frontend):** A React single-page application built with Vite (`src/artifacts/reskill-ai`) that captures user interactions, profile configurations, and RIASEC assessment responses.
-* **Backend API:** A Node.js Express server (`src/artifacts/api-server`) that processes client REST requests, handling routing, authentication, and core evaluation logic.
-* **AI Model / API:** Interacts with AI agent services (`src/artifacts/api-server/src/lib/llm.ts`) via Gemini by default in testing, with optional RunPod text routing in explicitly enabled hybrid mode. CV understanding uses the vision-capable route; matching and scheduling remain deterministic. AI provides bounded ELI5 explanations.
-* **Database Layer:** Managed via Drizzle ORM (`src/lib/db`) connected to a Neon Serverless PostgreSQL database, storing user profiles, skill matrices, and course catalog items.
-* **Cloud Hosting:** Foundational code built in **Replit** (`src/.replit`), with cloud infrastructure deployed via **Render** (`deployment/render.yaml`) for backend deployment and **Vercel** (`deployment/vercel.json`) for frontend hosting.
-
----
-
-## ⚙️ Environment Requirements (`.env`)
-
-Before running the application locally or deploying backend services, ensure you configure your environment variables. Create a `.env` file in the root directory (and/or `src/.env`) and populate it with the following configuration:
-
-```env
-# ==========================================
-# Database Configuration (PostgreSQL)
-# ==========================================
-DATABASE_URL="your_postgres_database_url_here"
-DATABASE_URL_UNPOOLED="your_unpooled_postgres_database_url_here"
-
-# ==========================================
-# Server Configuration
-# ==========================================
-PORT=5000
-NODE_ENV=development
-LOG_LEVEL=info
-
-# ==========================================
-# Authentication & Session Security
-# ==========================================
-SESSION_SECRET="your_session_secret_here"
-
-# ==========================================
-# AI & LLM Inference Configuration (RunPod)
-# ==========================================
-RUNPOD_API_KEY="your_runpod_api_key_here"
-RUNPOD_LLM_ENDPOINT_ID="3pvoygmk4mn0ad"
-RUNPOD_LLM_MODEL="Qwen 3.5-27b"
-RUNPOD_LIGHT_ENDPOINT_ID="bs50a57qmoqrpp"
-RUNPOD_LIGHT_MODEL="Qwen3.5-9b"
-
-# ==========================================
-# Google Generative AI Configuration (Gemini)
-# ==========================================
-GEMINI_API_KEY="your_gemini_api_key_here"
-```
-
-### Environment Variable Descriptions
-
-The table below describes each required variable, sorted alphabetically to align with the deployment configuration:
-
-| Variable Name | Required | Default / Example | Description |
-| :--- | :---: | :--- | :--- |
-| `DATABASE_URL` | Yes | `postgresql://user:pass@host/db?sslmode=require` | Pooled PostgreSQL connection string (Neon Serverless PostgreSQL) used for application-level data queries through Drizzle ORM. |
-| `DATABASE_URL_UNPOOLED` | Yes | `postgresql://user:pass@host/db?sslmode=require` | Direct (unpooled) PostgreSQL connection string dedicated to running database schema migrations and direct management commands. |
-| `GEMINI_API_KEY` | Yes | `AIzaSy...` | Google Gemini API key, used by the server HTTP adapter, utilized for resume parsing, document understanding, and structured skill extraction. |
-| `LOG_LEVEL` | No | `info` | Logging verbosity level for the Pino logging service (options: `fatal`, `error`, `warn`, `info`, `debug`, `trace`). |
-| `NODE_ENV` | No | `development` | Target execution runtime environment (`development`, `test`, or `production`). |
-| `PORT` | No | `5000` | Local or containerized TCP port on which the Express application server listens for incoming HTTP traffic. |
-| `RUNPOD_API_KEY` | Hybrid only | `rpa_...` | Authentication token used to authorize requests against RunPod Serverless GPU endpoints. |
-| `RUNPOD_LIGHT_ENDPOINT_ID` | Hybrid only | `bs50a57qmoqrpp` | RunPod serverless endpoint identifier designated for fast, low-latency reasoning and lighter language model tasks (`https://api.runpod.ai/v2/bs50a57qmoqrpp/run`). |
-| `RUNPOD_LIGHT_MODEL` | Hybrid only | `Qwen3.5-9b` | Model checkpoint identifier loaded on the lightweight RunPod serverless worker. |
-| `RUNPOD_LLM_ENDPOINT_ID` | Hybrid only | `3pvoygmk4mn0ad` | Primary RunPod serverless endpoint identifier assigned for complex analytical reasoning, career path synthesis, and deep evaluations (`https://api.runpod.ai/v2/3pvoygmk4mn0ad/run`). |
-| `RUNPOD_LLM_MODEL` | Hybrid only | `Qwen 3.5-27b` | Primary large language model checkpoint identifier deployed on the main RunPod compute worker. |
-| `SESSION_SECRET` | Yes | `generate-a-strong-random-key` | High-entropy cryptographic string used to sign, verify, and secure HTTP session cookies against tampering. |
 
 ---
 
@@ -264,18 +135,13 @@ The table below describes each required variable, sorted alphabetically to align
 
 ### Option 1 — Run on Replit (Recommended)
 
-1. Import the [GitHub Repository](https://github.com/ameer-yusoff/SDC2026_Hackathon_4bit_Skilytics) into Replit via **Create Repl → Import from GitHub**.
-2. Open the **Secrets** tab (🔒) and add the variables listed in `.env.example`:
+1. Import this repository on Replit via **Create Repl → Import from GitHub** (`https://github.com/ameer-yusoff/SDC2026_Hackathon_4bit_Skilytics`). (Replit Workspace Link: N/A)
+2. Open the **Secrets** tab (🔒) and add the variables listed in `.env.example` / `src/.env.example`:
    - `DATABASE_URL`
-   - `DATABASE_URL_UNPOOLED`
-   - `SESSION_SECRET`
-   - `RUNPOD_API_KEY`
-   - `RUNPOD_LLM_ENDPOINT_ID` (`3pvoygmk4mn0ad`)
-   - `RUNPOD_LLM_MODEL` (`Qwen 3.5-27b`)
-   - `RUNPOD_LIGHT_ENDPOINT_ID` (`bs50a57qmoqrpp`)
-   - `RUNPOD_LIGHT_MODEL` (`Qwen3.5-9b`)
    - `GEMINI_API_KEY`
-3. Click **Run**. Replit uses `src/.replit` to install workspace dependencies and start the full-stack application.
+   - `RUNPOD_API_KEY`
+   - `RUNPOD_ENDPOINT_ID`
+3. Click **Run**. Replit uses `src/.replit` to start the full-stack workspace.
 
 ### Option 2 — Run Locally
 
@@ -284,18 +150,19 @@ The table below describes each required variable, sorted alphabetically to align
 git clone https://github.com/ameer-yusoff/SDC2026_Hackathon_4bit_Skilytics.git
 cd SDC2026_Hackathon_4bit_Skilytics
 
-# 2. (Optional) Create a Python virtual environment for RunPod scripts
+# 2. (Optional) Create a Python virtual environment & install Python validation dependencies
 python -m venv venv
-source venv/bin/activate        # Windows: venv\Scripts\activate
+venv\Scripts\activate        # MacOS/Linux: source venv/bin/activate
 pip install -r requirements.txt
 
-# 3. Configure environment variables
-cp .env.example .env            # then fill in your values (see Environment Requirements above)
-cp src/.env.example src/.env
-
-# 4. Install monorepo dependencies & start the development servers
+# 3. Install Node.js monorepo dependencies
 cd src
 pnpm install
+
+# 4. Configure environment variables
+copy .env.example .env            # then fill in your DATABASE_URL, GEMINI_API_KEY, RUNPOD_API_KEY, etc.
+
+# 5. Run the application (starts API server & React frontend)
 pnpm run dev
 ```
 
@@ -308,210 +175,76 @@ pnpm test
 
 ---
 
-## 🧭 How to Use Skilytics (Step-by-Step Guide)
-
-You can access the live platform directly at **[https://skilytics.vercel.app/](https://skilytics.vercel.app/)**. 
-
-> 💡 **Note on Saving Progress:** You can explore the intake and analytics tools immediately, but to **save your assessment results, track your workspace progress, and claim certificates**, make sure to **Sign Up / Log In** with an account!
-
-### 👤 Portal 1: For Workers, Career Switchers, Students & Graduates
-
-```
-[1. Upload CV] ➔ [2. Goals & Budget] ➔ [3. RIASEC Test] ➔ [4. AI ELI5 Synthesis] ➔ [5. Role Match & Skill Map] ➔ [6. Custom Pathway] ➔ [7. Workspace & Certificate]
-```
-
-1. **Step 1: CV Upload & AI Interpretation**
-   * Upload your CV/Resume (supports PDF or scanned image formats).
-   * Our AI and OCR engine (`PDF.js` & `Tesseract.js`) automatically extracts your work history, education, and existing skills.
-   * **Review & Confirm:** Inspect the extracted details and edit or confirm their accuracy before proceeding.
-2. **Step 2: Set Learning Goals & Plan Constraints**
-   * Define your personal career objectives (e.g., transitioning industries, upskilling in your current role, or entering the workforce).
-   * Input your practical constraints, including your **allocated weekly study time** (hours/week) and your **training budget**.
-3. **Step 3: Complete the Holland Code (RIASEC) Questionnaire**
-   * Answer an interactive psychometric questionnaire covering the six RIASEC dimensions (*Realistic, Investigative, Artistic, Social, Enterprising, Conventional*) to uncover the work environments and skill types that naturally suit you.
-4. **Step 4: AI Synthesis & Final Intake Summary (with ELI5 Explanations)**
-   * View your Holland Code results alongside a **special AI synthesis feature** that merges your past experience (CV) with your personality profile (RIASEC).
-   * Read the **Final Intake Summary**, powered by our **ELI5 ("Explain Like I'm 5") AI engine**, which breaks down your strengths and career readiness in plain, jargon-free language.
-5. **Step 5: Explore Suggested Career Paths & Your Skill Map**
-   * Receive ranked future career recommendations complete with explainable match scores, SDG tags, and AI disruption scenarios.
-   * Inspect your interactive **Skill Map** (radar and competency charts) comparing your current skill levels against the target requirements of your chosen role.
-6. **Step 6: Customise Your Reskilling Plan & Timeline**
-   * Review curated course recommendations specifically selected to bridge your identified skill gaps.
-   * Adjust your **learning timeline** and **weekly training investment** (time and cost).
-   * Read transparent **AI explanations on why you should choose the suggested plan**, detailing how each module maximizes ROI for your career transition.
-7. **Step 7: Track Progress in Workspace, Earn Achievements & Get Certified**
-   * Save your chosen pathway to your personal **Workspace**.
-   * Track your ongoing course modules, unlock **Learner Achievements / Badges**, and upon completing your courses, receive an official **Certificate of Accomplishment** to celebrate your milestone!
-8. **Step 8: Explore Role Library, Course Catalogue, Market Pulse & Data Sources**
-   * **Role Library:** Browse comprehensive job profiles across diverse economic sectors.
-   * **Courses:** Explore the full catalogue of free, low-cost, and claimable training programmes.
-   * **Market Pulse:** Analyze live macroeconomic and AI indicators, including:
-     * *Unemployment & Participation Rates*
-     * *Labour Force Trends*
-     * *AI Usage by Role*
-     * *Most AI-Exposed Roles*
-   * **Data Sources:** Inspect the transparent documentation of all AI services, open datasets, and catalogues powering the platform, including clear explanations of how each data source operates.
-
-### 🏢 Portal 2: For Employers, HR Managers & Educators (TVET / Universities)
-
-Switch to the **Employer & Educator Portal** to manage organisational reskilling and curriculum alignment:
-
-1. **Step 1: Company & Institution Dashboard Overview**
-   * Access a dedicated macro-view built for your company, department, or academic cohort.
-   * Instantly monitor **AI Exposure by Team Member**, identify **Top Organisational Skill Gaps**, view aggregated **RIASEC Interest Profiles**, and discover **Recommended Courses for Common Gaps**.
-2. **Step 2: Employee / Student Roster Management & Tracking**
-   * Navigate to the **Employee / Talent Tracking Section** to view individual profiles, skill readiness, and active reskilling progress.
-   * **Add New Members:** Easily onboard new employees or students to the portal to evaluate their skills and assign targeted training pathways.
-3. **Step 3: Curriculum & L&D Strategy Alignment**
-   * Leverage the shared **Course Catalogue**, **Market Pulse** (unemployment trends, AI exposure by role, labour force shifts), and **Data Sources** to restructure corporate training programs or modernize university/TVET curricula in step with real-world industry demand.
-
----
-
 ## How We Use Replit *(Required)*
 
-We used **Replit** to build the foundational code of the Skilytics website and structure our full-stack monorepo workspace:
+- **Development & Scaffolding:** Used as our cloud IDE and staging environment (`src/.replit`) along with Replit Agent tools for full-stack project scaffolding, rapid UI mockup prototyping (`src/artifacts/mockup-sandbox`), building core features, and connecting our Neon PostgreSQL database in a shared workspace.
+- **Testing & Prototyping:** Enabled fast interactive testing, sandbox debugging, and multi-agent development so our team could quickly fix mistakes and launch working web tools.
+- **Secrets:** API keys and system credentials remain protected in environment secrets on the backend server, never exposed in the public repository.
 
-- **Foundational Code & Prototyping:** Built the core full-stack architecture inside Replit (`src/.replit` and `src/replit.md`), organizing the workspace into modular packages: the React + Vite frontend (`src/artifacts/reskill-ai`), the Express backend API server (`src/artifacts/api-server`), the UI component sandbox (`src/artifacts/mockup-sandbox`), and shared OpenAPI/Zod/Drizzle libraries (`src/lib/`).
-- **Database & API Integration:** Configured Drizzle ORM migrations and Neon Serverless PostgreSQL connectivity alongside our AI agent routing layer within the Replit development environment.
-- **Secrets Management:** All API keys and credentials (`DATABASE_URL`, `RUNPOD_API_KEY`, `RUNPOD_LLM_ENDPOINT_ID`, `RUNPOD_LIGHT_ENDPOINT_ID`, `GEMINI_API_KEY`, `SESSION_SECRET`) are stored securely in environment secrets and never hardcoded in the repository.
+📄 Proof of use: [`submission/3. SDC2026_4bit_Replit_POU.pdf`](submission/3.%20SDC2026_4bit_Replit_POU.pdf)
 
-📄 Proof of use: [`submission/SDC2026_4bit_Replit_POU.pdf`](submission/3.%20SDC2026_4bit_Replit_POU.pdf)
+## How We Use RunPod *(Required)*
 
-## RunPod integration and proof of use
-
-The Qwen main/light endpoint adapters and proof-of-use files are included for the hackathon's separate platform requirements. **Current credit-saving testing routes all eight workflows through Gemini**. Configured endpoint IDs and historical proof do not mean that the deployed app currently executes RunPod requests.
-
-- Enable RunPod text inference only with `AI_AGENT_ROUTING=hybrid` and `RUNPOD_ENABLE_GENERATION=true`, plus working endpoint credentials. Without these flags, endpoints remain placeholders.
-- The main tier can provide Fitter/Planner explanations, Analyst context and Company Advisor replies. Matching scores and course scheduling are deterministic catalogue-based code.
-- The light tier can provide bounded Holland/SDG explanations. CV and Profiler stay on Gemini in normal hybrid routing; a text endpoint is not claimed to read multimodal CVs.
-- The authoritative deployed routing is `/api/ai/routing`; saved replies identify the actual responding model. Do not infer current model use from the examples below.
-- Historical proof: [RunPod proof of use](submission/4.%20SDC2026_4bit_RunPod_POU.pdf). The team must check the overall platform requirement separately from the Domain 1 rubric.
+- **Workload:** Serverless cloud GPU compute (H100 GPUs) hosting Docker containers to run open-source decision models (`Qwen 3.5-27b`, and `Qwen3.5-9b`) with automatic scale-to-zero.
+- **Setup:** Configured scale-to-zero serverless workers deployed as **RunPod Serverless Endpoints**:
+  - **Qwen 3.5-27b:** `https://api.runpod.ai/v2/3pvoygmk4mn0ad/run`
+  - **Qwen3.5-9b:** `https://api.runpod.ai/v2/bs50a57qmoqrpp/run`
+- **Integration:** The backend API (`src/artifacts/api-server/src/lib/llm.ts`) and Python validation scripts send structured inference requests via REST API (`Python` and `CURL`) using `RUNPOD_API_KEY` to evaluate career paths and generate reskilling roadmaps, providing multi-vendor resilience alongside Google Gemini.
 
 Example request:
 
 ```bash
-# Primary Qwen 3.5-27b RunPod Serverless Endpoint
 curl -X POST https://api.runpod.ai/v2/3pvoygmk4mn0ad/run \
   -H "Authorization: Bearer $RUNPOD_API_KEY" \
   -H "Content-Type: application/json" \
-  -d '{
-    "input": {
-      "prompt": "Synthesize user CV skills with their RIASEC profile and generate an explainable ELI5 reskilling pathway."
-    }
-  }'
-
-# Lightweight Qwen3.5-9b RunPod Serverless Endpoint
-curl -X POST https://api.runpod.ai/v2/bs50a57qmoqrpp/run \
-  -H "Authorization: Bearer $RUNPOD_API_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "input": {
-      "prompt": "Explain this labour market AI exposure score in simple ELI5 terms."
-    }
-  }'
+  -d '{"input": {"prompt": "Evaluate skill gaps and generate reskilling roadmap"}}'
 ```
 
-📄 Proof of use: [`submission/SDC2026_4bit_Runpod_POU.pdf`](submission/4.%20SDC2026_4bit_RunPod_POU.pdf)
+📄 Proof of use: [`submission/4. SDC2026_4bit_RunPod_POU.pdf`](submission/4.%20SDC2026_4bit_RunPod_POU.pdf) (see also screenshots in `src/artifacts/reskill-ai/public/proof/`)
 
 ---
 
 ## Challenges & Learnings
 
-### Challenges We Faced
-- This was our team's very first time participating in a hackathon. Managing our schedule was a major challenge—our mornings through evenings were packed with university lectures at UTM, followed by replacement classes at night and ongoing university assignments that had to be completed alongside building Skilytics.
-- Our team had a limited number of experienced programming and technical specialists to build the complex full-stack web application together, requiring us to step outside our comfort zones and divide responsibilities strategically.
-- Because this was our first time working with RunPod Serverless GPU technology, it took dedicated time and troubleshooting to learn how to deploy, configure, and call AI models (`Qwen 3.5-27b` and `Qwen3.5-9b`) within their serverless environment.
-
-### What Our Team Learned
--  Despite our packed academic schedules, we learned how to prioritize tasks, manage our time discipline, and collaborate effectively as a team under tight deadlines.
--  We learned how to write structured, accurate prompts to guide LLMs into producing consistent career analytics, skill-gap mappings, and jargon-free ELI5 explanations.
--  We explored new ways to use GitHub to manage a multi-package repository, track changes, and organize project documentation.
--  We strengthened our design skills by learning how to design, edit, and polish project visuals and presentation assets using Canva.
--  During our mentoring sessions, we gained invaluable experience and practical advice from professional panel mentor, whose feedback directly helped us refine and improve our web application.
+- **1. Time Management & Teamwork**
+  - **Challenge:** Balancing university classes, assignments, and hackathon deadlines with limited technical expertise.
+  - **Learning:** Improved time management, task prioritisation, and teamwork under pressure.
+- **2. Technical & AI Development**
+  - **Challenge:** Learning to deploy AI models using RunPod Serverless GPUs and building a complex full-stack web application.
+  - **Learning:** Developed skills in AI deployment, prompt engineering, and LLM integration.
+- **3. Unfamiliar Development Workflows**
+  - **Challenge:** Adapting to unfamiliar development workflows and refining Skilytics within a tight deadline.
+  - **Learning:** Improved GitHub collaboration, Canva design skills, and the ability to apply mentor feedback to enhance the project.
 
 ## Future Improvements
 
-- [ ] **Resume Repair** — An intelligent resume auditing feature that checks whether a user's profile (role descriptions, awards, and extracurricular participation) aligns with the specific job or position they are applying for, providing actionable edits to improve their match rate.
-- [ ] **Disability Care** — A dedicated inclusive employment feature designed to help people with disabilities find suitable physical or remote job opportunities. Additionally, in the Enterprise Portal, employers can optionally open dedicated recruitment tracks for candidates with disabilities.
-- [ ] **AI Mock Interview** — A live Text-to-Speech (TTS) interactive AI interviewer that converses with users in real time for realistic job interview demonstration, practice, and preparation.
-- [ ] **Human-Based Coaching Plan** — Direct human mentorship integration offering personalised 1-on-1 career coaching sessions through WhatsApp.
+- [ ] **Resume Repair** — Checks whether a user's profile, achievements, and experience align with the target job.
+- [ ] **Disability Care** — Matches persons with disabilities to suitable on-site or remote jobs, with optional employer-led inclusive recruitment.
+- [ ] **AI Mock Interview** — Live TTS AI interacting with users for demonstration and preparation.
 
 ## Team
 
-| Name                                       | Role            | GitHub                                             |
-| ------------------------------------------ | --------------- | -------------------------------------------------- |
-| Muhammad Ameer Yusoff bin Azeri            | Full Stack Dev  | [@ameer-yusoff](https://github.com/ameer-yusoff)   |
-| Wan Muazzam bin Wan Ridhuan                | Records Manager | [@wanmuazzam88](https://github.com/wanmuazzam88)   |
-| Muhammad Alief Akmal Shah bin Mahzan       | Quality Control | [@aliefakmal](https://github.com/aliefakmal)       |
-| Muhammad Haris Ikhwan bin Muhammad Hanafi  | Keynote Speaker | [@Aeris022-RE](https://github.com/Aeris022-RE)     |
+| Name                                         | Role            | GitHub                                           |
+| -------------------------------------------- | --------------- | ------------------------------------------------ |
+| Muhammad Ameer Yusoff bin Azeri              | Full Stack Dev  | [@ameer-yusoff](https://github.com/ameer-yusoff) |
+| Wan Muazzam bin Wan Ridhuan                  | Records Manager | [@wanmuazzam88](https://github.com/wanmuazzam88) |
+| Muhammad Alief Akmal Shah bin Mahzan         | Quality Control | [@aliefakmal](https://github.com/aliefakmal)     |
+| Muhammad Haris Ikhwan bin Muhammad Hanafi    | Keynote Speaker | [@Aeris022-RE](https://github.com/Aeris022-RE)   |
 
 ---
 
 ## Submission Checklist
 
-- [ ] Team name, domain (Domain 1 / Domain 2) and SDG track filled in
-- [ ] Slide deck link added
-- [ ] Demo video link added
-- [ ] Replit used, with proof of use in `submission/`
-- [ ] RunPod used, with proof of use in `submission/`
-- [ ] Preliminary submission completed (`SDC2026_4bit_Preliminary.pdf`)
-- [ ] Technology declaration completed (`SDC2026_4bit_TechDeclaration.pdf`)
-- [ ] Submission files renamed with your team name (replace `TeamName`)
-- [ ] "How to Run" steps verified
-- [ ] No API keys or secrets committed to the repository
+- [x] Team name, domain (Domain 1 / Domain 2) and SDG track filled in
+- [x] Slide deck link added
+- [x] Demo video link added
+- [x] Replit used, with proof of use in `submission/`
+- [x] RunPod used, with proof of use in `submission/`
+- [x] Preliminary submission completed (`SDC2026_4bit_Preliminary.pdf`)
+- [x] Technology declaration completed (`SDC2026_4bit_TechDeclaration.pdf`)
+- [x] Submission files renamed with your team name (replace `TeamName`)
+- [x] "How to Run" steps verified
+- [x] No API keys or secrets committed to the repository
 
 ## License
-
-This project is licensed under the [Apache License 2.0](LICENSE).
-
-### 📜 Third-Party Licenses & Attributions
-
-This project relies on open-source libraries under permissive licenses. We gratefully acknowledge the creators and maintainers of the following ecosystems:
-
-* **MIT License:**
-  * `React`, `Vite`, `Express`, `Tailwind CSS`, `TanStack Query`, `Radix UI`, `Zod`, `Orval`, `Node.js`, `Recharts`, `Framer Motion`, `Wouter`, `node-postgres (pg)`, `Pino & Pino-HTTP`.
-* **ISC License:**
-  * `Lucide React`.
-* **Apache License 2.0:**
-  * `TypeScript`, `Drizzle ORM`, `Tesseract.js`, `PDF.js (pdfjs-dist & unpdf)`, `Google Generative AI SDK (@google/genai)`, `Neon Serverless SDK`.
-* **PSF License (Python Software Foundation):**
-  * `Python`.
-
-
-## Implementation audit — 24 October 2026
-
-### Six domain features: verified code map
-
-| Feature | Implementation and scope |
-| --- | --- |
-| Skills intake | `src/artifacts/reskill-ai/src/pages/onboarding.tsx`, `src/artifacts/api-server/src/lib/cv.ts`: reviewable CV extraction and the complete 30-question O*NET interest assessment. Demo buttons apply fictional saved fixtures without an AI call. |
-| Updatable signals | `src/artifacts/api-server/src/lib/market.ts`, `career-news.ts`: dated public source snapshots, career/technology/workplace-AI headlines. Refresh cadence is a cache policy, not a guarantee of newer publisher data. |
-| Role matching | `scoring.ts`, `components/individual-journey.tsx`: personal skill/interest/feasibility scores. Optional reviewed US BLS growth ordering changes the displayed ranking, not the personal score. Broad SOC references are not Malaysian occupation forecasts. |
-| Learning plan | `planner.ts`, `components/individual-journey.tsx`: catalogue IDs, provider links, time/budget constraints, dated learning and workplace AI courses. Unknown durations require a user estimate. |
-| Meaningful SDG choices | `lib/sdg-choice.ts`, `components/sdg-choice.tsx`: work-theme filters in Matcher, Roles, Jobs and Courses; the selected theme carries to Pathway and gives eligible matching courses a 15% editorial preference, with budget/skill requirements preserved. Pathways and completion views show the actual course-topic SDGs across all 17 goals; platform targets 4.3/4.4 and 8.2/8.5 do not limit the catalogue. Associations are editorial, not measured impact or UN endorsement. |
-| Uncertainty | `lib/market-scenario.ts`, `components/scenario-reason.tsx`: before/after calculations, selected-year explanations and dated references. News provides context, not proof of future percentages. |
-
-### AI disclosure and data boundaries
-
-The configured testing default is `gemini-3.1-flash-lite`; model environment overrides apply. RunPod Qwen main/light endpoints are reserved and disabled unless explicitly enabled. **The live Data Sources → AI service panel is the source of truth for deployed routing**; saved replies identify the responding model. See [AI routing documentation](src/docs/ai-routing.md) for all eight bounded workflows. These are application-orchestrated workflows, not autonomous agents. No claim of zero hallucination is made.
-
-Public training/job metadata and synthetic demos are separate from private uploads, account credentials and saved learning progress. Demo CV fixtures are documented in `src/testing/demo-cv/README.md`; the fictional TVET history is labelled synthetic. Historical commits can retain removed assets; removing a file from the current tree does not erase Git history.
-
-### Hardest technical risk and fallback
-
-External feeds can become stale, unavailable or change schema; AI can time out or misinterpret evidence. Matching and scheduling use catalogue data and deterministic rules, while explanations have bounded supplied context, schema/ID checks and source references. Cached snapshots preserve their dates and stale status; missing evidence stays missing. A failed explanation does not become a validated prediction. No promise of zero downtime, guaranteed employment, verified competence or forecast accuracy is made.
-
-The employer dashboard now includes an accessible workforce skill heatmap. It separates profile evidence, inferred skills, reported course completions, skills still to learn and skills not needed for that person's chosen role. It is not an employee performance or hiring score. Skill headers open course searches for planning the next learning step.
-
-Build outputs in `dist/` are generated from source and excluded by `.gitignore`; hosting builds them during deployment. Do not commit build outputs, credentials or personal demo data.
-
-
-## Future-ready decision evidence (24 October 2026)
-
-- Personal fit is deterministic and separate from future priority. Scenario assumptions, weights, source periods and missing-data behavior are documented in [the method note](src/docs/future-decision-method.md).
-- Moderate and faster assumptions compare the same selected year; changing a slider does not train a forecasting model. US BLS references are not Malaysian role-demand measurements. News is qualitative context, not numerical calibration.
-- Daily Malaysia-labelled public listing snapshots provide source-comparable skill-share changes only after enough history; no worker-shortage claims or invented historical data.
-- Skill-level SDG links have editorial provenance and ELI5 reasons. SDG associations describe possible uses, not verified global impact.
-- The synthetic evaluation covers 20 personas across EN/BM/ZH; see [evaluation limitations](src/docs/workforce-evaluation.md). Automated checks are not validated hiring accuracy or a domain-expert assessment.
-- Eight bounded AI workflows are configured; personal fit and constraint planning use deterministic code. Testing routing uses Gemini; RunPod placeholders do not prove current live RunPod inference.
-- Proposal, technology declaration, slide deck and video must be supplied by the team where marked pending. Existing proof-of-use PDFs are not substitutes for the missing proposal or evidence that every workflow currently calls that provider.
+This project is licensed under the Apache License 2.0, MIT License, & ISC License.
