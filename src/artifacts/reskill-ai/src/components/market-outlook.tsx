@@ -505,8 +505,8 @@ export function MarketOutlook({
               </h2>
               <p className="mt-1 text-xs text-muted-foreground">
                 {data.news.providers
-                  ?.map((p) => (p === "gdelt" ? "GDELT" : "Google News RSS"))
-                  .join(" / ")}{" "}
+                  ?.map((p) => (p === "rss" ? "Google News RSS" : p))
+                  .join(" / ") || "Google News RSS"}{" "}
                 · {data.news.fetchedAt?.slice(0, 10)}
                 {data.news.stale
                   ? " · " +

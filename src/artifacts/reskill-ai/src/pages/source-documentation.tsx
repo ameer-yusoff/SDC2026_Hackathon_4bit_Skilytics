@@ -67,13 +67,12 @@ const DOCS: Doc[] = [
     { label: "docs.f.limits", k: ["docs.aeie.limits"] },
     { label: "docs.f.license", k: ["docs.aeiu.license"] },
   ] },
-  {id:"career_news",types:["external","derived"],name:"docs.news.name",sourceIds:["gdelt_career_news","career_news_rss"],rows:[
-    {label:"docs.f.publisher",ref:"The GDELT Project / Google News RSS / original news publishers"},
-    {label:"docs.f.api",url:"https://blog.gdeltproject.org/gdelt-doc-2-0-api-debuts/"},
+  {id:"career_news",types:["external","derived"],name:"docs.news.name",sourceIds:["career_news_rss"],rows:[
+    {label:"docs.f.publisher",ref:"Google News RSS / original news publishers"},
     {label:"docs.f.dataset",url:"https://news.google.com/rss/search?q=upskilling%20Malaysia%20when%3A30d&hl=en-MY&gl=MY&ceid=MY%3Aen"},
     {label:"docs.f.coverage",k:["docs.news.coverage"]},
     {label:"docs.f.method",k:["docs.news.method"]},
-    {label:"docs.f.license",k:["docs.news.license"],url:"https://www.gdeltproject.org/about.html#termsofuse"},
+    {label:"docs.f.license",k:["docs.news.license"],url:"https://news.google.com/"},
     {label:"docs.f.failure",k:["docs.news.failure"]},
   ]},
   {id:"bls",types:["external","static","derived"],name:"src.bls_projections.name",sourceIds:["bls_projections"],rows:[

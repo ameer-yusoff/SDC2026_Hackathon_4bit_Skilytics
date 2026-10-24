@@ -829,7 +829,7 @@ export function Sources() {
                         )}
                         {s.error && (
                           <div className="mt-2 rounded-lg bg-destructive/5 p-2 text-[11px] text-destructive">
-                            {s.id === "gdelt_career_news" ? t("docs.news.unavailable") : t("docs.live.errorNote")}
+                            {t("docs.live.errorNote")}
                             <TechDiagnostics
                               text={s.error}
                               testId={`tech-source-${s.id}`}

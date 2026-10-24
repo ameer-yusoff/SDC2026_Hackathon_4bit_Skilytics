@@ -183,25 +183,6 @@
       }
     },
     {
-      "id": "gdelt_career_news",
-      "name": "GDELT · career news API",
-      "category": "dataset",
-      "access": "news",
-      "note": {
-        "en": "Public news metadata only, not full articles. Publisher copyright still applies; a rate-limit or timeout does not imply authentication is required.",
-        "ms": "Metadata berita awam sahaja, bukan artikel penuh. Hak cipta penerbit kekal; had kadar atau timeout tidak bermakna auth diperlukan.",
-        "zh": "仅使用公开新闻元数据，不包含全文。发布者版权仍适用；限流或超时不表示必须认证。"
-      },
-      "licence": "Publisher terms apply; public availability alone does not establish an open-content licence",
-      "documentation": "https://blog.gdeltproject.org/gdelt-doc-2-0-api-debuts/",
-      "checkedAt": "2026-10-23T22:53:24.270Z",
-      "probe": {
-        "status": 200,
-        "finalUrl": "https://blog.gdeltproject.org/gdelt-doc-2-0-api-debuts/",
-        "error": null
-      }
-    },
-    {
       "id": "career_news_rss",
       "name": "Google News · public career RSS",
       "category": "dataset",

@@ -19,7 +19,7 @@ import {
 import { hashInput } from "../lib/agents";
 import { chat } from "../lib/llm";
 import { consumeAiRequest } from "../lib/ai-rate-limit";
-import { loadCareerNews, GDELT_DOCS } from "../lib/career-news";
+import { loadCareerNews } from "../lib/career-news";
 
 const router = Router();
 const running = new Map<string, Promise<unknown>>();
@@ -60,15 +60,7 @@ async function contextFor(horizon: number) {
       url: BLS_SOURCE.url,
       dataDate: BLS_SOURCE.period,
     },
-    ...(news.providers.includes("gdelt")
-      ? [
-          {
-            label: "GDELT Project · career news metadata",
-            url: GDELT_DOCS,
-            dataDate: news.fetchedAt?.slice(0, 10) ?? null,
-          },
-        ]
-      : []),
+
     ...(news.providers.includes("rss")
       ? [
           {

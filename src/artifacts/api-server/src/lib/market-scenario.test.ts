@@ -5,7 +5,6 @@ import {
   careerRelevant,
   newsUrl,
   parseCareerRss,
-  parseCareerGdelt,
 } from "./career-news";
 
 test("slider scenarios keep source anchors, unknown values and bounded 1–10-year calculations", () => {
@@ -42,27 +41,7 @@ test("career news excludes unrelated, old, unlisted and unsafe metadata", () => 
   assert.ok(careerRelevant("Latihan kemahiran pekerja baharu"));
   assert.ok(careerRelevant("职业技能培训"));
   assert.throws(() => parseCareerRss("<!DOCTYPE x><rss/>", "global", now));
-  const gdelt = parseCareerGdelt(
-    {
-      articles: [
-        {
-          title: "AI workplace training",
-          url: "https://www.reuters.com/example",
-          domain: "reuters.com",
-          seendate: "20261022T100000Z",
-        },
-      ],
-    },
-    "global",
-    now,
-  );
-  assert.equal(gdelt[0].seenAt, "2026-10-22T10:00:00.000Z");
   assert.ok(
     new URL(newsUrl("rss", "my")).searchParams.get("q")?.includes("Malaysia"),
-  );
-  assert.ok(
-    new URL(newsUrl("gdelt", "my")).searchParams
-      .get("query")
-      ?.includes("Malaysia"),
   );
 });

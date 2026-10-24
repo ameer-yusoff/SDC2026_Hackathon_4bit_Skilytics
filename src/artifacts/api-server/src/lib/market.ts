@@ -17,7 +17,7 @@ import { logger } from "./logger";
 import { endpointHealth } from "./llm";
 import { loadCourses } from "./catalog";
 import { ingestOnet } from "./onet";
-import { loadCareerNews, GDELT_DOCS, newsUrl } from "./career-news";
+import { loadCareerNews, newsUrl } from "./career-news";
 
 export type SourceDef = {
   id: string;
@@ -43,7 +43,6 @@ export const SOURCES: SourceDef[] = [
   {id:"openlearn_catalogue",name:"OpenLearn · reviewed public courses",kind:"catalogue",url:"https://www.open.edu/openlearn/",description:"Manually reviewed public course metadata selection; not a live catalogue API. Course bodies are not ingested.",refreshCadence:"reviewed_snapshot",consumers:["pathway","role_matcher","agent_company_advisor"]},
   {id:"sdg_framework",name:"United Nations · Sustainable Development Goals",kind:"dataset",url:"https://sdgs.un.org/goals",description:"Official SDG goals and target references; role and course associations are app thematic mappings, not measured impact or UN endorsement.",refreshCadence:"reviewed_snapshot",consumers:["pathway","role_matcher","agent_sdg"]},
   {id:"hubspot_catalogue",name:"HubSpot Academy · public course catalogue",kind:"catalogue",url:"https://academy.hubspot.com/courses",description:"Unauthenticated public website catalogue search, paginated full English courses only. Refreshed every six hours; free Academy account required for learning. Public metadata is not an open-content licence or a documented developer API.",refreshCadence:"links_6h",consumers:["pathway","role_matcher","agent_company_advisor"]},
-  { id: "gdelt_career_news", name: "GDELT · career news API", kind: "dataset", url: GDELT_DOCS, description: "Public keyless news metadata API, filtered to careers and workplace skills in Malaysia and globally. News is context, not a hiring forecast.", refreshCadence: "news_6h", consumers: ["market", "predictions"] },
   { id: "career_news_rss", name: "Google News · public career RSS", kind: "dataset", url: newsUrl("rss", "my"), description: "Public RSS metadata fallback for Malaysia and global career news. No private API key; original publisher rights still apply.", refreshCadence: "news_6h", consumers: ["market", "predictions"] },
   {id:"bls_projections",name:"BLS occupational projections · reviewed public snapshot",kind:"dataset",url:blsSnapshot.url,description:"US 2025–2035 employment growth and annual openings matched by SOC. Reviewed 23 October 2026; not a live feed or Malaysian demand forecast.",refreshCadence:"reviewed_snapshot",consumers:["market","predictions"]},
   { id: "onet", name: "O*NET occupation references", kind: "catalogue", url: "https://www.onetcenter.org/database.html", description: "Official US occupation, skill and interest reference data; explicit SOC .00 crosswalk, not Malaysian vacancies.", refreshCadence: "release_6h", consumers: ["role_matcher", "agent_cv", "agent_holland", "agent_company_advisor"] },
@@ -333,7 +332,7 @@ let running: Promise<void> | null = null;
 export function refreshAll(force = false): Promise<void> {
   if (running) return running;
   const jobs: [string, () => Promise<void>][] = [
-    ["gdelt_career_news", async () => { await loadCareerNews(force); }],
+    ["career_news_rss", async () => { await loadCareerNews(force); }],
     ["onet", ingestOnet],
     ["himalayas_jobs", async()=>{await additionalVacancies();}],
     ["dosm_lfs_month", ingestLabour],
@@ -404,7 +403,7 @@ export function startMarketScheduler(): void {
       .select({ count: sql<number>`count(*)::int` })
       .from(marketSourcesTable)
       .where(eq(marketSourcesTable.status, "ok"));
-    if (count < SOURCES.filter(s=>!staticSources[s.id] && !["gdelt_career_news", "career_news_rss"].includes(s.id)).length) await refreshAll();
+    if (count < SOURCES.filter(s=>!staticSources[s.id] && s.id !== "career_news_rss").length) await refreshAll();
     else logger.info("Market data present; next check in 6 hours");
   })().catch((err) => logger.error({ err }, "Initial market refresh failed"));
   setInterval(() => {

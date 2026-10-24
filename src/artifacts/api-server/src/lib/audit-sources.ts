@@ -74,7 +74,7 @@ for (const source of SOURCES) {
         : "disabled"
       : source.id.endsWith("_jobs")
         ? "jobs"
-        : ["gdelt_career_news", "career_news_rss"].includes(source.id)
+        : source.id === "career_news_rss"
           ? "news"
           : [
                 "onet",

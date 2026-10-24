@@ -18,21 +18,7 @@ const TTL = 6 * 3600000;
 const QUESTION = "PUBLIC_CAREER_NEWS_V1";
 const TOPIC =
   '(upskilling OR reskilling OR "workforce skills" OR "AI workplace" OR "hiring demand")';
-export const GDELT_DOCS =
-  "https://blog.gdeltproject.org/gdelt-doc-2-0-api-debuts/";
-export function newsUrl(provider: "gdelt" | "rss", region: "my" | "global") {
-  if (provider === "gdelt") {
-    const u = new URL("https://api.gdeltproject.org/api/v2/doc/doc");
-    u.search = new URLSearchParams({
-      query: TOPIC + (region === "my" ? " Malaysia" : ""),
-      mode: "artlist",
-      format: "json",
-      maxrecords: "40",
-      timespan: "30d",
-      sort: "datedesc",
-    }).toString();
-    return u.href;
-  }
+export function newsUrl(provider: "rss" = "rss", region: "my" | "global" = "my") {
   const u = new URL("https://news.google.com/rss/search");
   u.search = new URLSearchParams({
     q: TOPIC + (region === "my" ? " Malaysia" : "") + " when:30d",
@@ -153,39 +139,6 @@ export function parseCareerRss(
       return a ? [a] : [];
     });
 }
-export function parseCareerGdelt(
-  json: unknown,
-  region: "my" | "global",
-  now = Date.now(),
-): CareerArticle[] {
-  const rows = (json as { articles?: unknown[] })?.articles;
-  if (!Array.isArray(rows)) throw new Error("invalid_news_response");
-  return rows.slice(0, 100).flatMap((value) => {
-    const r = value as Record<string, unknown>;
-    if (
-      ![r.title, r.url, r.domain, r.seendate].every(
-        (v) => typeof v === "string",
-      )
-    )
-      return [];
-    const raw = String(r.seendate),
-      date = raw.replace(
-        /^(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})Z$/,
-        "$1-$2-$3T$4:$5:$6Z",
-      );
-    const a = cleanArticle(
-      {
-        title: String(r.title),
-        url: String(r.url),
-        domain: String(r.domain).replace(/^www\./, ""),
-        seenAt: date,
-        region,
-      },
-      now,
-    );
-    return a ? [a] : [];
-  });
-}
 export class NewsFeedError extends Error {
   constructor(
     public code: string,
@@ -195,20 +148,17 @@ export class NewsFeedError extends Error {
   }
 }
 export async function fetchCareerFeed(
-  provider: "gdelt" | "rss",
-  region: "my" | "global",
+  provider: "rss" = "rss",
+  region: "my" | "global" = "my",
   request: typeof fetch = fetch,
 ) {
   let res: Response;
   try {
     res = await request(newsUrl(provider, region), {
-      signal: AbortSignal.timeout(provider === "gdelt" ? 22000 : 8000),
+      signal: AbortSignal.timeout(8000),
       headers: {
         "User-Agent": "Skilytics/1.0 career research",
-        Accept:
-          provider === "gdelt"
-            ? "application/json"
-            : "application/rss+xml, application/xml",
+        Accept: "application/rss+xml, application/xml",
       },
     });
   } catch (error) {
@@ -246,15 +196,11 @@ export async function fetchCareerFeed(
   }
   if (body.length > 2000000) throw new NewsFeedError("news_response_too_large");
   try {
-    return provider === "gdelt"
-      ? parseCareerGdelt(JSON.parse(body), region)
-      : parseCareerRss(body, region);
+    return parseCareerRss(body, region);
   } catch {
     throw new NewsFeedError("news_invalid_response");
   }
 }
-let gdeltLastRequest = 0,
-  gdeltRetryAt = 0;
 const NEWS_VERSION = "career-news-v2";
 let memory: CareerNews | undefined,
   nextCheck = 0,
@@ -308,34 +254,18 @@ async function refresh(force = false): Promise<CareerNews> {
       }
     } catch {}
   }
-  const [previousGdelt] = await db
-    .select()
-    .from(marketSourcesTable)
-    .where(eq(marketSourcesTable.id, "gdelt_career_news"));
-  if (
-    previousGdelt?.error === "news_rate_limited" &&
-    previousGdelt.lastFetchedAt
-  )
-    gdeltRetryAt = Math.max(
-      gdeltRetryAt,
-      previousGdelt.lastFetchedAt.getTime() + 15 * 60000,
-      Number(previousGdelt.detail?.match(/nextRetryAt=(\d+)/)?.[1]) || 0,
-    );
+  await db
+    .delete(marketSourcesTable)
+    .where(eq(marketSourcesTable.id, "gdelt_career_news"))
+    .catch(() => {});
   const found: CareerArticle[] = [],
     providers = new Set<string>();
-  // Query each provider sequentially and back off on failure; never retry per slider movement.
-  for (const provider of ["gdelt", "rss"] as const) {
+  for (const provider of ["rss"] as const) {
     let failed = false,
       count = 0,
       reason = "";
-    if (provider === "gdelt" && Date.now() < gdeltRetryAt) continue;
     for (const region of ["my", "global"] as const) {
       try {
-        if (provider === "gdelt") {
-          const wait = Math.max(0, 6500 - (Date.now() - gdeltLastRequest));
-          if (wait) await new Promise((resolve) => setTimeout(resolve, wait));
-          gdeltLastRequest = Date.now();
-        }
         const rows = await fetchCareerFeed(provider, region);
         found.push(...rows.slice(0, 8));
         count += rows.length;
@@ -343,32 +273,18 @@ async function refresh(force = false): Promise<CareerNews> {
         failed = true;
         reason =
           error instanceof NewsFeedError ? error.code : "news_unknown_error";
-        if (provider === "gdelt") {
-          gdeltRetryAt =
-            Date.now() +
-            ((error instanceof NewsFeedError && error.retryAfterMs) ||
-              15 * 60000);
-          break;
-        }
       }
     }
     await status(
-      provider === "gdelt" ? "gdelt_career_news" : "career_news_rss",
+      "career_news_rss",
       !failed,
       count,
       failed
-        ? `Public endpoint requires no API key. ${reason}; retained snapshot or alternate public career feed is used.${provider === "gdelt" ? ` nextRetryAt=${gdeltRetryAt}` : ""}`
+        ? `Public endpoint requires no API key. ${reason}; retained snapshot or alternate public career feed is used.`
         : "Career-filtered public headline metadata; no article bodies or user data.",
       reason,
     );
     if (count) providers.add(provider);
-    if (
-      provider === "gdelt" &&
-      !failed &&
-      found.some((a) => a.region === "my") &&
-      found.some((a) => a.region === "global")
-    )
-      break;
   }
   const seen = new Set<string>(),
     seenUrls = new Set<string>();
