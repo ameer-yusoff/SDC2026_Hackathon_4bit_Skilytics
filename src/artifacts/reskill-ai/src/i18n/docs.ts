@@ -1,6 +1,11 @@
 // Data Sources documentation strings. URLs, dataset field names, file names and official
 // English titles are reference identifiers and are intentionally kept verbatim.
 export const docsEn = {
+  "docs.ai.runpodMain": "RunPod Main · Qwen3.5-27B",
+  "docs.ai.runpodLight": "RunPod Light · Qwen3.5-9B",
+  "docs.ai.modelCard": "Model card (Hugging Face)",
+  "docs.ai.creditNoticeTitle": "AI service notice",
+  "docs.ai.creditNotice": "We're sorry, RunPod is temporarily switched off because our credits are running low. All AI features currently use Gemini so replies can keep working smoothly during testing, without stopping if RunPod credits run out.",
   "docs.future.evaluation": "The repository includes 20 fictional career personas, three-language parity checks, relevance expectations, budget/course constraints, missing-source tests and scenario-change tests. Automated contract checks are not real-world hiring or forecast accuracy. Relevance expectations are an initial editorial review; independent human/domain review remains required before claiming validated quality.",
   "docs.future.observations": "Daily public Malaysia-eligible remote listing snapshots (including worldwide matches) are stored in predictions as PUBLIC_SKILL_OBSERVATION_V1. Each skill counts at most once per listing. Comparable snapshots need identical provider sets, at least 20 listings each and at least 7 days apart. Listing-share changes above +1 percentage point are rising, below −1 declining, otherwise stable; these thresholds are editorial. No history is invented. Missing/incomparable data stays unavailable. Retained remote-feed listings are not a census of local vacancies or worker supply.",
   "docs.future.method": "Two editorial assumptions at the same year: moderate = 5% remaining-task AI overlap/year and the reviewed BLS growth trajectory; faster = 10% and a 1.35× growth exponent. Skills-index growth uses 5% or 10%. Institution synthetic examples use +2 or +4 percentage points/year. None are calibrated forecasts. The scenario is saved with a confirmed new plan; it never silently replaces an active pathway.",
@@ -122,7 +127,7 @@ export const docsEn = {
   "docs.ai.cold": "RunPod generation and health checks are disabled during Gemini-only testing. Enabling hybrid routing and generation may wake a paid worker.",
   "docs.ai.ids": "Endpoint IDs are not public secrets. API keys are never shown.",
   "docs.ai.configured": "Provider, model and health come from the live AI status. If the API key is missing, the service shows as not configured.",
-  "docs.ai.privacy": "With your consent, CV text and images go to Gemini. All eight routed AI roles use Gemini during testing; RunPod is a disabled placeholder. Original files are discarded; extracted text and evidence stay with your profile. Guest profiles are kept for 7 days. Employer employee summaries combine saved CV facts and fixed Holland results into English, Malay and Mandarin in one request, stored by input fingerprint. Company Future uses organisation-scoped learning and exposure data; its AI button caches the three-language analysis for each input and horizon. KPI targets are suggestions, not measured outcomes. Company/Institution Advisor retrieves this account’s organisation snapshot, saved analysis, up to six recent conversation turns and relevant catalogue references. Answers and references are saved in all three languages. A changed horizon or company snapshot requires a fresh analysis; it cannot take autonomous actions.",
+  "docs.ai.privacy": "With your consent, CV text and images go to Gemini. All eight routed AI roles currently use Gemini. RunPod is temporarily paused to conserve remaining credits. Original files are discarded; extracted text and evidence stay with your profile. Guest profiles are kept for 7 days. Employer employee summaries combine saved CV facts and fixed Holland results into English, Malay and Mandarin in one request, stored by input fingerprint. Company Future uses organisation-scoped learning and exposure data; its AI button caches the three-language analysis for each input and horizon. KPI targets are suggestions, not measured outcomes. Company/Institution Advisor retrieves this account’s organisation snapshot, saved analysis, up to six recent conversation turns and relevant catalogue references. Answers and references are saved in all three languages. A changed horizon or company snapshot requires a fresh analysis; it cannot take autonomous actions.",
 
   "docs.riasec.items": "30 workplace activities adapted from O*NET Interest Profiler domains, with English, Malay and Mandarin wording. Five items per RIASEC area; response scale 1–5. This adaptation is not the validated Mini-IP.",
   "docs.riasec.scoring": "All 30 unique answers are required by the API and both assessment screens. Each area uses the average of its five answers, rounded to two decimals. Ties follow R, I, A, S, E, C.",
@@ -155,6 +160,11 @@ export const docsEn = {
 export type DocsKey = keyof typeof docsEn;
 
 export const docsMs: Record<DocsKey, string> = {
+  "docs.ai.runpodMain": "RunPod Utama · Qwen3.5-27B",
+  "docs.ai.runpodLight": "RunPod Ringan · Qwen3.5-9B",
+  "docs.ai.modelCard": "Maklumat model (Hugging Face)",
+  "docs.ai.creditNoticeTitle": "Notis perkhidmatan AI",
+  "docs.ai.creditNotice": "Maaf, RunPod dimatikan sementara kerana kredit kami semakin rendah. Semua fungsi AI kini menggunakan Gemini supaya jawapan berjalan lancar semasa anda mencuba, tanpa terhenti jika kredit RunPod habis.",
   "docs.future.evaluation": "Repo mengandungi 20 persona kerjaya rekaan, semakan pariti tiga bahasa, jangkaan relevansi, kekangan bajet/kursus, sumber tiada dan perubahan senario. Semakan automatik bukan accuracy pengambilan kerja atau ramalan dunia sebenar. Jangkaan relevansi ialah semakan editorial awal; semakan manusia/pakar bebas masih diperlukan sebelum mendakwa kualiti tervalidasi.",
   "docs.future.observations": "Snapshot harian iklan remote awam yang layak untuk Malaysia (termasuk iklan seluruh dunia) disimpan dalam predictions sebagai PUBLIC_SKILL_OBSERVATION_V1. Setiap skill dikira sekali bagi satu iklan. Perbandingan memerlukan sumber sama, sekurang-kurangnya 20 iklan setiap sampel dan sela 7 hari. Perubahan bahagian iklan melebihi +1 mata peratus meningkat, bawah −1 menurun, selainnya stabil; ambang editorial. Sejarah tidak direka; data tiada/tidak setara kekal tidak tersedia. Feed remote disimpan bukan bancian vacancy tempatan atau bekalan pekerja.",
   "docs.future.method": "Dua andaian editorial pada tahun sama: sederhana = 5% pertindihan AI baki tugas/tahun dan trajektori BLS disemak; cepat = 10% dan eksponen pertumbuhan 1.35×. Indeks kemahiran naik 5% atau 10%. Contoh institusi sintetik menambah 2 atau 4 mata peratus/tahun. Bukan ramalan dikalibrasi. Senario disimpan dengan pelan baharu yang disahkan; tidak menggantikan pathway aktif secara senyap.",
@@ -276,7 +286,7 @@ export const docsMs: Record<DocsKey, string> = {
   "docs.ai.cold": "Penjanaan dan semakan kesihatan RunPod dimatikan semasa ujian Gemini sahaja. Mengaktifkan laluan hibrid dan penjanaan mungkin membangunkan pekerja berbayar.",
   "docs.ai.ids": "ID titik akhir bukan rahsia awam. Kunci API tidak pernah ditunjukkan.",
   "docs.ai.configured": "Penyedia, model dan kesihatan datang daripada status AI langsung. Jika kunci API tiada, perkhidmatan ditunjukkan sebagai belum dikonfigurasi.",
-  "docs.ai.privacy": "Dengan persetujuan anda, teks dan imej CV dihantar kepada Gemini. Lapan peranan AI menggunakan Gemini semasa ujian; RunPod ialah placeholder yang dimatikan. Fail asal dibuang; teks dan bukti disimpan bersama profil. Profil tetamu disimpan selama 7 hari. Ringkasan pekerja mengaitkan CV dan keputusan Holland tetap, menjana dan menyimpan tiga bahasa dalam satu permintaan. Company Future menggunakan data syarikat sendiri; analisis AI disimpan mengikut input dan tempoh. Sasaran KPI ialah cadangan, bukan hasil terukur. Penasihat Syarikat/Institusi merujuk snapshot organisasi akaun ini, analisis disimpan, sehingga enam giliran chat terkini dan rujukan kursus berkaitan. Jawapan dan rujukan disimpan dalam tiga bahasa. Perubahan tahun atau data syarikat memerlukan analisis baharu; AI ini tidak mengambil tindakan sendiri.",
+  "docs.ai.privacy": "Dengan persetujuan anda, teks dan imej CV dihantar kepada Gemini. Lapan peranan AI kini menggunakan Gemini. RunPod dihentikan sementara untuk menjimatkan baki kredit. Fail asal dibuang; teks dan bukti disimpan bersama profil. Profil tetamu disimpan selama 7 hari. Ringkasan pekerja mengaitkan CV dan keputusan Holland tetap, menjana dan menyimpan tiga bahasa dalam satu permintaan. Company Future menggunakan data syarikat sendiri; analisis AI disimpan mengikut input dan tempoh. Sasaran KPI ialah cadangan, bukan hasil terukur. Penasihat Syarikat/Institusi merujuk snapshot organisasi akaun ini, analisis disimpan, sehingga enam giliran chat terkini dan rujukan kursus berkaitan. Jawapan dan rujukan disimpan dalam tiga bahasa. Perubahan tahun atau data syarikat memerlukan analisis baharu; AI ini tidak mengambil tindakan sendiri.",
 
   "docs.riasec.items": "30 aktiviti kerja diadaptasi daripada domain O*NET Interest Profiler dalam English, Bahasa Melayu dan Mandarin. Lima item bagi setiap kategori RIASEC; skala jawapan 1–5. Adaptasi ini bukan Mini-IP yang telah divalidasi.",
   "docs.riasec.scoring": "Semua 30 jawapan unik diwajibkan oleh API dan kedua-dua skrin ujian. Setiap kategori menggunakan purata lima jawapan, dibundarkan kepada dua perpuluhan. Seri mengikut susunan R, I, A, S, E, C.",
@@ -307,6 +317,11 @@ export const docsMs: Record<DocsKey, string> = {
 };
 
 export const docsZh: Record<DocsKey, string> = {
+  "docs.ai.runpodMain": "RunPod 主模型 · Qwen3.5-27B",
+  "docs.ai.runpodLight": "RunPod 轻量模型 · Qwen3.5-9B",
+  "docs.ai.modelCard": "模型介绍（Hugging Face）",
+  "docs.ai.creditNoticeTitle": "AI 服务通知",
+  "docs.ai.creditNotice": "抱歉，由于剩余额度较低，我们暂时停用了 RunPod。目前所有 AI 功能均使用 Gemini，确保测试期间回复顺畅，避免因 RunPod 额度耗尽而中断。",
   "docs.future.evaluation": "仓库含20个虚构职业人物、三语一致性、相关性预期、预算/课程约束、来源缺失与情景变化检查。自动检查不代表真实招聘或预测准确率。相关性预期仅为初步编辑评审；声称经过验证前仍需独立人工/领域专家评审。",
   "docs.future.observations": "适用于马来西亚的公开远程职位每日快照（包含全球职位）以PUBLIC_SKILL_OBSERVATION_V1保存在predictions。每项技能在每个职位中最多计数一次。可比样本须来源一致、各至少20条且相隔7天。占比变化高于+1个百分点为上升，低于−1为下降，其余稳定；阈值为编辑设定。不编造历史；缺失或不可比数据保持未知。远程来源保留样本并非本地职位或劳动力供给普查。",
   "docs.future.method": "同一年有两套编辑假设：中等为每年剩余任务5%的AI重叠及BLS参考轨迹；较快为10%和1.35倍增长指数。技能指数增长5%或10%。合成机构示例每年增加2或4个百分点。均非校准预测。情景随确认的新计划保存，不会悄悄替换现有路径。",
@@ -428,7 +443,7 @@ export const docsZh: Record<DocsKey, string> = {
   "docs.ai.cold": "仅使用 Gemini 测试期间，RunPod 生成功能和健康检查均已关闭。启用混合路由与生成后，可能唤醒付费工作节点。",
   "docs.ai.ids": "接口 ID 不是公开机密。API 密钥从不显示。",
   "docs.ai.configured": "服务商、模型与健康状况来自实时 AI 状态。若缺少 API 密钥，服务会显示为未配置。",
-  "docs.ai.privacy": "经你同意，简历文字和图像发送至 Gemini。测试期间全部八个AI角色使用 Gemini；RunPod 是已禁用的预留配置。原文件不保留，提取的文字和依据随档案保存；访客档案保留 7 天。员工摘要结合简历及固定霍兰德结果，一次生成并保存三种语言。公司未来分析仅使用所属公司的学习与暴露数据，按输入和年数缓存。KPI目标是建议，并非实测结果。公司/机构顾问检索本账号的机构快照、已保存分析、最多六轮近期对话和相关课程资料，三语回答及参考资料一起保存。年份或公司数据更改后需要重新分析；它不会自主执行操作。",
+  "docs.ai.privacy": "经你同意，简历文字和图像发送至 Gemini。目前全部八个AI角色使用 Gemini；RunPod 暂时停用以保留剩余额度。原文件不保留，提取的文字和依据随档案保存；访客档案保留 7 天。员工摘要结合简历及固定霍兰德结果，一次生成并保存三种语言。公司未来分析仅使用所属公司的学习与暴露数据，按输入和年数缓存。KPI目标是建议，并非实测结果。公司/机构顾问检索本账号的机构快照、已保存分析、最多六轮近期对话和相关课程资料，三语回答及参考资料一起保存。年份或公司数据更改后需要重新分析；它不会自主执行操作。",
 
   "docs.riasec.items": "根据 O*NET Interest Profiler 领域改编的 30 项工作活动，提供英语、马来语和中文。每个 RIASEC 领域五题，评分为 1–5。本改编版本并非已验证的 Mini-IP。",
   "docs.riasec.scoring": "API 及两个评估页面均要求回答全部 30 道不同题目。各领域取五题平均值，保留两位小数。平分时依次按 R、I、A、S、E、C 排序。",

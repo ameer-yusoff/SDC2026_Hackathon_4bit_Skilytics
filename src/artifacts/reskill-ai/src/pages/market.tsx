@@ -1,3 +1,4 @@
+import { AiServiceNotice } from "@/components/ai-service-notice";
 import { InstitutionFuture } from "@/components/institution-portal";
 import { AiRoutingPanel } from "@/components/ai-routing-panel";
 import {SourceAccess,SourceAccessAudit,auditedSourceDescription} from "@/components/source-access";
@@ -618,6 +619,7 @@ export function Sources() {
           </Button>
         }
       />
+      <AiServiceNotice />
       {refresh.isPending && (
         <div
           className="mb-4 rounded-2xl border border-accent/40 bg-[hsl(var(--gold-soft))]/50 p-4 text-sm"

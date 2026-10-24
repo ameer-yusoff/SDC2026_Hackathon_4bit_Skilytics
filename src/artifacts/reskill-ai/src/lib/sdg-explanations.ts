@@ -1,3 +1,5 @@
+import { sdgApplication, sdgWorkBenefit } from "./sdg-applications";
+import { skillLabel } from "./skill-label";
 type Lang = "en" | "ms" | "zh";
 const globalReasons: Record<Lang, string[]> = {
   en: [
@@ -171,6 +173,11 @@ export function sdgExplanation(
   subject: string,
   skills: string[],
   lang: Lang,
+  context?: {
+    kind?: "role" | "course" | "vacancy" | "pathway";
+    matchedSkills?: string[];
+    missingSkills?: string[];
+  },
 ) {
   const n = Number(goal.split(".")[0]);
   if (!Number.isInteger(n) || n < 1 || n > 17) return null;
@@ -180,9 +187,86 @@ export function sdgExplanation(
       (t) => t.goals.includes(String(n)) && t.pattern.test(subject),
     ) ??
     topics.find((t) => t.goals.includes(String(n)) && t.pattern.test(text));
+  const evidenceSkills = skills.filter((s) => topic?.pattern.test(s));
+  const application = sdgApplication(
+    subject,
+    evidenceSkills.length ? evidenceSkills : skills,
+    lang,
+  );
+  const title = subject ? `“${subject}”` : "";
+  const named =
+    application?.evidence ?? evidenceSkills[0] ?? skills[0] ?? subject;
+  const evidence = named ? skillLabel(named, lang) : "";
+  const kind = context?.kind ?? "course";
+  const framing = {
+    en: {
+      course: "In this course",
+      role: "In this role",
+      vacancy: "For this vacancy",
+      pathway: "In your pathway",
+    },
+    ms: {
+      course: "Dalam kursus ini",
+      role: "Dalam peranan ini",
+      vacancy: "Untuk kekosongan ini",
+      pathway: "Dalam laluan anda",
+    },
+    zh: {
+      course: "在这门课程中",
+      role: "在这个职业中",
+      vacancy: "对于此职位",
+      pathway: "在你的路径中",
+    },
+  }[lang][kind];
+  const personal = application
+    ? {
+        en: `${framing}${title ? ` ${title}` : ""}, you can practise how to ${application.action}.`,
+        ms: `${framing}${title ? ` ${title}` : ""}, anda boleh berlatih untuk ${application.action}.`,
+        zh: `${framing}${title}，你可以练习${application.action}。`,
+      }[lang]
+    : (topic?.text[lang] ??
+      {
+        en: `${title || "This choice"} is tagged to SDG ${n}. A specific work example has not been reviewed yet.`,
+        ms: `${title || "Pilihan ini"} ditag kepada SDG ${n}. Contoh kegunaan khusus belum disemak.`,
+        zh: `${title || "此选择"}标记为SDG ${n}，具体工作示例尚待审核。`,
+      }[lang]);
+  const matched = context?.matchedSkills
+    ?.slice(0, 2)
+    .map((s) => skillLabel(s, lang))
+    .join(", ");
+  const missing = context?.missingSkills
+    ?.slice(0, 2)
+    .map((s) => skillLabel(s, lang))
+    .join(", ");
+  const learner = [
+    matched &&
+      {
+        en: `You already bring: ${matched}.`,
+        ms: `Kemahiran sedia ada anda: ${matched}.`,
+        zh: `你已具备：${matched}。`,
+      }[lang],
+    missing &&
+      {
+        en: `Next to practise: ${missing}.`,
+        ms: `Seterusnya untuk dilatih: ${missing}.`,
+        zh: `接下来练习：${missing}。`,
+      }[lang],
+  ]
+    .filter(Boolean)
+    .join(" ");
   return {
-    personal: topic?.text[lang] ?? goalReasons[lang][n - 1],
-    global: globalReasons[lang][n - 1],
+    personal,
+    global:
+      (n === 8 || n === 9
+        ? sdgWorkBenefit(
+            subject,
+            evidenceSkills.length ? evidenceSkills : skills,
+            lang,
+          )
+        : null) ??
+      `${evidence ? { en: `Applied through ${evidence}: `, ms: `Melalui penggunaan ${evidence}: `, zh: `通过应用${evidence}：` }[lang] : ""}${globalReasons[lang][n - 1]}`,
+    evidence: evidence || null,
+    learner,
   };
 }
 export const goalReasons = {

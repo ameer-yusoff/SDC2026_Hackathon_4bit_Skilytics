@@ -14,9 +14,6 @@ const words = {
     probe:
       "A URL check tests that URL only. HTTP 403/429 or timeout is not proof of an auth requirement. OpenLearn returned 403 from this environment; its selected course metadata remains a reviewed snapshot, not a verified live feed.",
     review: "Reviewed",
-    directory: "Vacancy API discovery",
-    decision:
-      "RemoteOK selected from public-apis and its official API tested without credentials. Adzuna, Jooble, Reed, Findwork and USAJOBS need keys; Upwork and Arbeitsamt need OAuth. Europe/UK feeds are not presented as Malaysian vacancies. Jobicy has been removed.",
   },
   ms: {
     title: "Audit akses awam",
@@ -31,9 +28,6 @@ const words = {
     probe:
       "Semakan URL hanya menguji URL tersebut. HTTP 403/429 atau timeout bukan bukti auth diperlukan. OpenLearn memulangkan 403 dari persekitaran ini; metadata kursus terpilih kekal sebagai snapshot disemak, bukan feed live yang disahkan.",
     review: "Disemak",
-    directory: "Penemuan API vacancy",
-    decision:
-      "RemoteOK dipilih daripada public-apis dan API rasminya diuji tanpa kelayakan. Adzuna, Jooble, Reed, Findwork dan USAJOBS memerlukan kunci; Upwork dan Arbeitsamt memerlukan OAuth. Feed Eropah/UK tidak dipaparkan sebagai vacancy Malaysia. Jobicy telah dibuang.",
   },
   zh: {
     title: "公开访问审核",
@@ -48,9 +42,6 @@ const words = {
     probe:
       "URL检查仅验证该URL。403、429或超时不等于需要认证。本环境访问OpenLearn返回403，因此所选课程仍标记为人工审核快照，而非已验证实时目录。",
     review: "审核日期",
-    directory: "招聘API发现",
-    decision:
-      "从public-apis选择RemoteOK，并无凭证测试其官方API。Adzuna、Jooble、Reed、Findwork及USAJOBS需要密钥；Upwork及Arbeitsamt需要OAuth。欧洲/英国职位不会标为马来西亚招聘。Jobicy已移除。",
   },
 };
 export function SourceAccess({ id }: { id: string }) {
@@ -98,20 +89,6 @@ export function SourceAccessAudit() {
       <p className="text-xs text-muted-foreground">
         {w.review}: {audit.reviewedAt.slice(0, 10)}
       </p>
-      <details className="rounded-xl border p-3 text-sm">
-        <summary className="cursor-pointer font-semibold">
-          {w.directory}
-        </summary>
-        <p className="mt-2">{w.decision}</p>
-        <a
-          href={audit.candidates.directory}
-          target="_blank"
-          rel="noreferrer"
-          className="inline-flex min-h-11 items-center text-primary underline"
-        >
-          public-apis / Jobs ↗
-        </a>
-      </details>
       <p className="text-xs leading-relaxed text-muted-foreground">{w.probe}</p>
       <p className="rounded-xl bg-muted/40 p-3 text-xs leading-relaxed">
         {w.privacy}

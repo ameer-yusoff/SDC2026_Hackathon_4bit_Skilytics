@@ -1,8 +1,13 @@
-import {ChangingValue,HorizonSlider} from "./projection-feedback";
-import {SkillSdg} from "./skill-sdg";
-import {RoleTrendEvidence,MatcherTrends,useMarketSignals} from "./matcher-trends";
-import {useFutureScenario} from "./future-scenario";
-import {futurePriority} from "../../../api-server/src/lib/future-scenarios";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { ChangingValue, HorizonSlider } from "./projection-feedback";
+import { SkillSdg } from "./skill-sdg";
+import {
+  RoleTrendEvidence,
+  MatcherTrends,
+  useMarketSignals,
+} from "./matcher-trends";
+import { useFutureScenario } from "./future-scenario";
+import { futurePriority } from "../../../api-server/src/lib/future-scenarios";
 import {
   SdgChoice,
   SdgExplanation,
@@ -28,7 +33,6 @@ import {
   useCreateProfilePlan,
   useUpdateProfile,
   useListRoles,
-  useListCourses,
   runProfileAgent,
   getGetProfileQueryKey,
   getGetProfileMatchesQueryKey,
@@ -163,6 +167,7 @@ export function IndividualMatcher({ p, base }: { p: Profile; base: string }) {
   const matches = useGetProfileMatches(p.id);
   const update = useUpdateProfile();
   const createPlan = useCreateProfilePlan();
+  const reduceMotion = useReducedMotion();
   const [search, setSearch] = useState("");
   const [limit, setLimit] = useState(20);
   const [selected, setSelected] = useState<number | null>(null);
@@ -170,23 +175,36 @@ export function IndividualMatcher({ p, base }: { p: Profile; base: string }) {
   const errorText = useErrText();
   const [goal, setGoal] = useState("all");
   const [order, setOrder] = useState("future");
-  const [years,setYears]=useState(3);
-  const [scenario]=useFutureScenario();
-  const signals=useMarketSignals();
-  const priority=(x:{score:number;role:{id:number}})=>futurePriority(x.score,signals.data?.references.find(r=>r.roleId===x.role.id),years,scenario);
+  const [years, setYears] = useState(3);
+  const [scenario] = useFutureScenario();
+  const signals = useMarketSignals();
+  const priority = (x: { score: number; role: { id: number } }) =>
+    futurePriority(
+      x.score,
+      signals.data?.references.find((r) => r.roleId === x.role.id),
+      years,
+      scenario,
+    );
   const available = matches.data ?? [];
   const goals = [...new Set(available.flatMap((x) => roleGoals(x.role)))].sort(
     (a, b) => Number(a) - Number(b),
   );
   const roles = byGoal(available, goal, (x) => x.role).sort((a, b) =>
-    order === "future" ? priority(b)-priority(a)||b.score-a.score : order === "growth"
-      ? (bls.rows.find((r) => r.socCode === b.role.socCode)?.growthPct ??
-          -Infinity) -
-          (bls.rows.find((r) => r.socCode === a.role.socCode)?.growthPct ??
-            -Infinity) || b.score - a.score
-      : b.score - a.score,
+    order === "future"
+      ? priority(b) - priority(a) || b.score - a.score
+      : order === "growth"
+        ? (bls.rows.find((r) => r.socCode === b.role.socCode)?.growthPct ??
+            -Infinity) -
+            (bls.rows.find((r) => r.socCode === a.role.socCode)?.growthPct ??
+              -Infinity) || b.score - a.score
+        : b.score - a.score,
   );
 
+  const otherRoles = roles
+    .slice(3)
+    .filter((x) =>
+      roleTitle(x.role, lang).toLowerCase().includes(search.toLowerCase()),
+    );
   const chosen = roles.find((x) => x.role.id === selected) ?? roles[0];
   if (matches.isLoading) return <Rows n={3} />;
   if (matches.isError)
@@ -201,7 +219,11 @@ export function IndividualMatcher({ p, base }: { p: Profile; base: string }) {
       qc.setQueryData(getGetProfileQueryKey(p.id), profile);
       const plan = await createPlan.mutateAsync({
         id: p.id,
-        data: { roleId: id, ...{futureScenario:scenario,futureYears:years}, ...(goal !== "all" ? { sdgGoal: goal } : {}) },
+        data: {
+          roleId: id,
+          ...{ futureScenario: scenario, futureYears: years },
+          ...(goal !== "all" ? { sdgGoal: goal } : {}),
+        },
       });
       qc.setQueryData(getGetProfilePlanQueryKey(p.id), plan);
       await qc.invalidateQueries({ queryKey: ["learning", p.id] });
@@ -211,71 +233,104 @@ export function IndividualMatcher({ p, base }: { p: Profile; base: string }) {
     }
   };
   return (
-    <div className="space-y-6">
+    <div className="min-w-0 space-y-6" data-testid="individual-matcher">
       <header>
         <h2 className="text-2xl font-bold">{w.title}</h2>
         <p className="mt-1 text-sm text-muted-foreground">{w.note}</p>
       </header>
-      <CatalogueGuard />
-      <MatcherTrends years={years} setYears={setYears}/>
-      <SdgChoice
-        goals={goals}
-        value={goal}
-        onChange={(g) => {
-          setGoal(g);
-          setSelected(null);
-          setLimit(20);
-        }}
-      />
-      <label className="block text-sm font-semibold">
-        {lang === "ms"
-          ? "Susun pilihan"
-          : lang === "zh"
-            ? "排序方式"
-            : "Order choices"}
-        <select
-          className="ml-2 min-h-11 max-w-full rounded-xl border bg-card px-3 text-sm"
-          value={order}
-          onChange={(e) => {
-            setOrder(e.target.value);
-            setSelected(null);
-          }}
-        >
-          <option value="future">{lang==="ms"?"Keutamaan masa depan":lang==="zh"?"未来优先级":"Future priority"}</option>
-          <option value="fit">
-            {lang === "ms"
-              ? "Padanan peribadi"
-              : lang === "zh"
-                ? "个人匹配"
-                : "Personal fit"}
-          </option>
-          <option value="growth">
-            {lang === "ms"
-              ? "Pertumbuhan pekerjaan (rujukan AS)"
-              : lang === "zh"
-                ? "就业增长（美国参考）"
-                : "Job growth (US reference)"}
-          </option>
-        </select>
-      </label>
-      {order === "growth" && (
-        <p className="text-xs text-muted-foreground">
-          <a
-            href={bls.url}
-            target="_blank"
-            rel="noreferrer"
-            className="underline"
-          >
-            {bls.source} · {bls.period}
-          </a>{" "}
-          · {bls.reviewedAt}.{" "}
-          {lang === "ms"
-            ? "Skor padanan peribadi kekal sama. Bukan ramalan Malaysia; pekerjaan khusus menggunakan rujukan SOC yang lebih luas."
+      <section
+        className="space-y-4 rounded-2xl border bg-card/70 p-4 sm:p-5"
+        aria-label={
+          lang === "ms"
+            ? "Pilihan cadangan"
             : lang === "zh"
-              ? "个人匹配分数不变。并非马来西亚预测；细分职位采用较宽泛的SOC参考。"
-              : "Personal fit scores stay the same. Not a Malaysian forecast; specialisations use broader SOC references."}
-        </p>
-      )}
+              ? "推荐设置"
+              : "Recommendation settings"
+        }
+      >
+        <label className="flex flex-col gap-2 text-sm font-semibold sm:flex-row sm:items-center sm:justify-between">
+          {lang === "ms"
+            ? "Susun pilihan"
+            : lang === "zh"
+              ? "排序方式"
+              : "Order choices"}
+          <select
+            data-testid="matcher-order"
+            className="min-h-11 w-full min-w-0 rounded-xl border bg-card px-3 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary sm:w-auto sm:max-w-[65%]"
+            value={order}
+            onChange={(e) => {
+              setOrder(e.target.value);
+              setSelected(null);
+              setLimit(20);
+            }}
+          >
+            <option value="future">
+              {lang === "ms"
+                ? "Keutamaan masa depan"
+                : lang === "zh"
+                  ? "未来优先级"
+                  : "Future priority"}
+            </option>
+            <option value="fit">
+              {lang === "ms"
+                ? "Padanan peribadi"
+                : lang === "zh"
+                  ? "个人匹配"
+                  : "Personal fit"}
+            </option>
+            <option value="growth">
+              {lang === "ms"
+                ? "Pertumbuhan pekerjaan (rujukan AS)"
+                : lang === "zh"
+                  ? "就业增长（美国参考）"
+                  : "Job growth (US reference)"}
+            </option>
+          </select>
+        </label>
+        <SdgChoice
+          goals={goals}
+          value={goal}
+          onChange={(g) => {
+            setGoal(g);
+            setSelected(null);
+            setLimit(20);
+          }}
+        />
+        <AnimatePresence initial={false}>
+          {order === "future" && (
+            <motion.div
+              key="future-controls"
+              data-testid="matcher-future-controls"
+              initial={{ opacity: 0, height: reduceMotion ? "auto" : 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: reduceMotion ? "auto" : 0 }}
+              transition={{ duration: reduceMotion ? 0 : 0.22 }}
+              className="overflow-hidden"
+            >
+              <MatcherTrends years={years} setYears={setYears} />
+            </motion.div>
+          )}
+        </AnimatePresence>
+        {order === "growth" && (
+          <p className="text-xs text-muted-foreground">
+            <a
+              href={bls.url}
+              target="_blank"
+              rel="noreferrer"
+              className="underline"
+            >
+              {bls.source} · {bls.period}
+            </a>{" "}
+            · {bls.reviewedAt}.{" "}
+            {lang === "ms"
+              ? "Skor padanan peribadi kekal sama. Bukan ramalan Malaysia; pekerjaan khusus menggunakan rujukan SOC yang lebih luas."
+              : lang === "zh"
+                ? "个人匹配分数不变。并非马来西亚预测；细分职位采用较宽泛的SOC参考。"
+                : "Personal fit scores stay the same. Not a Malaysian forecast; specialisations use broader SOC references."}
+          </p>
+        )}
+      </section>
+      <CatalogueGuard />
       {!roles.length && (
         <p role="status">
           {lang === "ms"
@@ -285,22 +340,47 @@ export function IndividualMatcher({ p, base }: { p: Profile; base: string }) {
               : "No careers match this theme."}
         </p>
       )}
-      <h3 className="font-bold">{w.top}</h3>
+      {roles.length > 0 && <h3 className="text-xl font-bold">{w.top}</h3>}
       <div className="grid items-stretch gap-3 md:grid-cols-3">
         {roles.slice(0, 3).map((x, i) => (
-          <article
+          <motion.article
+            layout={reduceMotion ? false : "position"}
+            initial={{ opacity: 0, y: reduceMotion ? 0 : 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: reduceMotion ? 0 : 0.25 }}
+            whileHover={reduceMotion ? undefined : { y: -4 }}
             key={x.role.id}
-            className={`relative flex flex-col rounded-2xl border p-5 motion-safe:transition-all motion-safe:duration-300 hover:shadow-lg ${chosen?.role.id === x.role.id ? "ring-2 ring-primary ring-offset-2 shadow-md" : ""} ${i === 0 ? "border-accent bg-[hsl(var(--gold-soft))] md:order-2" : i === 1 ? "border-border bg-card md:mt-8 md:order-1" : "border-border bg-card md:mt-14 md:order-3"}`}
+            className={`relative flex flex-col rounded-2xl border p-5 motion-safe:transition-[box-shadow,border-color] motion-safe:duration-300 hover:shadow-lg ${chosen?.role.id === x.role.id ? "ring-2 ring-primary ring-offset-2 shadow-md" : ""} ${i === 0 ? "border-accent bg-[hsl(var(--gold-soft))] md:order-2" : i === 1 ? "border-border bg-card md:mt-8 md:order-1" : "border-border bg-card md:mt-14 md:order-3"}`}
           >
             <span className="text-3xl font-black text-accent">#{i + 1}</span>
-            {order==="future"&&<p className="my-2 rounded-xl bg-primary/10 p-2 text-xs"><ChangingValue value={priority(x)} className="font-bold"/> /100 · {lang==="ms"?"Keutamaan masa depan":lang==="zh"?"未来优先级":"Future priority"}<br/>{lang==="ms"?"Kedudukan padanan asal":lang==="zh"?"原个人匹配排名":"Original fit rank"}: #{[...available].sort((a,b)=>b.score-a.score).findIndex(a=>a.role.id===x.role.id)+1}</p>}
             <h3 className="mt-2 text-lg font-bold">
               {roleTitle(x.role, lang)}
             </h3>
             <p className="text-xs text-muted-foreground">
               {tk("sector", x.role.sector)}
             </p>
-            <div className="my-3 flex gap-3 text-sm">
+            {order === "future" && (
+              <p className="my-2 rounded-xl bg-primary/10 p-2 text-xs">
+                <ChangingValue value={priority(x)} className="font-bold" /> /100
+                ·{" "}
+                {lang === "ms"
+                  ? "Keutamaan masa depan"
+                  : lang === "zh"
+                    ? "未来优先级"
+                    : "Future priority"}
+                <br />
+                {lang === "ms"
+                  ? "Kedudukan padanan asal"
+                  : lang === "zh"
+                    ? "原个人匹配排名"
+                    : "Original fit rank"}
+                : #
+                {[...available]
+                  .sort((a, b) => b.score - a.score)
+                  .findIndex((a) => a.role.id === x.role.id) + 1}
+              </p>
+            )}
+            <div className="my-3 grid grid-cols-2 gap-2 rounded-xl bg-background/60 p-3 text-xs sm:text-sm">
               <span>
                 {w.have}: <b>{x.matchedSkills.length}</b>
               </span>
@@ -315,7 +395,24 @@ export function IndividualMatcher({ p, base }: { p: Profile; base: string }) {
               {lang === "ms" ? "Padanan" : lang === "zh" ? "匹配" : "Fit"}:{" "}
               {x.score}%
             </p>
-            <RoleTrendEvidence roleId={x.role.id} fit={x.score} years={years}/><SdgReason role={x.role} />
+            {order === "future" && (
+              <RoleTrendEvidence
+                roleId={x.role.id}
+                fit={x.score}
+                years={years}
+              />
+            )}
+            <SdgReason
+              role={x.role}
+              matchedSkills={x.matchedSkills
+                .filter((s) =>
+                  p.skills.some(
+                    (k) => k.skillId === s.skillId && k.status !== "inferred",
+                  ),
+                )
+                .map((s) => s.name)}
+              missingSkills={x.gapSkills.map((s) => s.name)}
+            />
             {order === "growth" && (
               <p className="mt-2 text-xs">
                 BLS {bls.period}:{" "}
@@ -337,79 +434,99 @@ export function IndividualMatcher({ p, base }: { p: Profile; base: string }) {
             <div className="my-3 flex gap-1">
               <RoleGoals role={x.role} />
             </div>
-            <button
-              aria-pressed={chosen?.role.id === x.role.id}
-              className={
-                "mb-3 flex min-h-11 w-full items-center justify-center gap-2 rounded-xl border-2 px-3 text-sm font-bold transition-colors " +
-                (chosen?.role.id === x.role.id
-                  ? "border-primary bg-primary text-primary-foreground"
-                  : "border-primary/40 bg-primary/10 text-primary hover:bg-primary/20")
-              }
-              onClick={() => setSelected(x.role.id)}
-            >
-              <MapPin className="h-4 w-4" /> {w.map}
-              {chosen?.role.id === x.role.id && (
-                <ChevronDown className="h-4 w-4 motion-safe:animate-bounce" />
-              )}
-            </button>
-            <Button
-              className="mt-auto min-h-11 w-full"
-              disabled={update.isPending || createPlan.isPending}
-              onClick={() => choose(x.role.id)}
-            >
-              {w.choose}
-            </Button>
-          </article>
+            <div className="mt-auto space-y-3 pt-2">
+              <button
+                aria-pressed={chosen?.role.id === x.role.id}
+                className={
+                  "flex min-h-11 w-full items-center justify-center gap-2 rounded-xl border-2 px-3 text-sm font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 motion-safe:active:scale-[0.98] " +
+                  (chosen?.role.id === x.role.id
+                    ? "border-primary bg-primary text-primary-foreground"
+                    : "border-primary/40 bg-primary/10 text-primary hover:bg-primary/20")
+                }
+                onClick={() => setSelected(x.role.id)}
+              >
+                <MapPin className="h-4 w-4" /> {w.map}
+                {chosen?.role.id === x.role.id && (
+                  <ChevronDown className="h-4 w-4" />
+                )}
+              </button>
+              <Button
+                className="min-h-11 w-full"
+                disabled={update.isPending || createPlan.isPending}
+                onClick={() => choose(x.role.id)}
+              >
+                {w.choose}
+              </Button>
+            </div>
+          </motion.article>
         ))}
       </div>
       {error && <p role="alert">{error}</p>}
       <p className="text-xs text-muted-foreground">
         {matcherWords[lang].exposureNote} {matcherWords[lang].sdg}
       </p>
-      {chosen &&
-        roles.slice(0, 3).some((x) => x.role.id === chosen.role.id) && (
-          <MatcherSkillMap
-            key={chosen.role.id}
-            match={chosen}
-            p={p}
-            rank={roles.indexOf(chosen) + 1}
+      <AnimatePresence mode="wait" initial={false}>
+        {chosen &&
+          roles.slice(0, 3).some((x) => x.role.id === chosen.role.id) && (
+            <motion.div
+              key={chosen.role.id}
+              initial={{ opacity: 0, y: reduceMotion ? 0 : 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: reduceMotion ? 0 : 0.16 }}
+            >
+              <MatcherSkillMap
+                match={chosen}
+                p={p}
+                rank={roles.indexOf(chosen) + 1}
+              />
+            </motion.div>
+          )}
+      </AnimatePresence>
+      {roles.length > 3 && (
+        <section>
+          <h3 className="mb-3 font-bold">{w.others}</h3>
+          <Input
+            className="mb-3"
+            aria-label={w.others}
+            placeholder={
+              lang === "ms"
+                ? "Cari pekerjaan"
+                : lang === "zh"
+                  ? "搜索职位"
+                  : "Search careers"
+            }
+            value={search}
+            onChange={(e) => {
+              setSearch(e.target.value);
+              setLimit(20);
+            }}
           />
-        )}
-      <section>
-        <h3 className="mb-3 font-bold">{w.others}</h3>
-        <Input
-          className="mb-3"
-          aria-label={w.others}
-          placeholder={
-            lang === "ms"
-              ? "Cari pekerjaan"
-              : lang === "zh"
-                ? "搜索职位"
-                : "Search careers"
-          }
-          value={search}
-          onChange={(e) => {
-            setSearch(e.target.value);
-            setLimit(20);
-          }}
-        />
-        <div className="space-y-2">
-          {roles
-            .slice(3)
-            .filter((x) =>
-              roleTitle(x.role, lang)
-                .toLowerCase()
-                .includes(search.toLowerCase()),
-            )
-            .slice(0, limit)
-            .map((x) => (
-              <div
-                key={x.role.id}
-                className="overflow-hidden rounded-xl border bg-card"
+          <div className="space-y-2">
+            {otherRoles.length === 0 && (
+              <p
+                role="status"
+                className="rounded-xl bg-muted/40 p-4 text-sm text-muted-foreground"
               >
-                <div className="flex flex-wrap items-center justify-between gap-3 p-4">
+                {lang === "ms"
+                  ? "Tiada pilihan sepadan. Cuba carian lain."
+                  : lang === "zh"
+                    ? "没有匹配的选择，请换个关键词。"
+                    : "No matching options. Try another search."}
+              </p>
+            )}
+            {otherRoles.slice(0, limit).map((x) => (
+              <motion.div
+                layout={reduceMotion ? false : "position"}
+                initial={{ opacity: 0, y: reduceMotion ? 0 : 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: reduceMotion ? 0 : 0.2 }}
+                key={x.role.id}
+                className="overflow-hidden rounded-2xl border bg-card motion-safe:transition-shadow hover:shadow-md"
+              >
+                <div className="grid min-w-0 grid-cols-2 items-center gap-3 p-4 lg:grid-cols-[minmax(0,1fr)_10rem_auto_auto]">
                   <button
-                    className="flex min-w-40 flex-1 items-center gap-3 text-left font-semibold hover:text-primary"
+                    className="col-span-2 flex min-h-11 min-w-0 items-center gap-3 rounded-lg text-left font-semibold hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary lg:col-span-1"
                     aria-expanded={selected === x.role.id}
                     aria-controls={"role-map-" + x.role.id}
                     onClick={() =>
@@ -432,11 +549,24 @@ export function IndividualMatcher({ p, base }: { p: Profile; base: string }) {
                       </span>
                     </span>
                   </button>
-                  <div className="w-44">
+                  <div className="min-w-0 [&>div]:min-w-0">
                     <AiExposure role={x.role} />
                   </div>
-                  <div><RoleGoals role={x.role}/>{order==="future"&&<p className="mt-2 text-xs font-bold text-primary">{lang==="ms"?"Keutamaan":lang==="zh"?"优先级":"Priority"}: {priority(x)}</p>}</div>
+                  <div>
+                    <RoleGoals role={x.role} />
+                    {order === "future" && (
+                      <p className="mt-2 text-xs font-bold text-primary">
+                        {lang === "ms"
+                          ? "Keutamaan"
+                          : lang === "zh"
+                            ? "优先级"
+                            : "Priority"}
+                        : {priority(x)}
+                      </p>
+                    )}
+                  </div>
                   <Button
+                    className="col-span-2 min-h-11 w-full lg:col-span-1 lg:w-auto"
                     variant="outline"
                     disabled={update.isPending || createPlan.isPending}
                     onClick={() => choose(x.role.id)}
@@ -444,24 +574,44 @@ export function IndividualMatcher({ p, base }: { p: Profile; base: string }) {
                     {w.choose}
                   </Button>
                 </div>
-                {selected === x.role.id && (
-                  <div id={"role-map-" + x.role.id} className="p-3 pt-0">
-                    <MatcherSkillMap match={x} p={p} />
-                  </div>
-                )}
-              </div>
+                <AnimatePresence initial={false}>
+                  {selected === x.role.id && (
+                    <motion.div
+                      key="map"
+                      id={"role-map-" + x.role.id}
+                      initial={{
+                        height: reduceMotion ? "auto" : 0,
+                        opacity: 0,
+                      }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: reduceMotion ? "auto" : 0, opacity: 0 }}
+                      transition={{ duration: reduceMotion ? 0 : 0.2 }}
+                      className="overflow-hidden"
+                    >
+                      <div className="p-3 pt-0">
+                        <MatcherSkillMap
+                          match={x}
+                          p={p}
+                          rank={roles.indexOf(x) + 1}
+                        />
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </motion.div>
             ))}
-        </div>
-        {roles.length > limit + 3 && (
-          <Button variant="ghost" onClick={() => setLimit((n) => n + 20)}>
-            {lang === "ms"
-              ? "Lihat lagi"
-              : lang === "zh"
-                ? "查看更多"
-                : "Show more"}
-          </Button>
-        )}
-      </section>
+          </div>
+          {otherRoles.length > limit && (
+            <Button variant="ghost" onClick={() => setLimit((n) => n + 20)}>
+              {lang === "ms"
+                ? "Lihat lagi"
+                : lang === "zh"
+                  ? "查看更多"
+                  : "Show more"}
+            </Button>
+          )}
+        </section>
+      )}
     </div>
   );
 }
@@ -475,11 +625,9 @@ export function IndividualPathway({ p, base }: { p: Profile; base: string }) {
   const lw = learningWords[lang];
   const sw = studyWords[lang];
   const roleList = useListRoles();
-  const courses = useListCourses();
-  const [scenario]=useFutureScenario();
-  const [futureYears,setFutureYears]=useState(3);
-  const loadedPlan=useRef<number|null>(null);
-  const [sdgGoal, setSdgGoal] = useState("all");
+  const [scenario] = useFutureScenario();
+  const [futureYears, setFutureYears] = useState(3);
+  const loadedPlan = useRef<number | null>(null);
   const [selectedCourse, setSelectedCourse] = useState<number | null>(null);
   const [, navigate] = useLocation();
   const activate = useLearningAction(p.id);
@@ -492,12 +640,15 @@ export function IndividualPathway({ p, base }: { p: Profile; base: string }) {
   const plan = useGetProfilePlan(p.id, {
     query: { queryKey: getGetProfilePlanQueryKey(p.id), retry: false },
   });
-  useEffect(() => {
-    if (plan.data?.id) setSdgGoal(plan.data.sdgGoal ?? "all");
-  }, [plan.data?.id]);
+
   const create = useCreateProfilePlan();
   const update = useUpdateProfile();
-  useEffect(()=>{if(plan.data?.id && loadedPlan.current!==plan.data.id){loadedPlan.current=plan.data.id;setFutureYears(plan.data.items[0]?.futureYears??3);}},[plan.data]);
+  useEffect(() => {
+    if (plan.data?.id && loadedPlan.current !== plan.data.id) {
+      loadedPlan.current = plan.data.id;
+      setFutureYears(plan.data.items[0]?.futureYears ?? 3);
+    }
+  }, [plan.data]);
   const [hours, setHours] = useState(String(p.weeklyHours));
   const [budget, setBudget] = useState(String(p.budgetMyr));
   const [start, setStart] = useState(
@@ -535,8 +686,9 @@ export function IndividualPathway({ p, base }: { p: Profile; base: string }) {
       const result = await create.mutateAsync({
         id: p.id,
         data: {
-          roleId: p.targetRoleId, ...{futureScenario:scenario,futureYears},
-          ...(sdgGoal !== "all" ? { sdgGoal } : {}),
+          roleId: p.targetRoleId,
+          ...{ futureScenario: scenario, futureYears },
+          ...(plan.data?.sdgGoal ? { sdgGoal: plan.data.sdgGoal } : {}),
         },
       });
       qc.setQueryData(getGetProfilePlanQueryKey(p.id), result);
@@ -583,16 +735,33 @@ export function IndividualPathway({ p, base }: { p: Profile; base: string }) {
   const busy = create.isPending || update.isPending;
   const items = pl && pl.roleId === p.targetRoleId ? pl.items : [];
   const dated = datedLearning(items, start, estimates);
-  const goalOptions = [
-    ...new Set(
-      (courses.data ?? []).flatMap((c) =>
-        (c.sdgCodes ?? []).map((s) => s.split(".")[0]),
-      ),
-    ),
-  ].sort((a, b) => Number(a) - Number(b));
   return (
     <div className="space-y-5">
-      {plan.data?.items[0]?.futureScenario&&<p className="rounded-xl border bg-primary/5 p-3 text-xs">{lang==="ms"?"Andaian pelan disimpan":lang==="zh"?"已保存计划假设":"Saved plan assumption"}: {plan.data.items[0].futureScenario==="fast"?(lang==="ms"?"Lebih cepat":lang==="zh"?"较快":"Faster"):(lang==="ms"?"Sederhana":lang==="zh"?"中等":"Moderate")} · {new Date(plan.data.createdAt).getUTCFullYear()+(plan.data.items[0].futureYears??3)} · BLS {plan.data.items[0].trendReviewedAt??"—"}</p>}
+      {plan.data?.items[0]?.futureScenario && (
+        <p className="rounded-xl border bg-primary/5 p-3 text-xs">
+          {lang === "ms"
+            ? "Andaian pelan disimpan"
+            : lang === "zh"
+              ? "已保存计划假设"
+              : "Saved plan assumption"}
+          :{" "}
+          {plan.data.items[0].futureScenario === "fast"
+            ? lang === "ms"
+              ? "Lebih cepat"
+              : lang === "zh"
+                ? "较快"
+                : "Faster"
+            : lang === "ms"
+              ? "Sederhana"
+              : lang === "zh"
+                ? "中等"
+                : "Moderate"}{" "}
+          ·{" "}
+          {new Date(plan.data.createdAt).getUTCFullYear() +
+            (plan.data.items[0].futureYears ?? 3)}{" "}
+          · BLS {plan.data.items[0].trendReviewedAt ?? "—"}
+        </p>
+      )}
       <form
         className="grid gap-3 rounded-2xl border bg-card p-4 sm:grid-cols-3"
         onSubmit={(e) => {
@@ -600,20 +769,26 @@ export function IndividualPathway({ p, base }: { p: Profile; base: string }) {
           void rebuild();
         }}
       >
-        <div className="sm:col-span-3"><HorizonSlider id="pathway-years" years={futureYears} onChange={setFutureYears} label={lang==="ms"?"Tahun persediaan":lang==="zh"?"准备年份":"Preparation year"}/><p className="mb-3 text-xs text-muted-foreground">{lang==="ms"?"Tukar andaian, kemudian tekan kemas kini untuk menyimpan pelan baharu. Pelan semasa kekal sehingga disahkan.":lang==="zh"?"更改假设后点击更新才会保存新计划；确认前现有计划保持不变。":"Change an assumption, then update to save a new plan. Your current plan stays until confirmed."}</p>
-          <SdgChoice
-            learning
-            goals={goalOptions}
-            value={sdgGoal}
-            onChange={setSdgGoal}
-            note={
+        <div className="sm:col-span-3">
+          <HorizonSlider
+            id="pathway-years"
+            years={futureYears}
+            onChange={setFutureYears}
+            label={
               lang === "ms"
-                ? "Pilih tema, kemudian kemas kini garis masa. Kursus sepadan diutamakan jika sesuai dengan kemahiran, bajet dan masa anda. Kursus wajib dikekalkan."
+                ? "Tahun persediaan"
                 : lang === "zh"
-                  ? "选择主题后更新学习时间线。在满足技能、预算与时间要求时优先选择相应课程，必修课程保留。"
-                  : "Choose a theme, then update your timeline. Matching courses are preferred within your skills, budget and time needs. Required courses stay."
+                  ? "准备年份"
+                  : "Preparation year"
             }
           />
+          <p className="mb-3 text-xs text-muted-foreground">
+            {lang === "ms"
+              ? "Tukar andaian, kemudian tekan kemas kini untuk menyimpan pelan baharu. Pelan semasa kekal sehingga disahkan."
+              : lang === "zh"
+                ? "更改假设后点击更新才会保存新计划；确认前现有计划保持不变。"
+                : "Change an assumption, then update to save a new plan. Your current plan stays until confirmed."}
+          </p>
         </div>
         <label className="text-sm">
           {w.hours}
@@ -882,7 +1057,26 @@ export function IndividualPathway({ p, base }: { p: Profile; base: string }) {
                         />
                       ))}
                   </div>
-                  <details className="my-3 text-xs"><summary className="min-h-11 cursor-pointer py-3">{lang==="ms"?"Kemahiran & kaitan SDG":lang==="zh"?"技能与SDG关联":"Skills & SDG links"}</summary><div className="grid gap-2 sm:grid-cols-2">{item.skills.map(name=><SkillSdg key={name} name={name}/>)}</div></details><SdgExplanation goals={item.sdgTargets.map(t=>t.code)} subject={item.title} skills={item.skills} kind="course"/>
+                  <details className="my-3 text-xs">
+                    <summary className="min-h-11 cursor-pointer py-3">
+                      {lang === "ms"
+                        ? "Kemahiran & kaitan SDG"
+                        : lang === "zh"
+                          ? "技能与SDG关联"
+                          : "Skills & SDG links"}
+                    </summary>
+                    <div className="grid gap-2 sm:grid-cols-2">
+                      {item.skills.map((name) => (
+                        <SkillSdg key={name} name={name} subject={item.title} />
+                      ))}
+                    </div>
+                  </details>
+                  <SdgExplanation
+                    goals={item.sdgTargets.map((t) => t.code)}
+                    subject={item.title}
+                    skills={item.skills}
+                    kind="course"
+                  />
                 </li>
               );
             })}

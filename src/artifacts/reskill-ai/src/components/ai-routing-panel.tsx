@@ -119,15 +119,6 @@ export function AiRoutingPanel() {
       </h4>
       <p className="my-2 text-xs text-muted-foreground">{c.note}</p>
       <p className="mb-3 text-xs text-muted-foreground">{c.logic}</p>
-      {q.data?.some((r) => r.runpodPlaceholder) && (
-        <p className="mb-2 rounded bg-muted p-2 text-xs">
-          {lang === "ms"
-            ? "Fasa testing: semua agent menggunakan Gemini. RunPod Qwen ialah placeholder; penjanaan dan probe worker dimatikan. Holland/SDG (Qwen ringan) serta Fitter/Planner/Analyst/Company Advisor (Qwen utama) disediakan untuk fasa hackathon."
-            : lang === "zh"
-              ? "测试阶段：所有智能体使用 Gemini。RunPod Qwen 仅为占位配置，生成及工作节点探测均已关闭。Holland／SDG 预留 Qwen 轻量模型，Fitter／Planner／Analyst／公司顾问 预留 Qwen 主模型供黑客松阶段使用。"
-              : "Testing phase: all agents use Gemini. RunPod Qwen is a placeholder; generation and worker probes are disabled. Holland/SDG reserve Qwen light; Fitter/Planner/Analyst/Company Advisor reserve Qwen main for the hackathon phase."}
-        </p>
-      )}
       {q.isError ? (
         <ErrorBox error={q.error} retry={() => q.refetch()} />
       ) : (

@@ -64,7 +64,7 @@ export function MatcherTrends({
     ],
   }[lang];
   return (
-    <section className="rounded-2xl border bg-card p-4">
+    <section className="space-y-3 border-t pt-4">
       <h3 className="font-bold">{w[0]}</h3>
       <HorizonSlider
         id="matcher-years"

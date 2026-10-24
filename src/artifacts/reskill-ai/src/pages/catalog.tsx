@@ -1,4 +1,4 @@
-import {SkillSdg} from "@/components/skill-sdg";
+import { SkillSdg } from "@/components/skill-sdg";
 import { SdgChoice, SdgExplanation, SdgReason } from "@/components/sdg-choice";
 import { byGoal } from "@/lib/sdg-choice";
 import { useMemo, useState } from "react";
@@ -321,7 +321,10 @@ export function RoleDetail() {
                               <span className="tnum text-[10px] text-muted-foreground">
                                 {s.importance}/3
                               </span>
-                              <SkillSdg name={s.name}/>
+                              <SkillSdg
+                                name={s.name}
+                                subject={roleTitle(r, lang)}
+                              />
                               {s.courseUrl && (
                                 <a
                                   className="inline-flex min-h-11 items-center text-xs text-primary underline"
@@ -599,8 +602,11 @@ export function Courses({
               <div className="mt-2 flex flex-wrap gap-1.5">
                 {c.skills.map((s) => (
                   <div key={s.id} className="min-w-0 rounded-xl border p-2">
-                    <SkillBadge name={skillLabel(s.name, lang)} category={s.category}/>
-                    <SkillSdg name={s.name}/>
+                    <SkillBadge
+                      name={skillLabel(s.name, lang)}
+                      category={s.category}
+                    />
+                    <SkillSdg name={s.name} subject={c.title} />
                   </div>
                 ))}
               </div>

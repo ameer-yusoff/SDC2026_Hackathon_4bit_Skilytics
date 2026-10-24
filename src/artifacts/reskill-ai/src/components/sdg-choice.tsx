@@ -198,13 +198,19 @@ export function SdgChoice({
 
 export function SdgReason({
   role,
+  matchedSkills,
+  missingSkills,
 }: {
   role: { title: string; sector: string; skills?: { name: string }[] };
+  matchedSkills?: string[];
+  missingSkills?: string[];
 }) {
   return (
     <SdgExplanation
       goals={roleGoals(role)}
       kind="role"
+      matchedSkills={matchedSkills}
+      missingSkills={missingSkills}
       subject={role.title}
       skills={role.skills?.map((s) => s.name)}
     />
@@ -216,12 +222,16 @@ export function SdgExplanation({
   skills = [],
   kind = "course",
   expanded = false,
+  matchedSkills,
+  missingSkills,
 }: {
   goals: string[];
   subject?: string;
   skills?: string[];
   kind?: "course" | "role" | "vacancy" | "pathway";
   expanded?: boolean;
+  matchedSkills?: string[];
+  missingSkills?: string[];
 }) {
   const { lang, tk } = useT();
   const selected = [...new Set(goals.map((g) => g.split(".")[0]))].filter((g) =>
@@ -267,7 +277,11 @@ export function SdgExplanation({
       </summary>
       <div className="space-y-3 pb-3">
         {selected.map((g) => {
-          const reason = sdgExplanation(g, subject, skills, lang)!;
+          const reason = sdgExplanation(g, subject, skills, lang, {
+            kind,
+            matchedSkills,
+            missingSkills,
+          })!;
           return (
             <div
               key={g}
@@ -280,6 +294,21 @@ export function SdgExplanation({
               <p className="leading-relaxed">
                 <b>{w.you}: </b> {reason.personal}
               </p>
+              {reason.learner && (
+                <p className="mt-2 rounded-lg bg-primary/5 p-2 font-medium">
+                  {reason.learner}
+                </p>
+              )}
+              {reason.evidence && (
+                <p className="mt-2 text-[11px] text-muted-foreground">
+                  {lang === "ms"
+                    ? "Berdasarkan tajuk / kemahiran"
+                    : lang === "zh"
+                      ? "依据标题／技能"
+                      : "Based on title / skill"}
+                  : {reason.evidence}
+                </p>
+              )}
               <p className="mt-2 leading-relaxed">
                 <b>{w.world}: </b> {reason.global}
               </p>

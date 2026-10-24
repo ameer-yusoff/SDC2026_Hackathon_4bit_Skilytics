@@ -2,7 +2,7 @@ import {SyntheticBadge} from "@/components/sdg-choice";
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { Link, Redirect, useLocation, useParams, useSearch } from "wouter";
 import { useQueryClient } from "@tanstack/react-query";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import {
   AlertTriangle, ArrowLeft, ArrowRight, BadgeCheck, BarChart2, Check, CheckCircle2, Compass, Copy, ExternalLink, Eye, FileCheck, FileImage, FileText, FileUp, GraduationCap, HelpCircle, Lightbulb, Loader2, PlusCircle, Quote, RotateCw, Sparkles, X,
 } from "lucide-react";
@@ -475,6 +475,8 @@ function CvStep({
   const { go, upd } = useAdvance(p, scope, onProfileReady);
   const ref = useRef<HTMLInputElement>(null);
   const consentRef = useRef<HTMLLabelElement>(null);
+  const atsConsentRef = useRef<HTMLLabelElement>(null);
+  const reduceMotion = useReducedMotion();
   const [consent, setConsent] = useState(false);
   const [demoBusy,setDemoBusy]=useState(false);
   const [highlightConsent, setHighlightConsent] = useState(false);
@@ -525,13 +527,16 @@ function CvStep({
   ], [lang]);
 
   const handleAtsConfirm = () => {
-    setConsent(true);
+    if (!consent) {
+      promptConsent();
+      return;
+    }
     setHighlightConsent(false);
     setShowAtsNotice(false);
     if (pendingFile) {
       const f = pendingFile;
       setPendingFile(null);
-      send(f, undefined, true);
+      send(f);
     } else {
       setLocal(null);
       ref.current?.click();
@@ -560,7 +565,9 @@ function CvStep({
       description: t("ob.cv.consentDesc"),
       variant: "destructive",
     });
-    consentRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+    const target = showAtsNotice ? atsConsentRef.current : consentRef.current;
+    target?.scrollIntoView({ behavior: reduceMotion ? "instant" : "smooth", block: "center" });
+    target?.querySelector<HTMLButtonElement>('button[role="checkbox"]')?.focus({ preventScroll: true });
   };
 
   useEffect(() => {
@@ -595,9 +602,9 @@ function CvStep({
     },
   });
 
-  const send = async (file: File, replacement?: Profile, consentConfirmed = false) => {
+  const send = async (file: File, replacement?: Profile) => {
     setLocal(null);
-    if (!consent && !consentConfirmed) {
+    if (!consent) {
       promptConsent();
       return;
     }
@@ -703,12 +710,13 @@ function CvStep({
               highlightConsent && "border-primary ring-4 ring-primary ring-offset-2 scale-110 shadow-md"
             )}
             data-testid="checkbox-consent"
+            aria-invalid={highlightConsent && !consent}
           />
           {highlightConsent && (
             <>
               {/* Outer circular glowing/pulsing ring to circle the area to be ticked */}
-              <span className="pointer-events-none absolute -inset-2.5 rounded-full border-2 border-primary animate-ping opacity-75" />
-              <span className="pointer-events-none absolute -inset-2.5 rounded-full border-2 border-dashed border-primary animate-spin [animation-duration:6s]" />
+              <span className="pointer-events-none absolute -inset-2.5 rounded-full border-2 border-primary motion-safe:animate-ping opacity-75" />
+              <span className="pointer-events-none absolute -inset-2.5 rounded-full border-2 border-dashed border-primary motion-safe:animate-spin [animation-duration:6s]" />
             </>
           )}
         </div>
@@ -924,10 +932,10 @@ function CvStep({
             </div>
           </div>
 
-          <label className={cn(
+          <label ref={atsConsentRef} className={cn(
             "my-1 flex cursor-pointer items-start gap-2.5 rounded-xl border p-3 text-xs leading-relaxed transition-all",
             highlightConsent
-              ? "border-primary bg-[hsl(var(--maroon-soft))] ring-2 ring-primary"
+              ? "border-primary bg-[hsl(var(--maroon-soft))] ring-2 ring-primary motion-safe:animate-pulse"
               : "border-border/80 bg-background hover:border-primary/50"
           )}>
             <div className="relative mt-0.5 flex shrink-0 items-center justify-center">
@@ -945,6 +953,7 @@ function CvStep({
                   highlightConsent && "border-primary ring-2 ring-primary ring-offset-1"
                 )}
                 data-testid="checkbox-ats-consent"
+                aria-invalid={highlightConsent && !consent}
               />
             </div>
             <div className="min-w-0">

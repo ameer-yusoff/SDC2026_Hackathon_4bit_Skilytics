@@ -397,9 +397,9 @@
       "category": "ai_endpoint",
       "access": "disabled",
       "note": {
-        "en": "Disabled authenticated AI placeholder, not a public dataset. Enabling it requires private credentials and may incur costs.",
-        "ms": "Placeholder AI ber-auth yang dimatikan, bukan dataset awam. Pengaktifan memerlukan kelayakan peribadi dan mungkin berkos.",
-        "zh": "已禁用的认证AI预留服务，不是公开数据集。启用需要私有凭证并可能产生费用。"
+        "en": "Authenticated RunPod AI endpoint, temporarily paused to conserve remaining credits. Gemini currently serves AI requests. Private credentials are required; this is not a public dataset.",
+        "ms": "Endpoint AI RunPod ber-auth dihentikan sementara untuk menjimatkan baki kredit. Gemini kini mengendalikan permintaan AI. Kelayakan peribadi diperlukan; ini bukan dataset awam.",
+        "zh": "RunPod AI 认证端点暂时停用以节省剩余额度。目前由 Gemini 处理 AI 请求。需要私有凭证，并非公开数据集。"
       },
       "licence": "Publisher terms apply; public availability alone does not establish an open-content licence",
       "documentation": "https://www.runpod.io/console/serverless",
@@ -416,9 +416,9 @@
       "category": "ai_endpoint",
       "access": "disabled",
       "note": {
-        "en": "Disabled authenticated AI placeholder, not a public dataset. Enabling it requires private credentials and may incur costs.",
-        "ms": "Placeholder AI ber-auth yang dimatikan, bukan dataset awam. Pengaktifan memerlukan kelayakan peribadi dan mungkin berkos.",
-        "zh": "已禁用的认证AI预留服务，不是公开数据集。启用需要私有凭证并可能产生费用。"
+        "en": "Authenticated RunPod AI endpoint, temporarily paused to conserve remaining credits. Gemini currently serves AI requests. Private credentials are required; this is not a public dataset.",
+        "ms": "Endpoint AI RunPod ber-auth dihentikan sementara untuk menjimatkan baki kredit. Gemini kini mengendalikan permintaan AI. Kelayakan peribadi diperlukan; ini bukan dataset awam.",
+        "zh": "RunPod AI 认证端点暂时停用以节省剩余额度。目前由 Gemini 处理 AI 请求。需要私有凭证，并非公开数据集。"
       },
       "licence": "Publisher terms apply; public availability alone does not establish an open-content licence",
       "documentation": "https://www.runpod.io/console/serverless",

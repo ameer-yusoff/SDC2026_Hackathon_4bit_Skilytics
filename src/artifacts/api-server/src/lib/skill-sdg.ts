@@ -79,7 +79,7 @@ const topics: [RegExp, string, string, Tri, Tri][] = [
     },
   ],
   [
-    /cyber|security|privacy|python|sql|program|software|data|cloud|machine|ai\b|artificial|web|html|css|network|database/i,
+    /cyber|security|privacy|python|javascript|typescript|\bjava\b|version control|\bgit\b|sql|program|software|data|cloud|machine|ai\b|artificial|web|html|css|network|database/i,
     "9",
     "9.5",
     {
