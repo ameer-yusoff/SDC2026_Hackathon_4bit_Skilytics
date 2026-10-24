@@ -506,14 +506,14 @@ export function SdgBadge({
       rel="noopener noreferrer"
       title={label}
       className={cn(
-        "inline-flex items-center gap-1 rounded border bg-card p-1 text-xs",
+        "inline-flex items-center gap-1 rounded-none border bg-card p-1 text-xs",
         primary ? "border-[3px] border-primary font-bold" : "border-border",
       )}
     >
       <img
         src={`/sdg/${goal}.png`}
         alt={`SDG ${goal}: ${label}`}
-        className={cn("object-contain", compact ? "h-8 w-8" : "h-14 w-14")}
+        className={cn("rounded-none object-contain", compact ? "h-8 w-8" : "h-14 w-14")}
         loading="lazy"
       />
     </a>

@@ -1,5 +1,5 @@
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { ChangingValue, HorizonSlider } from "./projection-feedback";
+import { ChangingValue } from "./projection-feedback";
 import { SkillSdg } from "./skill-sdg";
 import {
   RoleTrendEvidence,
@@ -625,9 +625,6 @@ export function IndividualPathway({ p, base }: { p: Profile; base: string }) {
   const lw = learningWords[lang];
   const sw = studyWords[lang];
   const roleList = useListRoles();
-  const [scenario] = useFutureScenario();
-  const [futureYears, setFutureYears] = useState(3);
-  const loadedPlan = useRef<number | null>(null);
   const [selectedCourse, setSelectedCourse] = useState<number | null>(null);
   const [, navigate] = useLocation();
   const activate = useLearningAction(p.id);
@@ -643,12 +640,6 @@ export function IndividualPathway({ p, base }: { p: Profile; base: string }) {
 
   const create = useCreateProfilePlan();
   const update = useUpdateProfile();
-  useEffect(() => {
-    if (plan.data?.id && loadedPlan.current !== plan.data.id) {
-      loadedPlan.current = plan.data.id;
-      setFutureYears(plan.data.items[0]?.futureYears ?? 3);
-    }
-  }, [plan.data]);
   const [hours, setHours] = useState(String(p.weeklyHours));
   const [budget, setBudget] = useState(String(p.budgetMyr));
   const [start, setStart] = useState(
@@ -687,7 +678,11 @@ export function IndividualPathway({ p, base }: { p: Profile; base: string }) {
         id: p.id,
         data: {
           roleId: p.targetRoleId,
-          ...{ futureScenario: scenario, futureYears },
+          // Retain the choice confirmed in Matcher when adjusting study time/budget.
+          ...(plan.data?.items[0]?.futureScenario ? {
+            futureScenario: plan.data.items[0].futureScenario,
+            futureYears: plan.data.items[0].futureYears ?? 3,
+          } : {}),
           ...(plan.data?.sdgGoal ? { sdgGoal: plan.data.sdgGoal } : {}),
         },
       });
@@ -737,31 +732,6 @@ export function IndividualPathway({ p, base }: { p: Profile; base: string }) {
   const dated = datedLearning(items, start, estimates);
   return (
     <div className="space-y-5">
-      {plan.data?.items[0]?.futureScenario && (
-        <p className="rounded-xl border bg-primary/5 p-3 text-xs">
-          {lang === "ms"
-            ? "Andaian pelan disimpan"
-            : lang === "zh"
-              ? "已保存计划假设"
-              : "Saved plan assumption"}
-          :{" "}
-          {plan.data.items[0].futureScenario === "fast"
-            ? lang === "ms"
-              ? "Lebih cepat"
-              : lang === "zh"
-                ? "较快"
-                : "Faster"
-            : lang === "ms"
-              ? "Sederhana"
-              : lang === "zh"
-                ? "中等"
-                : "Moderate"}{" "}
-          ·{" "}
-          {new Date(plan.data.createdAt).getUTCFullYear() +
-            (plan.data.items[0].futureYears ?? 3)}{" "}
-          · BLS {plan.data.items[0].trendReviewedAt ?? "—"}
-        </p>
-      )}
       <form
         className="grid gap-3 rounded-2xl border bg-card p-4 sm:grid-cols-3"
         onSubmit={(e) => {
@@ -769,27 +739,6 @@ export function IndividualPathway({ p, base }: { p: Profile; base: string }) {
           void rebuild();
         }}
       >
-        <div className="sm:col-span-3">
-          <HorizonSlider
-            id="pathway-years"
-            years={futureYears}
-            onChange={setFutureYears}
-            label={
-              lang === "ms"
-                ? "Tahun persediaan"
-                : lang === "zh"
-                  ? "准备年份"
-                  : "Preparation year"
-            }
-          />
-          <p className="mb-3 text-xs text-muted-foreground">
-            {lang === "ms"
-              ? "Tukar andaian, kemudian tekan kemas kini untuk menyimpan pelan baharu. Pelan semasa kekal sehingga disahkan."
-              : lang === "zh"
-                ? "更改假设后点击更新才会保存新计划；确认前现有计划保持不变。"
-                : "Change an assumption, then update to save a new plan. Your current plan stays until confirmed."}
-          </p>
-        </div>
         <label className="text-sm">
           {w.hours}
           <Input

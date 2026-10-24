@@ -198,7 +198,7 @@ export function Roles() {
                         key={code}
                         title={tk("sdg", code)}
                         className={cn(
-                          "rounded border bg-card p-1",
+                          "rounded-none border bg-card p-1",
                           i === 0 && "border-2 border-primary",
                         )}
                       >

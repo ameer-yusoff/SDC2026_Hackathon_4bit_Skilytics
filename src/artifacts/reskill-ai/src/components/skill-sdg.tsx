@@ -46,9 +46,10 @@ export function SkillSdg({
       <summary
         aria-label={`${skillLabel(name, lang)} · ${w[0]}`}
         title={`${skillLabel(name, lang)} · ${w[0]}`}
-        className="flex min-h-11 cursor-pointer items-center gap-2"
+        className="flex min-h-11 cursor-pointer list-none items-center gap-2"
       >
-        <span className="flex gap-1">
+        <span className="min-w-0 flex-1 break-words text-sm font-semibold">{skillLabel(name, lang)}</span>
+        <span className="flex shrink-0 gap-1">
           {links.map((l) => (
             <img
               key={l.code}
@@ -58,12 +59,12 @@ export function SkillSdg({
               loading="lazy"
               width={32}
               height={32}
-              className="h-8 w-8 rounded-sm object-contain"
+              className="h-8 w-8 rounded-none object-contain"
             />
           ))}
         </span>
         <span className="sr-only">{w[0]}</span>
-        <span aria-hidden>⌄</span>
+        <span className="shrink-0" aria-hidden>⌄</span>
       </summary>
       <div className="my-2 space-y-2 rounded-lg bg-background/60 p-3 leading-relaxed">
         <p>{personal.example}</p>
