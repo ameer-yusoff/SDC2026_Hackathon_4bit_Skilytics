@@ -2,9 +2,12 @@ import { createRoot } from "react-dom/client";
 import { setAuthTokenGetter, setExtraHeadersGetter, setBaseUrl } from "@workspace/api-client-react";
 
 import App from "./App";
+import { registerPwa } from "@/lib/pwa";
 import { ErrorBoundary } from "@/components/error-boundary";
 
 import "./index.css";
+
+registerPwa();
 
 const rawApiUrl = import.meta.env.VITE_API_URL;
 if (rawApiUrl) {

@@ -8,6 +8,7 @@ import { Shell } from "@/components/shell";
 import { Rows } from "@/components/kit";
 import { LangProvider } from "@/i18n";
 import { AuthProvider, portalHome, useAuth } from "@/lib/auth";
+import { PwaInstall } from "@/components/pwa-install";
 import { Landing, Login, NotFound, Register } from "@/pages/public";
 const { Outlook, Workspace } = {
   Outlook: lazy(() => import("@/pages/me").then((m) => ({ default: m.Outlook }))),
@@ -96,6 +97,7 @@ function App() {
         <TooltipProvider>
           <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
             <AuthProvider>
+              <PwaInstall />
               <Suspense fallback={<main className="mx-auto max-w-5xl p-6"><Rows n={4} h="h-20" /></main>}><AppRoutes /></Suspense>
             </AuthProvider>
           </WouterRouter>
