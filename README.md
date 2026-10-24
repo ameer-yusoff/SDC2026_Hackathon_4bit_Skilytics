@@ -154,8 +154,7 @@ pnpm install
 # 3. Configure environment variables (Windows)
 copy .env.example .env
 # macOS/Linux: cp .env.example .env
-# Fill DATABASE_URL, DATABASE_URL_UNPOOLED, SESSION_SECRET and GEMINI_API_KEY.
-# For RunPod main/light configuration, use the settings below.
+# Complete all settings in .env using your own credentials and endpoint configuration.
 
 # 4. On a NEW development database, create the schema; review Drizzle's prompts.
 pnpm db:push
@@ -168,30 +167,6 @@ pnpm run dev
 ```
 
 `pnpm run dev` displays the frontend only. Its `/api` proxy expects the separately running API at port 5000; set `API_URL` for another API address. API startup seeds the built-in catalogue and fictional demo accounts, then starts source refreshes. Use a separate development database. Python is not required to run the web application; `requirements.txt` lists optional Python tooling, and no Python validation scripts are currently committed.
-
-### RunPod Main and Light API Configuration
-
-Add the following settings to `src/.env`, or the backend hosting service's private environment. Both endpoints use `RUNPOD_API_KEY`; endpoint URLs are not API keys. Never put the private key in frontend code or Git.
-
-```dotenv
-RUNPOD_API_KEY=your_private_runpod_api_key
-
-# Main: Qwen3.5-27B
-RUNPOD_LLM_ENDPOINT_ID=3pvoygmk4mn0ad
-RUNPOD_LLM_MODEL=qwen/qwen3.5-27b
-# Request URL: https://api.runpod.ai/v2/3pvoygmk4mn0ad/run
-
-# Light: Qwen3.5-9B
-RUNPOD_LIGHT_ENDPOINT_ID=bs50a57qmoqrpp
-RUNPOD_LIGHT_MODEL=qwen/qwen3.5-9b
-# Request URL: https://api.runpod.ai/v2/bs50a57qmoqrpp/run
-
-# Current default: Gemini active, RunPod generation paused to conserve credits.
-AI_AGENT_ROUTING=gemini-only
-RUNPOD_ENABLE_GENERATION=false
-```
-
-To deliberately enable the RunPod routes, change `AI_AGENT_ROUTING=hybrid` and `RUNPOD_ENABLE_GENERATION=true`, then restart the API. Keep `GEMINI_API_KEY` configured: CV and Profiler still use Gemini in hybrid routing. Main handles Fitter, Planner, Analyst and Company Advisor; Light handles Holland and SDG. See [AI routing](src/docs/ai-routing.md) for details.
 
 ### Run Tests
 
