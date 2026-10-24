@@ -1,11 +1,12 @@
 import {skillObservations} from "../lib/skill-observations";
+import { freshIntakeValues, replacesIntake } from "../lib/intake-replacement";
 import {futureSkillWeights,roleTrendReferences} from "../lib/workforce-trends";
 import { compulsoryIds } from "../lib/institution";
 import { guestProfileScope, keepOneGuestProfile } from "../lib/guest-profile";
 import demoFixtures from "../../../../testing/demo-cv/profiles.json";
 import { individualProfile } from "../lib/individual-profile";
 import { hollandSource } from "../lib/holland-source";
-import { Router, type IRouter } from "express";
+import { Router, type IRouter, type Request } from "express";
 import { performance } from "node:perf_hooks";
 import { z } from "zod";
 import { ROLES } from "../data/roles";
@@ -42,6 +43,21 @@ import { CvAiOutputError, CvProfileFactsMissingError, cvExtractionKey, extractCv
 
 const router: IRouter = Router();
 const cvRequests = new Map<number, Promise<unknown>>();
+
+async function replaceValidatedIntake(req: Request, previous: ProfileRow, cv: Parameters<typeof freshIntakeValues>[1]) {
+  const scope = previous.ownerUserId ? eq(profilesTable.ownerUserId, previous.ownerUserId) : guestProfileScope(previous.guestToken!);
+  const lock = previous.ownerUserId ? "individual-profile:" + previous.ownerUserId : previous.guestToken!;
+  return db.transaction(async tx => {
+    await tx.execute(sql`SELECT pg_advisory_xact_lock(hashtextextended(${lock},0))`);
+    const [current] = await tx.select({ id: profilesTable.id }).from(profilesTable).where(and(scope, eq(profilesTable.id, previous.id)));
+    if (!current) throw new CvError("profile_not_found");
+    const [row] = await tx.insert(profilesTable).values(freshIntakeValues(previous, cv, typeof req.headers["x-intake-segment"] === "string" ? req.headers["x-intake-segment"] : undefined)).returning();
+    // Delete only this account/device's prior profiles after the new CV is ready.
+    // Profile foreign keys cascade to old plans, insights and learning progress.
+    await tx.delete(profilesTable).where(and(scope, ne(profilesTable.id, row.id)));
+    return row;
+  });
+}
 
 router.get("/profiles", async (req, res) => {
   if (!req.user && req.guestToken) await keepOneGuestProfile(req.guestToken);
@@ -104,6 +120,10 @@ router.post("/profiles", async (req, res) => {
     const outcome = await db.transaction(async (tx) => {
       // A database lock also serialises different application instances for this guest.
       await tx.execute(sql`SELECT pg_advisory_xact_lock(hashtextextended(${guestToken}, 0))`);
+      if (replacesIntake(req.user?.role, req.headers["x-replace-intake"])) {
+        const [current] = await tx.select().from(profilesTable).where(guestProfileScope(guestToken)).orderBy(desc(profilesTable.id)).limit(1);
+        if (current) return { kind: "existing", row: current } as const;
+      }
       if (requestKey) {
         const [existing] = await tx.select().from(profilesTable).where(eq(profilesTable.createRequestKey, requestKey));
         if (existing) return { kind: existing.guestToken === guestToken && !existing.ownerUserId ? "existing" : "conflict", row: existing } as const;
@@ -269,12 +289,14 @@ router.delete("/profiles/:id", async (req, res) => {
 // Fixed fictional sample data. This route never calls file extraction, OCR, or an LLM.
 router.post("/profiles/:id/demo-cv",async(req,res)=>{
   const p=await requireProfile(GetProfileParams.parse(req.params).id,req,res);if(!p)return;
-  if(p.onboardingStep==="complete") {res.status(409).json({error:"riasec_locked"});return;}
+  const replace = replacesIntake(req.user?.role, req.headers["x-replace-intake"]);
+  if(p.onboardingStep==="complete" && !replace) {res.status(409).json({error:"riasec_locked"});return;}
   const {demoId}=z.object({demoId:z.number().int().min(1).max(3)}).parse(req.body);
   const fixture=demoFixtures.profiles.find(f=>f.id===demoId)!;
   const skills=await loadSkills();
   const evidence=["name","currentRole","organization","education","experience"].map(field=>({field,value:String(fixture[field as keyof typeof fixture]),quote:String(fixture[field as keyof typeof fixture]),source:"user_cv"}));
-  const [row]=await db.update(profilesTable).set({name:fixture.name,currentRole:fixture.currentRole,organization:fixture.organization,education:fixture.education,experience:fixture.experience,cvText:fixture.cvText,cvFileName:fixture.file,cvExtractionKey:"demo-v1:"+fixture.sha256,cvEvidence:evidence,cvUploadedAt:new Date(),skills:extractSkills(fixture.cvText,skills),verified:false,onboardingStep:"review"}).where(eq(profilesTable.id,p.id)).returning();
+  const cv = {name:fixture.name,currentRole:fixture.currentRole,organization:fixture.organization,education:fixture.education,experience:fixture.experience,cvText:fixture.cvText,cvFileName:fixture.file,cvExtractionKey:"demo-v1:"+fixture.sha256,cvEvidence:evidence,skills:extractSkills(fixture.cvText,skills)};
+  const row = replace ? await replaceValidatedIntake(req,p,cv) : (await db.update(profilesTable).set({...cv,cvUploadedAt:new Date(),verified:false,onboardingStep:"review"}).where(eq(profilesTable.id,p.id)).returning())[0];
   res.json(profileToApi(row,skills));
 });
 
@@ -283,7 +305,8 @@ router.post("/profiles/:id/cv", async (req, res) => {
   const body = UploadCvBody.parse(req.body);
   const p = await requireProfile(id, req, res);
   if (!p) return;
-  if ((!req.user || req.user.role === "individual") && p.onboardingStep === "complete") {res.status(409).json({error:"riasec_locked"});return;}
+  const replace = replacesIntake(req.user?.role, req.headers["x-replace-intake"]);
+  if ((!req.user || req.user.role === "individual") && p.onboardingStep === "complete" && !replace) {res.status(409).json({error:"riasec_locked"});return;}
   if (!body.consent) { res.status(400).json({ error: "cv_consent_required" }); return; }
   let text: string | null = null;
   let pages: CvDocumentPage[] | undefined;
@@ -323,7 +346,7 @@ router.post("/profiles/:id/cv", async (req, res) => {
   // reuse a cached extraction from a different document with the same images.
   const keyText = text ?? pages?.map((page) => `Page ${page.pageNumber}\n${page.text}`).join("\n\n") ?? "";
   const key = cvExtractionKey(keyText, lang, images);
-  if (p.cvExtractionKey === key) { res.json(profileToApi(p, await loadSkills())); return; }
+  if (p.cvExtractionKey === key && !replace) { res.json(profileToApi(p, await loadSkills())); return; }
   const inFlight = cvRequests.get(id);
   if (inFlight) {
     try {
@@ -399,6 +422,15 @@ router.post("/profiles/:id/cv", async (req, res) => {
     const cvText = result.text || (multimodal ? (pages?.map((page) => page.text).filter(Boolean).join("\n\n") || "") : text!);
     const allSkills = await loadSkills();
     const extracted = extractSkills(cvText, allSkills);
+    if (replace) {
+      const row = await replaceValidatedIntake(req,p,{
+        name: result.fields.name ?? "New profile", currentRole: result.fields.currentRole ?? null,
+        organization: result.fields.organization ?? null, education: result.fields.education ?? null,
+        experience: result.fields.experience ?? null, cvText, cvFileName: body.fileName,
+        cvEvidence: result.evidence, cvExtractionKey: key, skills: extracted,
+      });
+      return profileToApi(row, allSkills);
+    }
     const manual = p.skills.filter((s) => s.status === "self_reported" && !extracted.some((e) => e.skillId === s.skillId));
     const isOrg = req.user?.role === "hr" || req.user?.role === "tvet";
     const preserveConfirmedDetails = p.verified;

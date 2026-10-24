@@ -1,3 +1,4 @@
+import { forgetPreviousIntake } from "@/lib/intake-replacement";
 import {SyntheticBadge} from "@/components/sdg-choice";
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { Link, Redirect, useLocation, useParams, useSearch } from "wouter";
@@ -79,8 +80,6 @@ export default function Onboarding() {
   const [pid, setPid] = useState<number | null>(() => {
     if (validUrlPid) return validUrlPid;
     if (isNew) {
-      const previous = getObProfile(scope);
-      if (previous) clearDraft(scope, previous);
       setActiveProfile(null);
       setObProfile(scope, null);
       clearObCreateKey(scope);
@@ -90,7 +89,7 @@ export default function Onboarding() {
   });
   const [ready, setReady] = useState(() => !loading);
 
-  // If new=1 was present, clean it from the URL once on mount and wipe old draft
+  // Clean new=1 from the URL; retain the previous intake until a CV succeeds.
   useEffect(() => {
     if (preNew === "1") {
       setObProfile(scope, null);
@@ -123,7 +122,7 @@ export default function Onboarding() {
 
   const handleProfileReady = useCallback((np: Profile) => {
     const previous = getObProfile(scope);
-    if (previous && previous !== np.id) { clearDraft(scope, previous); qc.removeQueries({queryKey:getGetProfileQueryKey(previous)}); }
+    if (previous && previous !== np.id) forgetPreviousIntake(qc, scope, previous);
     setActiveProfile(np.id);
     setObProfile(scope, np.id);
     setPid(np.id);
@@ -138,7 +137,7 @@ export default function Onboarding() {
         segment: targetSeg,
         weeklyHours: 1,
         budgetMyr: 0,
-    }, { headers: { "X-Idempotency-Key": getObCreateKey(scope) }, signal: AbortSignal.timeout(15_000) }).then((np) => {
+    }, { headers: { "X-Idempotency-Key": getObCreateKey(scope), "X-Replace-Intake": "1" }, signal: AbortSignal.timeout(15_000) }).then((np) => {
       handleProfileReady(np);
       qc.invalidateQueries({ queryKey: ["/api/profiles"] });
       qc.invalidateQueries({ queryKey: ["/api/dashboard/summary"] });
@@ -161,13 +160,13 @@ export default function Onboarding() {
   }, [q.isError, q.error, pid, scope]);
 
   useEffect(() => {
-    if (p && p.id > 0 && preSeg && (preSeg === "worker" || preSeg === "graduate") && p.segment !== preSeg && !upd.isPending) {
+    if (requested !== "cv" && p && p.id > 0 && preSeg && (preSeg === "worker" || preSeg === "graduate") && p.segment !== preSeg && !upd.isPending) {
       upd.mutateAsync({ id: p.id, data: { segment: preSeg } }).then((np) => {
         handleProfileReady(np);
         qc.invalidateQueries({ queryKey: ["/api/profiles"] });
       }).catch(() => {});
     }
-  }, [p?.id, p?.segment, preSeg, handleProfileReady, upd, qc]);
+  }, [requested, p?.id, p?.segment, preSeg, handleProfileReady, upd, qc]);
 
   const draftProfile: Profile = useMemo(() => ({
     id: pid ?? 0,
@@ -221,7 +220,6 @@ export default function Onboarding() {
           scope={scope}
           ensureProfile={ensureProfile}
           onProfileReady={handleProfileReady}
-          onStartOver={handleStartOver}
         />
       </Frame>
     );
@@ -296,7 +294,6 @@ export default function Onboarding() {
           scope={scope}
           ensureProfile={ensureProfile}
           onProfileReady={handleProfileReady}
-          onStartOver={handleStartOver}
         />
       )}
       {step === "review" && <ReviewStep p={p} scope={scope} onProfileReady={handleProfileReady} />}
@@ -459,13 +456,11 @@ function CvStep({
   scope,
   ensureProfile,
   onProfileReady,
-  onStartOver,
 }: {
   p: Profile;
   scope: string;
   ensureProfile?: (force?: boolean) => Promise<Profile>;
   onProfileReady?: (np: Profile) => void;
-  onStartOver?: () => void;
 }) {
   const { t, lang } = useT();
   const et = useErrText();
@@ -543,13 +538,15 @@ function CvStep({
     }
   };
 
+  const intakeSegment = new URLSearchParams(window.location.search).get("seg");
+  const intakeHeaders = { "X-Replace-Intake": "1", "X-Intake-Segment": intakeSegment === "graduate" || intakeSegment === "worker" ? intakeSegment : p.segment };
   const loadDemoCv = async (demoId: number) => {
     setLocal(null);setDemoBusy(true);
     try {
       const profile=p.id>0?p:await ensureProfile?.();
       if(!profile?.id)throw new Error("profile_not_ready");
-      const np=await customFetch<Profile>(`/api/profiles/${profile.id}/demo-cv`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({demoId})});
-      qc.setQueryData(getGetProfileQueryKey(np.id),np);setObProfile(scope,np.id);onProfileReady?.(np);writeDraft(scope,np.id,{form:undefined});nav(`/onboarding/review?pid=${np.id}`);
+      const np=await customFetch<Profile>(`/api/profiles/${profile.id}/demo-cv`,{method:"POST",headers:{"Content-Type":"application/json",...intakeHeaders},body:JSON.stringify({demoId})});
+      qc.setQueryData(getGetProfileQueryKey(np.id),np);onProfileReady?.(np);setObProfile(scope,np.id);clearDraft(scope,np.id);clearObCreateKey(scope);qc.invalidateQueries({queryKey:["/api/profiles"]});qc.invalidateQueries({queryKey:["/api/dashboard/summary"]});nav(`/onboarding/review?pid=${np.id}`);
     } catch(err) {setLocal(et(err));} finally {setDemoBusy(false);}
   };
 
@@ -577,15 +574,18 @@ function CvStep({
   }, []);
 
   const up = useUploadCv({
+    request: { headers: intakeHeaders },
     mutation: {
       onSuccess: async (np) => {
         setSince(null);
         lastFile.current = null;
         qc.setQueryData(getGetProfileQueryKey(np.id), np);
-        setObProfile(scope, np.id);
         onProfileReady?.(np);
-        // a new extraction invalidates any earlier review draft and verification
-        writeDraft(scope, np.id, { form: undefined });
+        setObProfile(scope, np.id);
+        clearDraft(scope, np.id);
+        clearObCreateKey(scope);
+        qc.invalidateQueries({ queryKey: ["/api/profiles"] });
+        qc.invalidateQueries({ queryKey: ["/api/dashboard/summary"] });
         nav(`/onboarding/review?pid=${np.id}`);
       },
       onError: async (err) => {
@@ -1018,7 +1018,6 @@ function CvStep({
         </div>
       )}
       <NavBar pid={p.id}>
-        {onStartOver && <Button variant="ghost" className="min-h-11" onClick={onStartOver} data-testid="button-start-over">{t("ob.startOver")}</Button>}
         {p.cvExtractionKey && <Button variant="outline" className="min-h-11" disabled={up.isPending || upd.isPending} onClick={() => go("review").catch(() => undefined)} data-testid="button-cv-next">{t("ob.next")}</Button>}
       </NavBar>
     </>
